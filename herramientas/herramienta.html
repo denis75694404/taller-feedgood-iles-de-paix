@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Herramienta · Taller Feed Good</title>
+<link rel="icon" href="../trabajemos-juntos/img/administrador-icono.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="../assets/app.css">
+<style>
+#main{margin-left:0}
+.thead{position:relative;color:#fff;min-height:220px;display:flex;align-items:flex-end;overflow:hidden}
+.thead img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thead::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(94,58,50,.92))}
+.thead .in{position:relative;z-index:2;padding:22px 0;width:100%}
+.thead .eyebrow{color:var(--sol)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0}
+.form{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));align-items:end}
+.form .wide{grid-column:1/-1}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:.82rem;font-weight:700;color:var(--muted)}
+input,select,textarea{font:inherit;padding:.6rem .7rem;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);width:100%}
+textarea{min-height:70px;resize:vertical}
+.board{display:grid;grid-template-columns:repeat(7,minmax(150px,1fr));gap:10px;overflow-x:auto;padding-bottom:6px}
+.col{background:#fff;border:1px solid var(--line);border-radius:16px;min-height:220px;display:flex;flex-direction:column}
+.col h4{margin:0;padding:10px 12px;border-radius:16px 16px 0 0;background:var(--terra-d);color:#fff;font-size:.9rem}
+.col h4 small{display:block;font-weight:500;opacity:.85}
+.col .cards{padding:8px;display:flex;flex-direction:column;gap:8px}
+.note{border-radius:10px;padding:8px 10px;font-size:.88rem;line-height:1.3;position:relative;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.note .meta{display:block;font-size:.72rem;color:#6b5e5a;margin-top:4px}
+.note .del{position:absolute;top:2px;right:4px;border:0;background:none;color:#8c5a4f;font-size:16px;line-height:1}
+.n-a{background:#F6D5C8}.n-b{background:#D7E8CC}.n-c{background:#F7E3B5}
+.vrow{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:8px}
+.vrow .rk{width:34px;height:34px;border-radius:99px;background:var(--terra-d);color:#fff;display:grid;place-items:center;font-weight:800}
+.vrow .vb{height:8px;border-radius:99px;background:var(--line);margin-top:6px;overflow:hidden}.vrow .vb i{display:block;height:100%;background:linear-gradient(90deg,var(--verde),var(--sol))}
+.vctl{display:flex;align-items:center;gap:6px}
+.vctl button{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:20px;font-weight:800;color:var(--terra-dd)}
+.vctl b{min-width:2.2ch;text-align:center;font-size:1.3rem}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tree{display:grid;grid-template-columns:1fr 60px 1.1fr 60px 1fr;gap:10px;align-items:center}
+.tree .colx{display:flex;flex-direction:column;gap:8px}
+.tree .box{border-radius:14px;padding:10px 12px;font-size:.92rem}
+.tree .cause{background:#F6D5C8;border:1px solid var(--terra)}
+.tree .res{background:var(--terra-d);color:#fff;font-weight:700;min-height:120px;display:flex;align-items:center;justify-content:center;text-align:center}
+.tree .cons{background:#fff;border:1px solid var(--terra-d)}
+.tree .arrow{font-size:28px;color:var(--terra);text-align:center}
+.mx{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:.9rem}
+.mx th{background:var(--terra-d);color:#fff;padding:8px;font-weight:700}
+.mx td{border-top:1px solid var(--line);padding:6px;text-align:center;vertical-align:middle}
+.mx td:first-child{text-align:left;font-weight:600;min-width:160px}
+.cell{display:flex;gap:4px;justify-content:center;align-items:center;flex-wrap:wrap;border-radius:10px;padding:6px}
+.dot{width:28px;height:28px;border-radius:99px;border:1px solid #bbb;font-size:.75rem;font-weight:800;display:grid;place-items:center;cursor:pointer;user-select:none}
+.d-n{background:#F28C28;color:#fff;border-color:#d9731a}.d-v{background:#5BA55B;color:#fff;border-color:#3f8a3f}.d-b{background:#fff;color:#555}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.88rem;align-items:center}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.tbl{width:100%;border-collapse:collapse;background:#fff;font-size:.88rem}
+.tbl th{background:var(--terra-d);color:#fff;text-align:left;padding:8px}
+.tbl td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:top}
+.scale{display:grid;grid-template-columns:1.6fr repeat(5,1fr);gap:6px;align-items:center;margin-bottom:6px}
+.scale button{padding:.6rem .2rem;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:.8rem}
+.scale button b{display:block;font-size:1.1rem;color:var(--terra-d)}
+.empty{padding:24px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:16px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--terra-dd);color:#fff;padding:.6rem 1rem;border-radius:12px;font-weight:700;display:none;z-index:99}
+@media (max-width:760px){.tree{grid-template-columns:1fr}.tree .arrow{transform:rotate(90deg)}.scale{grid-template-columns:1fr repeat(5,1fr)}}
+</style>
+</head>
+<body>
+<div id="main">
+  <div class="thead"><img id="ph" src="" alt=""><div class="in"><div class="wrap">
+    <a class="btn ghost sm noprint" href="../index.html#/herramientas">← Volver al portal</a>
+    <div class="eyebrow" id="ey" style="margin-top:12px"></div><h1 id="tt" style="font-size:clamp(1.6rem,3.4vw,2.4rem)"></h1><p id="pp" style="margin:0;opacity:.92"></p>
+  </div></div></div>
+  <div class="wrap">
+    <div class="bar noprint">
+      <button class="btn sec sm" id="bCsv">Exportar CSV</button>
+      <button class="btn sec sm" id="bJson">Respaldo (JSON)</button>
+      <label class="btn sec sm" style="cursor:pointer">Restaurar respaldo<input type="file" id="fJson" accept=".json" hidden></label>
+      <button class="btn sec sm" onclick="print()">Imprimir</button>
+      <span class="sp"></span>
+      <button class="btn sm" style="color:#a33" id="bClear">Borrar todo</button>
+    </div>
+    <p class="small muted noprint">Lo escrito se guarda automáticamente en este equipo (navegador). Exporte el CSV al cierre de cada sesión para la relatoría.</p>
+    <div id="app" style="padding-bottom:40px"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="../assets/data.js"></script>
+<script>
+(function () {
+  const D = window.FG, $ = s => document.querySelector(s);
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const id = new URLSearchParams(location.search).get("id") || "H6";
+  const H = D.herr.find(x => x.c === id) || D.herr[0];
+  // H6 y H8 comparten el mismo muro
+  const KEY = "fg-" + ({ H8: "H6" }[H.c] || H.c);
+  const MESAS = ["Naranja", "Verde", "Azul", "Amarilla", "Terracota", "Morada"];
+  const RS = [["R1", "Producción"], ["R2", "Cadenas"], ["R3", "Gobernanza"], ["R4", "Incidencia"], ["R5", "Sensibilización"], ["R6", "Mujeres y jóvenes"], ["Otro", "Otros cambios"]];
+  const CATS = [["P", "Productora o productor"], ["T", "Transformador o MPE"], ["O", "Organización"], ["S", "Servicio técnico o autoridad"], ["C", "Consumidor o comunidad educativa"], ["A", "Socio u ONG"], ["E", "Equipo del programa"]];
+  const SES = D.dias.flatMap(d => d.bloques.filter(b => b.c).map(b => b.c + " · " + b.t));
+  let S; try { S = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { S = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } };
+  const toast = t => { const el = $("#toast"); el.textContent = t; el.style.display = "block"; clearTimeout(el._t); el._t = setTimeout(() => el.style.display = "none", 2200); };
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const opt = (arr, sel) => arr.map(a => { const [v, t] = Array.isArray(a) ? a : [a, a]; return `<option value="${esc(v)}" ${v === sel ? "selected" : ""}>${esc(t)}</option>`; }).join("");
+  const val = n => ($("#" + n) || {}).value?.trim() || "";
+
+  $("#ph").src = "../" + H.img; $("#ey").textContent = H.c + " · " + H.s; $("#tt").textContent = H.n; $("#pp").textContent = H.p;
+  document.title = H.c + " · " + H.n + " · Taller Feed Good";
+
+  /* ---------------- definiciones por herramienta ---------------- */
+  const FICHAS = {
+    H10: { item: "Cambio analizado", q: ["¿Cómo era antes del programa?", "¿Cómo es ahora?", "¿Qué hizo el programa que ayudó a este cambio?", "¿Qué hicieron otras personas, organizaciones o instituciones?", "¿Qué factores del contexto influyeron (clima, precios, políticas, otros)?", "¿Habría ocurrido sin el programa? (sí, en parte o no) ¿Por qué?", "¿Qué aprendimos de este cambio?"] },
+    H20: { item: "Persona entrevistada (código E1 a E5 y rol)", q: ["Cuéntanos quién eres y cómo participaste en el programa.", "¿Cómo era tu vida, tu chacra, tu negocio o tu organización antes del programa?", "¿Qué ha cambiado para ti, tu familia, tu organización o tu comunidad?", "De todos esos cambios, ¿cuál es el más importante para ti? ¿Por qué?", "¿Qué hizo el programa para que eso cambie? ¿Quién más ayudó?", "¿Qué esperabas que pasara y no pasó? ¿Por qué crees que no ocurrió?", "¿Ese cambio se mantendrá? ¿Qué necesita para mantenerse?", "Si empezáramos de nuevo, ¿qué harías distinto?", "Consentimiento: ¿acepta la grabación y ser citada o citado con su nombre?"] }
+  };
+  const ENC_AS = ["Pude expresar lo que pienso con libertad", "Se escucharon distintos puntos de vista", "La metodología y las herramientas", "El uso del tiempo", "Utilidad para mi organización o mi trabajo"];
+  const MATRIZ = {
+    H15: { fila: "Cambio seleccionado", cols: ["Impacto frente a lo previsto", "Sostenibilidad", "Eficacia", "Perspectiva de género", "Dificultades", "Aprendizajes"] },
+    H16: { fila: "Resultado no alcanzado", cols: ["No era realista", "Imprevistos", "Metodología inadecuada", "Tiempo mal estimado", "Otros factores"] }
+  };
+  const COLS = {
+    H12: [["Aprendimos de lo que funcionó", "n-b"], ["Aprendimos de lo que no funcionó", "n-a"]],
+    H19: [["¿Qué mantener?", "n-b"], ["¿Qué hacer distinto?", "n-a"]]
+  };
+  const VOTOS = {
+    H9: { item: "Cambio significativo", extra: [["r", "Resultado", RS.map(r => [r[0], r[0] + " · " + r[1]])], ["por", "¿Por qué es significativo? (palabras del grupo)"], ["grupos", "Grupos que lo priorizaron"]] },
+    H17: { item: "Lección (cuando…, entonces…, por lo que…)", extra: [["origen", "Proviene de", [["Alcanzado", "Resultado alcanzado"], ["No alcanzado", "Resultado no alcanzado"]]]] }
+  };
+
+  /* ---------------- vistas ---------------- */
+  const R = {
+    muro() {
+      S.notes = S.notes || [];
+      return `<div class="card pad"><div class="form">
+        <label class="f wide">Cambio observado (máximo siete palabras en la tarjeta de mesa)<input id="tx" maxlength="160" placeholder="Ej.: Más familias venden hortalizas en la feria"></label>
+        <label class="f">Mesa<select id="me">${opt(MESAS)}</select></label>
+        <label class="f">Resultado<select id="rr">${opt(RS.map(r => [r[0], r[0] + " · " + r[1]]))}</select></label>
+        <label class="f">El cambio…<select id="ti">${opt([["a", "Me alegra"], ["c", "Me preocupa"]])}</select></label>
+        <button class="btn pri" id="add">Agregar al muro</button></div></div>
+        <h3 style="margin-top:20px">Muro de cambios · ${S.notes.length} tarjetas</h3>
+        <div class="board">${RS.map(([r, n]) => { const ns = S.notes.filter(x => x.r === r); return `<div class="col"><h4>${r === "Otro" ? "Otros" : r}<small>${esc(n)} · ${ns.length}</small></h4><div class="cards">${ns.map(x => `<div class="note ${x.ti === "c" ? "n-a" : "n-b"}">${esc(x.tx)}<span class="meta">Mesa ${esc(x.me)} · ${x.ti === "c" ? "me preocupa" : "me alegra"}</span><button class="del" data-del="${x.id}" title="Quitar">×</button></div>`).join("")}</div></div>`; }).join("")}</div>`;
+    },
+    votos() {
+      const cfg = VOTOS[H.c]; S.items = S.items || [];
+      const tot = Math.max(1, ...S.items.map(x => x.v || 0));
+      const list = [...S.items].sort((a, b) => (b.v || 0) - (a.v || 0));
+      return `<div class="card pad"><div class="form"><label class="f wide">${cfg.item}<input id="tx" maxlength="240"></label>
+        ${cfg.extra.map(([k, t, o]) => o ? `<label class="f">${t}<select id="x_${k}">${opt(o)}</select></label>` : `<label class="f wide">${t}<input id="x_${k}" maxlength="240"></label>`).join("")}
+        <button class="btn pri" id="add">Agregar</button></div></div>
+        <h3 style="margin-top:20px">Ranking · ${S.items.reduce((s, x) => s + (x.v || 0), 0)} votos</h3>
+        ${list.length ? list.map((x, i) => `<div class="vrow"><div class="rk">${i + 1}</div><div><b>${esc(x.tx)}</b>
+          <div class="small muted">${cfg.extra.map(([k, t]) => x[k] ? `${t}: ${esc(x[k])}` : "").filter(Boolean).join(" · ")}</div>
+          <div class="vb"><i style="width:${100 * (x.v || 0) / tot}%"></i></div></div>
+          <div class="vctl noprint"><button data-v="${x.id}|-1">−</button><b>${x.v || 0}</b><button data-v="${x.id}|1">+</button><button class="del" data-del="${x.id}" title="Quitar" style="font-size:16px">×</button></div></div>`).join("")
+          : `<div class="empty">Agregue los elementos y registre los votos con + y −.</div>`}`;
+    },
+    ficha() {
+      const cfg = FICHAS[H.c]; S.fichas = S.fichas || []; S.cur = S.cur || (S.fichas[0] && S.fichas[0].id);
+      const f = S.fichas.find(x => x.id === S.cur);
+      return `<div class="tabs">${S.fichas.map((x, i) => `<button class="chip ${x.id === S.cur ? "on" : ""}" data-cur="${x.id}">${i + 1}. ${esc((x.item || "Sin título").slice(0, 40))}</button>`).join("")}<button class="chip" id="newF">+ Nueva ficha</button></div>
+        ${f ? `<div class="card pad"><div class="form"><label class="f wide">${cfg.item}<input data-fk="item" value="${esc(f.item || "")}"></label>
+          ${cfg.q.map((q, i) => `<label class="f wide">${i + 1}. ${esc(q)}<textarea data-fk="q${i}">${esc(f["q" + i] || "")}</textarea></label>`).join("")}
+          <div><button class="btn sm" style="color:#a33" data-delf="${f.id}">Eliminar esta ficha</button></div></div></div>` : `<div class="empty">Cree la primera ficha con «+ Nueva ficha».</div>`}`;
+    },
+    arbol() {
+      S.trees = S.trees || []; S.cur = S.cur || (S.trees[0] && S.trees[0].id);
+      const t = S.trees.find(x => x.id === S.cur);
+      return `<div class="tabs">${S.trees.map((x, i) => `<button class="chip ${x.id === S.cur ? "on" : ""}" data-cur="${x.id}">${i + 1}. ${esc((x.res || "Sin título").slice(0, 36))}</button>`).join("")}<button class="chip" id="newT">+ Nuevo árbol</button></div>
+        ${t ? `<div class="card pad"><div class="form" style="margin-bottom:14px"><label class="f">Mesa<select data-tk="mesa">${opt(MESAS, t.mesa)}</select></label>
+          <label class="f wide">Resultado esperado no alcanzado<input data-tk="res" value="${esc(t.res || "")}"></label></div>
+          <div class="tree"><div class="colx">${[0, 1, 2].map(i => `<textarea class="box cause" data-tk="c${i}" placeholder="Causa ${i + 1}: ¿por qué pasó?">${esc(t["c" + i] || "")}</textarea>`).join("")}</div>
+          <div class="arrow">→</div><div class="box res">${esc(t.res || "Resultado no alcanzado")}</div><div class="arrow">→</div>
+          <div class="colx">${[0, 1].map(i => `<textarea class="box cons" data-tk="k${i}" placeholder="Consecuencia ${i + 1}: ¿a quién afectó?">${esc(t["k" + i] || "")}</textarea>`).join("")}</div></div>
+          <div style="margin-top:12px"><button class="btn sm" style="color:#a33" data-delt="${t.id}">Eliminar este árbol</button></div></div>` : `<div class="empty">Cree el primer árbol con «+ Nuevo árbol».</div>`}`;
+    },
+    columnas() {
+      const cs = COLS[H.c]; S.notes = S.notes || [];
+      return `<div class="card pad"><div class="form"><label class="f wide">Frase completa<input id="tx" maxlength="240" placeholder="Ej.: Cuando las familias intercambian semillas, la diversificación se mantiene sin apoyo externo"></label>
+        <label class="f">Columna<select id="co">${opt(cs.map((c, i) => [String(i), c[0]]))}</select></label>
+        ${H.c === "H19" ? `<label class="f">Momento<select id="mo">${opt(["Diseño", "Implementación", "Seguimiento"])}</select></label><label class="f">Prioridad<select id="pr">${opt(["Alta", "Media", "Baja"])}</select></label>` : `<label class="f">Mesa<select id="me">${opt(MESAS)}</select></label>`}
+        <button class="btn pri" id="add">Agregar</button></div></div>
+        <div class="grid g2" style="margin-top:18px">${cs.map((c, i) => `<div class="col"><h4>${esc(c[0])}</h4><div class="cards">${S.notes.filter(n => n.co === String(i)).map(n => `<div class="note ${c[1]}">${esc(n.tx)}<span class="meta">${esc([n.me && "Mesa " + n.me, n.mo, n.pr && "prioridad " + n.pr.toLowerCase()].filter(Boolean).join(" · "))}</span><button class="del" data-del="${n.id}">×</button></div>`).join("")}</div></div>`).join("")}</div>`;
+    },
+    matriz() {
+      const cfg = MATRIZ[H.c]; S.rows = S.rows || [];
+      const cell = (r, j) => { const c = (r.c && r.c[j]) || { n: 0, v: 0, b: 0 }; const tot = c.n + c.v + c.b; const top = tot ? (c.n >= c.v && c.n >= c.b ? "#FDE3CC" : c.v >= c.b ? "#DCEFD8" : "#F4F4F4") : "#fff";
+        return `<div class="cell" style="background:${top}">${["n", "v", "b"].map(k => `<span class="dot d-${k}" data-dot="${r.id}|${j}|${k}" title="Clic: +1 · Mayús+clic: −1">${c[k]}</span>`).join("")}</div>`; };
+      return `<div class="legend card pad"><span><i class="dot d-n"></i>Relevancia alta</span><span><i class="dot d-v"></i>Relevancia media</span><span><i class="dot d-b"></i>Relevancia baja</span><span class="muted small">Clic suma un adhesivo; Mayús + clic o clic derecho resta.</span></div>
+        <div class="card pad" style="margin-top:12px"><div class="form"><label class="f wide">${cfg.fila}<input id="tx" maxlength="200"></label><button class="btn pri" id="add">Agregar fila</button></div></div>
+        <div style="overflow-x:auto;margin-top:14px"><table class="mx"><thead><tr><th>${cfg.fila}</th>${cfg.cols.map(c => `<th>${esc(c)}</th>`).join("")}<th class="noprint"></th></tr></thead>
+        <tbody>${S.rows.map(r => `<tr><td>${esc(r.tx)}</td>${cfg.cols.map((c, j) => `<td>${cell(r, j)}</td>`).join("")}<td class="noprint"><button class="del" style="border:0;background:none;color:#a33;font-size:18px" data-del="${r.id}">×</button></td></tr>`).join("") || `<tr><td colspan="${cfg.cols.length + 2}" class="muted">Agregue las filas seleccionadas en S2.3.</td></tr>`}</tbody></table></div>`;
+    },
+    padron() {
+      S.rows = S.rows || [];
+      const cnt = {}; S.rows.forEach(r => { cnt[r.cat] = cnt[r.cat] || { M: 0, H: 0 }; cnt[r.cat][r.sx] = (cnt[r.cat][r.sx] || 0) + 1; });
+      return `<div class="card pad"><div class="form"><label class="f wide">Nombres y apellidos<input id="nm"></label><label class="f">Organización o comunidad<input id="og"></label>
+        <label class="f">Categoría<select id="ct">${opt(CATS.map(c => [c[0], c[0] + " · " + c[1]]))}</select></label><label class="f">Sexo<select id="sx">${opt([["M", "Mujer"], ["H", "Hombre"]])}</select></label>
+        <label class="f">Edad<input id="ed" type="number" min="10" max="99"></label><label class="f">Día<select id="dy">${opt([["1", "Día 1"], ["2", "Día 2"]])}</select></label><label class="f">Mesa<select id="me">${opt(MESAS)}</select></label>
+        <button class="btn pri" id="add">Registrar</button></div></div>
+        <div class="grid g4" style="margin:16px 0">${CATS.map(c => `<div class="fact"><b>${(cnt[c[0]]?.M || 0) + (cnt[c[0]]?.H || 0)}</b><span class="small muted">${esc(c[1])} · ${cnt[c[0]]?.M || 0} M / ${cnt[c[0]]?.H || 0} H</span></div>`).join("")}</div>
+        <table class="tbl"><thead><tr><th>N.°</th><th>Nombre</th><th>Organización</th><th>Cat.</th><th>Sexo</th><th>Edad</th><th>Día</th><th>Mesa</th><th class="noprint"></th></tr></thead><tbody>
+        ${S.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${esc(r.nm)}</td><td>${esc(r.og)}</td><td>${r.cat}</td><td>${r.sx}</td><td>${esc(r.ed)}</td><td>${r.dy}</td><td>${esc(r.me)}</td><td class="noprint"><button class="del" style="border:0;background:none;color:#a33" data-del="${r.id}">×</button></td></tr>`).join("")}</tbody></table>`;
+    },
+    encuesta() {
+      const AS = ENC_AS;
+      const ES = ["Muy malo", "Malo", "Regular", "Bueno", "Muy bueno"];
+      S.t = S.t || AS.map(() => [0, 0, 0, 0, 0]); S.ab = S.ab || [];
+      const prom = row => { const n = row.reduce((a, b) => a + b, 0); return n ? (row.reduce((a, b, i) => a + b * (i + 1), 0) / n).toFixed(1) : "—"; };
+      return `<p class="muted">Cada persona toca una opción por aspecto. El promedio va de 1 (muy malo) a 5 (muy bueno).</p>
+        ${AS.map((a, i) => `<div class="scale"><div><b>${esc(a)}</b><div class="small muted">Promedio ${prom(S.t[i])} · ${S.t[i].reduce((x, y) => x + y, 0)} respuestas</div></div>${ES.map((e, j) => `<button data-sc="${i}|${j}">${e}<b>${S.t[i][j]}</b></button>`).join("")}</div>`).join("")}
+        <div class="card pad" style="margin-top:14px"><div class="form"><label class="f wide">¿Qué fue lo más valioso para ti? / ¿Qué mejorarías?<input id="tx" maxlength="240"></label>
+        <label class="f">Pregunta<select id="pq">${opt([["v", "Lo más valioso"], ["m", "Qué mejorarías"]])}</select></label><button class="btn pri" id="add">Agregar</button></div>
+        <ul>${S.ab.map(x => `<li><b>${x.pq === "v" ? "Valioso" : "Mejorar"}:</b> ${esc(x.tx)}</li>`).join("")}</ul></div>`;
+    },
+    relatoria() {
+      S.rows = S.rows || [];
+      return `<div class="card pad"><div class="form">
+        <label class="f wide">Sesión<select id="se">${opt(SES, S.lastSe)}</select></label><label class="f">Mesa<select id="me">${opt(["Plenaria"].concat(MESAS), S.lastMe)}</select></label>
+        <label class="f">Categoría de actor<select id="ct">${opt(CATS.map(c => [c[0], c[0] + " · " + c[1]]))}</select></label><label class="f">C / D<select id="cd">${opt([["C", "C · compartida"], ["D", "D · divergente"]])}</select></label>
+        <label class="f">Código de foto o audio<input id="fo" placeholder="FG-S1.4-M3-01"></label>
+        <label class="f wide">Aporte clave (textual)<textarea id="tx"></textarea></label><label class="f wide">Observación del facilitador<input id="ob"></label>
+        <button class="btn pri" id="add">Registrar aporte</button></div></div>
+        <h3 style="margin-top:18px">${S.rows.length} aportes registrados</h3>
+        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Hora</th><th>Sesión</th><th>Mesa</th><th>Aporte</th><th>Cat.</th><th>C/D</th><th>Foto o audio</th><th>Observación</th><th class="noprint"></th></tr></thead><tbody>
+        ${[...S.rows].reverse().map(r => `<tr><td>${r.h}</td><td>${esc(r.se.split(" · ")[0])}</td><td>${esc(r.me)}</td><td>${esc(r.tx)}</td><td>${r.ct}</td><td>${r.cd}</td><td>${esc(r.fo)}</td><td>${esc(r.ob)}</td><td class="noprint"><button class="del" style="border:0;background:none;color:#a33" data-del="${r.id}">×</button></td></tr>`).join("")}</tbody></table></div>`;
+    }
+  };
+
+  function render() { $("#app").innerHTML = R[H.mode](); }
+
+  /* ---------------- acciones ---------------- */
+  const hora = () => new Date(Date.now() - 5 * 3600e3).toISOString().slice(11, 16);
+  function add() {
+    const m = H.mode, tx = val("tx");
+    if (m === "muro") { if (!tx) return toast("Escriba el cambio"); S.notes.push({ id: uid(), tx, me: val("me"), r: val("rr"), ti: val("ti") }); }
+    if (m === "votos") { if (!tx) return toast("Escriba el elemento"); const o = { id: uid(), tx, v: 0 }; VOTOS[H.c].extra.forEach(([k]) => o[k] = val("x_" + k)); S.items.push(o); }
+    if (m === "columnas") { if (!tx) return toast("Escriba la frase"); S.notes.push({ id: uid(), tx, co: val("co"), me: val("me"), mo: val("mo"), pr: val("pr") }); }
+    if (m === "matriz") { if (!tx) return toast("Escriba la fila"); S.rows.push({ id: uid(), tx, c: {} }); }
+    if (m === "padron") { const nm = val("nm"); if (!nm) return toast("Escriba el nombre"); S.rows.push({ id: uid(), nm, og: val("og"), cat: val("ct"), sx: val("sx"), ed: val("ed"), dy: val("dy"), me: val("me") }); }
+    if (m === "encuesta") { if (!tx) return; S.ab.push({ pq: val("pq"), tx }); }
+    if (m === "relatoria") { if (!tx) return toast("Escriba el aporte"); S.lastSe = val("se"); S.lastMe = val("me"); S.rows.push({ id: uid(), h: hora(), se: val("se"), me: val("me"), ct: val("ct"), cd: val("cd"), fo: val("fo"), tx, ob: val("ob") }); }
+    save(); render(); const f = $("#tx") || $("#nm"); if (f) f.focus(); toast("Guardado");
+  }
+  document.addEventListener("click", e => {
+    const t = e.target;
+    if (t.id === "add") return add();
+    if (t.dataset.del) { const k = t.dataset.del; ["notes", "items", "rows"].forEach(a => S[a] && (S[a] = S[a].filter(x => x.id !== k))); save(); render(); return; }
+    if (t.dataset.v) { const [k, d] = t.dataset.v.split("|"); const x = S.items.find(i => i.id === k); x.v = Math.max(0, (x.v || 0) + Number(d)); save(); render(); return; }
+    if (t.dataset.cur) { S.cur = t.dataset.cur; save(); render(); return; }
+    if (t.id === "newF") { const f = { id: uid(), item: "" }; S.fichas.push(f); S.cur = f.id; save(); render(); return; }
+    if (t.id === "newT") { const f = { id: uid(), res: "", mesa: MESAS[0] }; S.trees.push(f); S.cur = f.id; save(); render(); return; }
+    if (t.dataset.delf && confirm("¿Eliminar esta ficha?")) { S.fichas = S.fichas.filter(x => x.id !== t.dataset.delf); S.cur = S.fichas[0]?.id; save(); render(); return; }
+    if (t.dataset.delt && confirm("¿Eliminar este árbol?")) { S.trees = S.trees.filter(x => x.id !== t.dataset.delt); S.cur = S.trees[0]?.id; save(); render(); return; }
+    const sc = t.closest("[data-sc]"); if (sc) { const [i, j] = sc.dataset.sc.split("|").map(Number); S.t[i][j]++; save(); render(); toast("¡Gracias!"); return; }
+    if (t.dataset.dot) { dot(t.dataset.dot, e.shiftKey ? -1 : 1); }
+  });
+  document.addEventListener("contextmenu", e => { if (e.target.dataset.dot) { e.preventDefault(); dot(e.target.dataset.dot, -1); } });
+  function dot(ref, d) { const [rid, j, k] = ref.split("|"); const r = S.rows.find(x => x.id === rid); r.c[j] = r.c[j] || { n: 0, v: 0, b: 0 }; r.c[j][k] = Math.max(0, r.c[j][k] + d); save(); render(); }
+  document.addEventListener("input", e => {
+    const t = e.target;
+    if (t.dataset.fk) { const f = S.fichas.find(x => x.id === S.cur); f[t.dataset.fk] = t.value; save(); }
+    if (t.dataset.tk) { const f = S.trees.find(x => x.id === S.cur); f[t.dataset.tk] = t.value; save(); if (t.dataset.tk === "res") { const r = document.querySelector(".tree .res"); if (r) r.textContent = t.value || "Resultado no alcanzado"; } }
+  });
+  document.addEventListener("change", e => { if (e.target.dataset.tk) { const f = S.trees.find(x => x.id === S.cur); f[e.target.dataset.tk] = e.target.value; save(); } });
+  document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT" && !e.target.dataset.fk && !e.target.dataset.tk) add(); });
+
+  /* exportar e importar */
+  function rowsCsv() {
+    const m = H.mode;
+    if (m === "muro") return [["Cambio", "Mesa", "Resultado", "Valoración"], ...S.notes.map(x => [x.tx, x.me, x.r, x.ti === "c" ? "Me preocupa" : "Me alegra"])];
+    if (m === "votos") { const ex = VOTOS[H.c].extra; return [[VOTOS[H.c].item, "Votos", ...ex.map(x => x[1])], ...[...S.items].sort((a, b) => b.v - a.v).map(x => [x.tx, x.v || 0, ...ex.map(([k]) => x[k] || "")])]; }
+    if (m === "ficha") { const c = FICHAS[H.c]; return [[c.item, ...c.q], ...S.fichas.map(f => [f.item, ...c.q.map((q, i) => f["q" + i] || "")])]; }
+    if (m === "arbol") return [["Mesa", "Resultado no alcanzado", "Causa 1", "Causa 2", "Causa 3", "Consecuencia 1", "Consecuencia 2"], ...S.trees.map(t => [t.mesa, t.res, t.c0, t.c1, t.c2, t.k0, t.k1])];
+    if (m === "columnas") return [["Columna", "Frase", "Mesa", "Momento", "Prioridad"], ...S.notes.map(n => [COLS[H.c][n.co][0], n.tx, n.me, n.mo, n.pr])];
+    if (m === "matriz") { const c = MATRIZ[H.c]; return [[c.fila, ...c.cols.flatMap(x => [x + " (alta)", x + " (media)", x + " (baja)"])], ...S.rows.map(r => [r.tx, ...c.cols.flatMap((x, j) => { const v = r.c[j] || { n: 0, v: 0, b: 0 }; return [v.n, v.v, v.b]; })])]; }
+    if (m === "padron") return [["N.°", "Nombre", "Organización", "Categoría", "Sexo", "Edad", "Día", "Mesa"], ...S.rows.map((r, i) => [i + 1, r.nm, r.og, r.cat, r.sx, r.ed, r.dy, r.me])];
+    if (m === "encuesta") return [["Aspecto", "Muy malo", "Malo", "Regular", "Bueno", "Muy bueno"], ...S.t.map((r, i) => [ENC_AS[i], ...r]), [], ["Pregunta", "Respuesta"], ...S.ab.map(x => [x.pq === "v" ? "Lo más valioso" : "Qué mejorarías", x.tx])];
+    if (m === "relatoria") return [["Hora", "Sesión", "Mesa", "Aporte clave", "Categoría", "C/D", "Foto o audio", "Observación"], ...S.rows.map(r => [r.h, r.se, r.me, r.tx, r.ct, r.cd, r.fo, r.ob])];
+    return [];
+  }
+  const dl = (name, text, type) => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
+  const stamp = () => new Date(Date.now() - 5 * 3600e3).toISOString().slice(0, 16).replace(/[-:T]/g, "");
+  $("#bCsv").onclick = () => dl(`FG_${H.c}_${stamp()}.csv`, "﻿" + rowsCsv().map(r => r.map(c => '"' + String(c ?? "").replace(/"/g, '""') + '"').join(";")).join("\r\n"), "text/csv");
+  $("#bJson").onclick = () => dl(`FG_${H.c}_${stamp()}.json`, JSON.stringify(S, null, 1), "application/json");
+  $("#fJson").onchange = e => { const f = e.target.files[0]; if (!f) return; f.text().then(t => { try { S = JSON.parse(t); save(); render(); toast("Respaldo restaurado"); } catch (x) { toast("Archivo no válido"); } }); };
+  $("#bClear").onclick = () => { if (confirm("¿Borrar todo lo registrado en esta herramienta? Primero exporte un respaldo.")) { S = {}; save(); render(); } };
+
+  render();
+})();
+</script>
+</body>
+</html>
