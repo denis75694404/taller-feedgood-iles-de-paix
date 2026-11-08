@@ -1,0 +1,19 @@
+# Render: sitio estático del portal del taller Feed Good (se despliega desde un repositorio privado).
+# En Render: New → Blueprint → elegir el repositorio → Apply.
+services:
+  - type: web
+    name: fg-taller-huanuco-2026
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: X-Robots-Tag
+        value: noindex, nofollow, noarchive, nosnippet
+      - path: /*.html
+        name: Cache-Control
+        value: no-cache
+      - path: /
+        name: Cache-Control
+        value: no-cache

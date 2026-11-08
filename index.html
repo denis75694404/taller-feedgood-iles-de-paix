@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Taller Feed Good · Iles de Paix</title>
+<meta name="description" content="Portal del taller participativo de autoevaluación final del programa Feed Good 2022–2026 (Huánuco, 28 y 29 de noviembre de 2026): agenda en vivo, herramientas y Trabajemos juntos.">
+<meta name="theme-color" content="#8C5A4F">
+<link rel="icon" href="trabajemos-juntos/img/administrador-icono.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="assets/app.css">
+<link rel="preload" as="image" href="img/idp-paisaje.jpg">
+</head>
+<body>
+<nav id="rail" aria-label="Secciones">
+  <img class="logo" src="img/logo_idp.png" alt="Iles de Paix">
+</nav>
+<div id="main">
+  <header class="top noprint" data-proj>
+    <div class="wrap">
+      <div class="ttl">Taller de autoevaluación final · Feed Good<small>Iles de Paix · Huánuco, 28 y 29 de noviembre de 2026</small></div>
+      <span class="sp"></span>
+      <span class="pill" id="clock"><span class="dot"></span><span>Hora de Huánuco</span></span>
+    </div>
+  </header>
+
+  <!-- ===================== inicio ===================== -->
+  <section class="view" id="v-inicio">
+    <div class="hero">
+      <img class="bg" src="img/idp-paisaje.jpg" alt="Valle andino con chacras y neblina">
+      <img class="logo" src="img/logo_idp_blanco.png" alt="Iles de Paix">
+      <div class="in"><div class="wrap">
+        <div class="eyebrow">Programa Feed Good 2022–2026 · Huánuco</div>
+        <h1>Cinco años de cambios en el sistema alimentario: los miramos juntos</h1>
+        <p class="lead">Escuchar lo que cambió, comprender lo que no llegó a brotar y celebrar lo que sembramos juntos. Aquí están la agenda en vivo, las herramientas de cada jornada y la dinámica por mesas.</p>
+        <div class="acts">
+          <a class="btn pri" href="#/participa" data-i="users">Participar con mi mesa</a>
+          <a class="btn ghost" href="#/agenda" data-i="calendar">Ver la agenda</a>
+          <a class="btn ghost" href="#/herramientas" data-i="wrench">Herramientas</a>
+        </div>
+      </div></div>
+      <span class="credit">Foto: Iles de Paix (ilesdepaix.org)</span>
+    </div>
+    <div class="wrap">
+      <section class="blk"><div class="card pad now" id="nowCard"></div></section>
+
+      <section class="blk" style="padding-top:0">
+        <h2>¿Cómo usar este portal?</h2>
+        <div class="grid g3 steps">
+          <div class="card pad"><div class="n">1</div><h3>Mire la agenda</h3><p class="muted">La agenda indica en vivo qué toca ahora, quién conduce y con qué herramienta.</p></div>
+          <div class="card pad"><div class="n">2</div><h3>Abra la herramienta</h3><p class="muted">Cada sesión tiene su herramienta: se abre aquí mismo y guarda lo escrito en este equipo.</p></div>
+          <div class="card pad"><div class="n">3</div><h3>Participe con su mesa</h3><p class="muted">Escanee el código QR, elija el color de su mesa, responda y vote desde su celular.</p></div>
+        </div>
+      </section>
+
+      <section class="blk" style="padding-top:0">
+        <h2>La ruta de los dos días</h2>
+        <div class="grid g2" id="routeGrid"></div>
+      </section>
+
+      <section class="blk" style="padding-top:0">
+        <h2>Lo que el programa se propuso: seis resultados</h2>
+        <p class="muted">Los cambios que identifiquemos se vinculan con estos resultados. El análisis usa cuatro criterios: impacto, sostenibilidad, eficacia y género.</p>
+        <div class="grid g3" id="resGrid"></div>
+      </section>
+
+      <section class="blk" style="padding-top:0">
+        <div class="grid g4" id="facts"></div>
+      </section>
+
+      <section class="blk" style="padding-top:0">
+        <blockquote class="quote">«Esto no es un examen al programa ni a las personas: es una conversación para aprender. Lo que no funcionó vale tanto como lo que sí».</blockquote>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===================== agenda ===================== -->
+  <section class="view" id="v-agenda">
+    <div class="wrap">
+      <section class="blk">
+        <div class="eyebrow">Agenda en vivo</div>
+        <h2>Programa de las dos jornadas</h2>
+        <p class="muted">Toque una sesión para ver el objetivo, el paso a paso y las herramientas. El botón del cronómetro proyecta el tiempo de la sesión.</p>
+        <div class="chips" id="dayChips" style="margin:14px 0 6px"></div>
+        <p class="small muted" id="dayInfo"></p>
+        <div class="timeline" id="timeline"></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===================== herramientas ===================== -->
+  <section class="view" id="v-herramientas">
+    <div class="wrap">
+      <section class="blk">
+        <div class="eyebrow">Caja de herramientas</div>
+        <h2>Las herramientas del taller</h2>
+        <p class="muted">Herramientas de facilitación (H1–H22) y de documentación (D1–D5). Las marcadas como «Interactiva» se abren aquí y guardan lo escrito en este equipo; las demás muestran su ficha y su formato.</p>
+        <div class="chips" id="toolChips" style="margin:14px 0 18px"></div>
+        <div class="grid g4" id="toolGrid"></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===================== participa ===================== -->
+  <section class="view" id="v-participa">
+    <div class="wrap">
+      <section class="blk">
+        <div class="grid g2" style="align-items:center">
+          <div>
+            <div class="eyebrow">Trabajemos juntos</div>
+            <h2>Tu voz cuenta: participa desde tu celular</h2>
+            <p class="muted">La dinámica en vivo por mesas: el sábado para identificar los cambios y lo que no se logró, y el domingo para los aprendizajes.</p>
+            <ol>
+              <li>Escanee el código o abra el enlace.</li>
+              <li>Escriba su nombre y elija el color de su mesa.</li>
+              <li>Responda, vote (un voto) y vea las prioridades de su mesa.</li>
+            </ol>
+            <div class="chips" style="margin-top:14px">
+              <a class="btn pri" id="tjLink" href="trabajemos-juntos/grupos.html" target="_blank" rel="noopener" data-i="users">Entrar a mi mesa</a>
+              <button class="btn sec" id="qrBig" data-i="maximize">Proyectar el QR</button>
+            </div>
+            <p class="small muted" style="margin-top:12px">Requiere internet. Si falla la conexión, el facilitador usa la versión de una sola pantalla.</p>
+          </div>
+          <div style="text-align:center">
+            <div class="qrbox"><div id="qr"></div></div>
+            <p class="small muted" id="qrUrl" style="word-break:break-all;margin-top:8px"></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===================== documentos ===================== -->
+  <section class="view" id="v-documentos">
+    <div class="wrap">
+      <section class="blk">
+        <div class="eyebrow">Documentos</div>
+        <h2>Productos de la consultoría</h2>
+        <div class="grid g2" id="docGrid"></div>
+      </section>
+      <footer class="cred" id="credits"></footer>
+    </div>
+  </section>
+
+  <!-- ===================== facilitador ===================== -->
+  <section class="view" id="v-facilitador">
+    <div class="wrap">
+      <section class="blk">
+        <div class="eyebrow">Facilitador</div>
+        <h2>Panel de trabajo del equipo consultor</h2>
+        <p class="muted">El panel de «Trabajemos juntos» pide la clave de administrador. Las demás herramientas son de libre acceso.</p>
+        <div class="grid g3" id="facGrid"></div>
+      </section>
+    </div>
+  </section>
+</div>
+
+<nav id="tabbar" aria-label="Secciones"></nav>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="box" style="position:relative" id="modalBox"></div></div>
+
+<div id="timer" role="dialog" aria-label="Cronómetro">
+  <div class="eyebrow" style="color:var(--sol)" id="tmLabel">Cronómetro</div>
+  <div class="big" id="tmBig">00:00</div>
+  <div class="ctl">
+    <button class="btn ghost" id="tmPlay">Pausar</button>
+    <button class="btn ghost" id="tmMinus">−1 min</button>
+    <button class="btn ghost" id="tmPlus">+1 min</button>
+    <button class="btn ghost" id="tmReset">Reiniciar</button>
+    <button class="btn pri" id="tmClose">Cerrar</button>
+  </div>
+</div>
+<button class="btn pri" id="projX">Salir de la proyección</button>
+
+<script src="assets/data.js"></script>
+<script src="assets/creditos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="assets/app.js"></script>
+<script>if ("serviceWorker" in navigator && location.protocol.startsWith("http")) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));</script>
+</body>
+</html>

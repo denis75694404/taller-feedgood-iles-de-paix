@@ -1,0 +1,163 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+    function sala(s) { return get(/databases/$(database)/documents/salas/$(s)).data; }
+    function miembro(s) { return /databases/$(database)/documents/salas/$(s)/miembros/$(request.auth.uid); }
+    // Las etapas dependen de la hora: respuestas hasta "fin"; votación durante "voto" ms después.
+    function fin(s) { return sala(s).get('fin', null); }
+    function voto(s) { return sala(s).get('voto', 180000); }
+    function enRespuestas(s) { return fin(s) != null && request.time.toMillis() < fin(s) + 15000; }
+    function enVotacion(s) { return fin(s) != null && request.time.toMillis() >= fin(s) - 5000 && request.time.toMillis() < fin(s) + voto(s) + 15000; }
+    function miembroEn(s, g) { return signedIn() && exists(miembro(s)) && string(get(miembro(s)).data.grupo) == g; }
+
+    // Código del facilitador: documento config/admin con el campo "codigo". Nadie lo puede leer.
+    match /config/{doc} { allow read, write: if false; }
+
+    // Un dispositivo queda como administrador solo si escribe el código correcto.
+    match /admins/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.codigo == get(/databases/$(database)/documents/config/admin).data.codigo;
+    }
+
+    match /salas/{s} {
+      allow read: if signedIn();
+      allow create, update, delete: if isAdmin();
+
+      match /miembros/{uid} {
+        allow read: if signedIn();
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && request.resource.data.grupo is int
+          && request.resource.data.grupo >= 1 && request.resource.data.grupo <= sala(s).grupos
+          && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 50;
+        allow delete: if (signedIn() && request.auth.uid == uid) || isAdmin();
+      }
+
+      // Cada grupo solo ve lo suyo; el facilitador ve todos los grupos.
+      // Ronda con varias preguntas a la vez: la sala guarda en qids las preguntas activas.
+      match /grupos/{g}/respuestas/{id} {
+        allow read: if isAdmin() || miembroEn(s, g);
+        allow create: if miembroEn(s, g)
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.t is string
+          && request.resource.data.t.size() > 0 && request.resource.data.t.size() <= 400
+          && (request.resource.data.q == sala(s).qid || request.resource.data.q in sala(s).get('qids', []))
+          && enRespuestas(s);
+        allow delete: if isAdmin() || (miembroEn(s, g) && resource.data.uid == request.auth.uid);
+      }
+
+      // Fotos que el facilitador envía al chat de un grupo (la imagen va comprimida dentro del documento).
+      match /grupos/{g}/fotos/{id} {
+        allow read: if isAdmin() || miembroEn(s, g);
+        allow create: if isAdmin()
+          && request.resource.data.src is string && request.resource.data.src.size() <= 400000
+          && request.resource.data.cap is string && request.resource.data.cap.size() <= 200;
+        allow delete: if isAdmin();
+      }
+
+      // Un solo voto por integrante y por pregunta: el documento se llama <uid>_<pregunta>.
+      match /grupos/{g}/votos/{vid} {
+        allow read: if isAdmin() || miembroEn(s, g);
+        allow create, update: if miembroEn(s, g)
+          && request.resource.data.uid == request.auth.uid
+          && (request.resource.data.q == sala(s).qid || request.resource.data.q in sala(s).get('qids', []))
+          && vid == request.auth.uid + '_' + request.resource.data.q
+          && request.resource.data.id is string
+          && enVotacion(s);
+        allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      }
+
+      // Bloque 2: propuesta de solución y responsable de la respuesta ganadora (un documento por pregunta).
+      match /grupos/{g}/soluciones/{q} {
+        allow read: if isAdmin() || miembroEn(s, g);
+        allow write: if isAdmin() || (miembroEn(s, g)
+          && request.resource.data.solucion is string && request.resource.data.solucion.size() <= 600
+          && request.resource.data.responsable is string && request.resource.data.responsable.size() <= 100);
+      }
+
+      // Plenario: cada participante vota una vez entre las ganadoras de todos los grupos, dentro del tiempo.
+      match /plenario/{vid} {
+        allow read: if signedIn();
+        allow create, update: if signedIn() && exists(miembro(s))
+          && request.resource.data.uid == request.auth.uid
+          && (request.resource.data.q == sala(s).plenario.q || request.resource.data.q in sala(s).plenario.get('qs', []))
+          && vid == request.auth.uid + '_' + request.resource.data.q
+          && request.resource.data.id is string
+          && request.time.toMillis() < sala(s).plenario.fin + 15000;
+        allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      }
+
+      // Bloque 2: filas de propuestas. Empiezan libres (uid vacío); quien toca una fila libre la toma y escribe en ella.
+      // Una fila vacía se libera sola si nadie escribe en ella hace 15 s. Solo se eliminan filas vacías.
+      match /b2prop/{id} {
+        allow read: if signedIn();
+        allow create: if (isAdmin() || (signedIn() && exists(miembro(s))))
+          && request.resource.data.q == sala(s).b2.q
+          && request.resource.data.tema in ['t1', 't2']
+          && (request.resource.data.uid == '' || request.resource.data.uid == request.auth.uid)
+          && request.resource.data.t is string && request.resource.data.t.size() <= 400
+          && (isAdmin() || request.time.toMillis() < sala(s).b2.fin + 15000);
+        allow update: if signedIn() && exists(miembro(s))
+          && request.resource.data.q == resource.data.q
+          && request.resource.data.tema == resource.data.tema
+          && request.resource.data.t is string && request.resource.data.t.size() <= 400
+          && request.time.toMillis() < sala(s).b2.fin + 15000
+          && (
+            // el dueño escribe en su fila, o la suelta cuando está vacía
+            (resource.data.uid == request.auth.uid
+              && (request.resource.data.uid == request.auth.uid
+                  || (request.resource.data.uid == '' && request.resource.data.t == '')))
+            // tomar una fila vacía que está libre o abandonada
+            || (resource.data.t == '' && request.resource.data.uid == request.auth.uid
+                && (resource.data.uid == '' || request.time.toMillis() > resource.data.get('ed', 0) + 15000))
+          );
+        allow delete: if isAdmin()
+          || (signedIn() && exists(miembro(s)) && resource.data.t == ''
+              && (resource.data.uid == request.auth.uid || resource.data.uid == ''
+                  || request.time.toMillis() > resource.data.get('ed', 0) + 15000));
+      }
+
+      // Bloque 2: prioridad. Un documento por participante (<uid>_<pregunta>) con hasta 2 marcas por cuello de botella.
+      match /b2voto/{vid} {
+        allow read: if signedIn();
+        allow create, update: if signedIn() && exists(miembro(s))
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.q == sala(s).b2.q
+          && vid == request.auth.uid + '_' + request.resource.data.q
+          && request.resource.data.sel is map
+          && request.resource.data.sel.keys().hasOnly(['t1', 't2'])
+          && request.resource.data.sel.get('t1', []).size() <= 2
+          && request.resource.data.sel.get('t2', []).size() <= 2
+          && request.time.toMillis() >= sala(s).b2.fin - 5000
+          && request.time.toMillis() < sala(s).b2.fin + sala(s).b2.get('voto', 180000) + 15000;
+        allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      }
+
+      // Archivos que el facilitador envía a un grupo o a todos. La ficha va en archivos/{id} y el contenido,
+      // en partes de hasta 900 KB (archivos/{id}/partes/{n}). Los integrantes de la sala pueden leerlos.
+      match /archivos/{id} {
+        allow read: if isAdmin() || (signedIn() && exists(miembro(s)));
+        allow create: if isAdmin()
+          && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 200
+          && request.resource.data.gs is list && request.resource.data.partes is int && request.resource.data.partes <= 20;
+        allow delete: if isAdmin();
+        match /partes/{n} {
+          allow read: if isAdmin() || (signedIn() && exists(miembro(s)));
+          allow create: if isAdmin() && request.resource.data.d is bytes;
+          allow delete: if isAdmin();
+        }
+      }
+
+      // Encuesta de cierre: anónima para los grupos; solo el facilitador ve el conjunto.
+      match /encuesta/{uid} {
+        allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && sala(s).get('encuesta', false) == true
+          && request.resource.data.nota is int && request.resource.data.nota >= 1 && request.resource.data.nota <= 5;
+        allow delete: if isAdmin();
+      }
+    }
+  }
+}
