@@ -778,27 +778,27 @@ const FIREBASE_CONFIG = window.FIREBASE_CONFIG || null;
 const ROLE = "grupo"; // "admin" = facilitador, "grupo" = participantes
 
 const DEFAULT_Q = "¿Qué ha cambiado en el sistema alimentario de Huánuco con el programa Feed Good?";
-/* Sesiones del taller Feed Good (Huánuco, 28 y 29 de noviembre de 2026): una por momento de la agenda. */
+/* Sesiones del taller Feed Good (Huánuco, 25 y 26 de noviembre de 2026): una por momento de la agenda. */
 const MESAS_DIA1 = ["Mesa Naranja", "Mesa Verde", "Mesa Azul", "Mesa Amarilla", "Mesa Terracota", "Mesa Morada"];
 const MESAS_DIA2 = ["Mesa Naranja", "Mesa Verde", "Mesa Azul"];
 const UNIDAD_TEMA = {};
 const SESIONES = {
   sabado: {
-    rotulo: "Sábado 28 · ¿Qué ha cambiado?", hora: "09:30-10:30 (S1.4)", cupo: 15,
+    rotulo: "Miércoles 25 · ¿Qué ha cambiado?", hora: "09:30-10:30 (S1.4)", cupo: 15,
     titulo: "Feed Good · ¿Qué ha cambiado en cinco años?",
     detalle: "6 mesas del día 1. Cada persona escribe un cambio que vio en el sistema alimentario (también los no esperados); la mesa vota y prioriza.",
     nombres: MESAS_DIA1,
     preguntas: ["¿Qué ha cambiado en el sistema alimentario de Huánuco en estos cinco años con el programa Feed Good? Escribe un cambio por mensaje."]
   },
   tarde: {
-    rotulo: "Sábado 28 · Lo que no se logró", hora: "15:00-16:00 (S1.8)", cupo: 15,
+    rotulo: "Miércoles 25 · Lo que no se logró", hora: "15:00-16:00 (S1.8)", cupo: 15,
     titulo: "Feed Good · Resultados que no se materializaron",
     detalle: "6 mesas del día 1. Cada mesa nombra lo que esperaba lograr y no se logró (o se logró solo en parte) y vota el más importante.",
     nombres: MESAS_DIA1,
     preguntas: ["¿Qué esperábamos lograr con el programa que no se logró o se logró solo en parte? ¿Por qué crees que pasó?"]
   },
   domingo: {
-    rotulo: "Domingo 29 · Aprendizajes para el futuro", hora: "14:30-15:15 (S2.8)", cupo: 15,
+    rotulo: "Jueves 26 · Aprendizajes para el futuro", hora: "14:30-15:15 (S2.8)", cupo: 15,
     titulo: "Feed Good · ¿Qué haríamos distinto?",
     detalle: "3 mesas del equipo del programa y contrapartes. Cada mesa propone aprendizajes para los futuros programas y prioriza los más útiles.",
     nombres: MESAS_DIA2,
@@ -969,7 +969,7 @@ const me = () => S.miembros.get(S.uid) || null;
 const salaRef = () => S.db.collection("salas").doc(S.code);
 const grupoRef = g => salaRef().collection("grupos").doc(String(g));
 const nGrupos = () => Math.max(1, S.room?.grupos | 0, nombresSala().length);
-// nombres de los grupos: los de la sala o, si aún no llegan, los de la sesión de la agenda (sábado: las 6 mesas)
+// nombres de los grupos: los de la sala o, si aún no llegan, los de la sesión de la agenda (día 1: las 6 mesas)
 const nombresSala = () => (Array.isArray(S.room?.nombres) && S.room.nombres.length ? S.room.nombres : SESIONES[S.room?.sesion]?.nombres) || [];
 const gname = g => nombresSala()[g - 1] || "Grupo " + g;
 const cupo = () => Math.min(15, Math.max(S.room?.cupo | 0, CUPO)); // hasta 15 por grupo, también en salas creadas con cupo 10
@@ -1737,7 +1737,7 @@ function editPregunta() {
   setTimeout(() => inp.focus(), 50);
 }
 // rondas preparadas: varias preguntas que se envían juntas de un clic
-const RONDAS = [{ n: "Enviar las 2 preguntas del domingo", qs: [
+const RONDAS = [{ n: "Enviar las 2 preguntas del día 2", qs: [
   "¿Qué deberíamos hacer de manera diferente en los futuros programas?",
   "¿Qué deberíamos mantener porque funcionó?"] }];
 async function enviarPreguntas(lineas) {

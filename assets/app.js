@@ -174,7 +174,7 @@
 
   /* facilitador */
   const FAC = [
-    ["Panel de Trabajemos juntos", "Crea la sesión del sábado o del domingo, envía la pregunta y controla las rondas (pide clave).", "trabajemos-juntos/admin.html", "shield", true],
+    ["Panel de Trabajemos juntos", "Crea la sesión del día 1 (miércoles 25) o del día 2 (jueves 26), envía la pregunta y controla las rondas (pide clave).", "trabajemos-juntos/admin.html", "shield", true],
     ["Versión sin internet", "La misma dinámica en una sola laptop, con pegado del chat de WhatsApp.", "trabajemos-juntos/pantalla-unica.html", "wifioff", true],
     ["Relatoría en vivo (D1)", "Registro de los aportes clave por sesión y mesa, con exportación a CSV.", "herramientas/herramienta.html?id=D1", "pen", false],
     ["Cronómetro de la sesión", "Proyecta el tiempo de la sesión en curso o de la que elija.", "#timer", "timer", false],
