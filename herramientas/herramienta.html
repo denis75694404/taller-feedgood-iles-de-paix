@@ -111,19 +111,19 @@ textarea{min-height:70px;resize:vertical}
   /* ---------------- definiciones por herramienta ---------------- */
   const FICHAS = {
     H10: { item: "Cambio analizado", q: ["¿Cómo era antes del programa?", "¿Cómo es ahora?", "¿Qué hizo el programa que ayudó a este cambio?", "¿Qué hicieron otras personas, organizaciones o instituciones?", "¿Qué factores del contexto influyeron (clima, precios, políticas, otros)?", "¿Habría ocurrido sin el programa? (sí, en parte o no) ¿Por qué?", "¿Qué aprendimos de este cambio?"] },
-    H20: { item: "Persona entrevistada (código E1 a E5 y rol)", q: ["Cuéntanos quién eres y cómo participaste en el programa.", "¿Cómo era tu vida, tu chacra, tu negocio o tu organización antes del programa?", "¿Qué ha cambiado para ti, tu familia, tu organización o tu comunidad?", "De todos esos cambios, ¿cuál es el más importante para ti? ¿Por qué?", "¿Qué hizo el programa para que eso cambie? ¿Quién más ayudó?", "¿Qué esperabas que pasara y no pasó? ¿Por qué crees que no ocurrió?", "¿Ese cambio se mantendrá? ¿Qué necesita para mantenerse?", "Si empezáramos de nuevo, ¿qué harías distinto?", "Consentimiento: ¿acepta la grabación y ser citada o citado con su nombre?"] }
+    H20: { item: "Persona entrevistada (código E1 a E5 y rol)", q: ["Cuéntanos cómo participaste en el programa.", "¿Cómo era tu vida, tu chacra, tu negocio o tu organización antes del programa?", "¿Qué ha cambiado para ti, tu familia, tu organización o tu comunidad?", "De todos esos cambios, ¿cuál es el más importante para ti? ¿Por qué?", "¿Qué hizo el programa para que eso cambie? ¿Quién más ayudó?", "¿Qué esperabas que pasara y no pasó? ¿Por qué crees que no ocurrió?", "¿Ese cambio se mantendrá? ¿Qué necesita para mantenerse?", "Si empezáramos de nuevo, ¿qué harías distinto?", "Consentimiento: ¿acepta la grabación y ser citada o citado con su nombre?"] }
   };
-  const ENC_AS = ["Pude expresar lo que pienso con libertad", "Se escucharon distintos puntos de vista", "La metodología y las herramientas", "El uso del tiempo", "Utilidad para mi organización o mi trabajo"];
+  const ENC_AS = ["Pude expresar lo que pienso con libertad", "Se escucharon distintos puntos de vista", "La metodología y las herramientas", "El uso del tiempo"];
   const MATRIZ = {
     H15: { fila: "Cambio seleccionado", cols: ["Impacto frente a lo previsto", "Sostenibilidad", "Eficacia", "Perspectiva de género", "Dificultades", "Aprendizajes", "Teoría del cambio (vínculo y supuestos)"] },
-    H16: { fila: "Resultado no alcanzado", cols: ["No era realista", "Imprevistos", "Metodología inadecuada", "Tiempo mal estimado", "Otros factores"] }
+    H16: { fila: "Resultado no alcanzado", cols: ["Realismo", "Imprevistos", "Metodología", "Tiempo estimado", "Otros factores"] }
   };
   const COLS = {
     H12: [["Aprendimos de lo que funcionó", "n-b"], ["Aprendimos de lo que no funcionó", "n-a"]],
     H19: [["¿Qué mantener?", "n-b"], ["¿Qué hacer distinto? (recomendación)", "n-a"]]
   };
   const VOTOS = {
-    H9: { item: "Cambio significativo", extra: [["r", "Resultado", RS.map(r => [r[0], r[0] + " · " + r[1]])], ["por", "¿Por qué es significativo? (palabras del grupo)"], ["grupos", "Grupos que lo priorizaron"]] },
+    H9: { item: "Cambio significativo", extra: [["r", "Resultado", RS.map(r => [r[0], r[0] + " · " + r[1]])], ["por", "¿Por qué es significativo? (palabras del grupo)"]] },
     H17: { item: "Lección (cuando…, entonces…, por lo que…)", extra: [["origen", "Proviene de", [["Alcanzado", "Resultado alcanzado"], ["No alcanzado", "Resultado no alcanzado"], ["Emergente", "Aspecto emergente no previsto"]]]] }
   };
 
@@ -207,7 +207,7 @@ textarea{min-height:70px;resize:vertical}
       S.t = S.t || AS.map(() => [0, 0, 0, 0, 0]); S.ab = S.ab || [];
       const prom = row => { const n = row.reduce((a, b) => a + b, 0); return n ? (row.reduce((a, b, i) => a + b * (i + 1), 0) / n).toFixed(1) : "—"; };
       return `<p class="muted">Cada persona toca una opción por aspecto. El promedio va de 1 (muy malo) a 5 (muy bueno).</p>
-        ${AS.map((a, i) => `<div class="scale"><div><b>${esc(a)}</b><div class="small muted">Promedio ${prom(S.t[i])} · ${S.t[i].reduce((x, y) => x + y, 0)} respuestas</div></div>${ES.map((e, j) => `<button data-sc="${i}|${j}">${e}<b>${S.t[i][j]}</b></button>`).join("")}</div>`).join("")}
+        ${AS.map((a, i) => `<div class="scale"><div><b>${esc(a)}</b><div class="small muted">Promedio ${prom(S.t[i])} · ${S.t[i].reduce((x, y) => x + y, 0)} respuestas</div></div>${[4, 3, 2, 1, 0].map(j => `<button data-sc="${i}|${j}">${ES[j]}<b>${S.t[i][j]}</b></button>`).join("")}</div>`).join("")}
         <div class="card pad" style="margin-top:14px"><div class="form"><label class="f wide">¿Qué fue lo más valioso para ti? / ¿Qué mejorarías?<input id="tx" maxlength="240"></label>
         <label class="f">Pregunta<select id="pq">${opt([["v", "Lo más valioso"], ["m", "Qué mejorarías"]])}</select></label><button class="btn pri" id="add">Agregar</button></div>
         <ul>${S.ab.map(x => `<li><b>${x.pq === "v" ? "Valioso" : "Mejorar"}:</b> ${esc(x.tx)}</li>`).join("")}</ul></div>`;
