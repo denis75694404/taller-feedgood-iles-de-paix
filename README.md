@@ -1,4 +1,4 @@
-# Portal del taller Feed Good · Iles de Paix (Huánuco, 28 y 29 de noviembre de 2026)
+# Portal del taller Feed Good · Iles de Paix (Huánuco, 25 y 26 de noviembre de 2026)
 
 Sistema del taller participativo de autoevaluación final del programa Feed Good 2022–2026, adaptado del portal del taller Devida PP 0072 Pirdais.
 
@@ -17,9 +17,9 @@ Sistema del taller participativo de autoevaluación final del programa Feed Good
 
 | Sesión | Hora | Mesas | Pregunta |
 |---|---|---|---|
-| Sábado 28 · ¿Qué ha cambiado? (S1.4) | 09:30–10:30 | 6 mesas por color | ¿Qué ha cambiado en el sistema alimentario de Huánuco en estos cinco años con el programa Feed Good? |
-| Sábado 28 · Lo que no se logró (S1.8) | 15:00–16:00 | 6 mesas por color | ¿Qué esperábamos lograr con el programa que no se logró o se logró solo en parte? |
-| Domingo 29 · Aprendizajes para el futuro (S2.8) | 14:30–15:15 | 3 mesas | ¿Qué deberíamos hacer de manera diferente? y ¿Qué deberíamos mantener? |
+| Miércoles 25 · ¿Qué ha cambiado? (S1.4) | 09:30–10:30 | 6 mesas por color | ¿Qué ha cambiado en el sistema alimentario de Huánuco en estos cinco años con el programa Feed Good? |
+| Miércoles 25 · Lo que no se logró (S1.8) | 15:00–16:00 | 6 mesas por color | ¿Qué esperábamos lograr con el programa que no se logró o se logró solo en parte? |
+| Jueves 26 · Aprendizajes para el futuro (S2.8) | 14:30–15:15 | 3 mesas | ¿Qué deberíamos hacer de manera diferente? y ¿Qué deberíamos mantener? |
 
 ## Antes del taller
 

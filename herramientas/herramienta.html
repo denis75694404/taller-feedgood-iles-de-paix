@@ -115,16 +115,16 @@ textarea{min-height:70px;resize:vertical}
   };
   const ENC_AS = ["Pude expresar lo que pienso con libertad", "Se escucharon distintos puntos de vista", "La metodología y las herramientas", "El uso del tiempo", "Utilidad para mi organización o mi trabajo"];
   const MATRIZ = {
-    H15: { fila: "Cambio seleccionado", cols: ["Impacto frente a lo previsto", "Sostenibilidad", "Eficacia", "Perspectiva de género", "Dificultades", "Aprendizajes"] },
+    H15: { fila: "Cambio seleccionado", cols: ["Impacto frente a lo previsto", "Sostenibilidad", "Eficacia", "Perspectiva de género", "Dificultades", "Aprendizajes", "Teoría del cambio (vínculo y supuestos)"] },
     H16: { fila: "Resultado no alcanzado", cols: ["No era realista", "Imprevistos", "Metodología inadecuada", "Tiempo mal estimado", "Otros factores"] }
   };
   const COLS = {
     H12: [["Aprendimos de lo que funcionó", "n-b"], ["Aprendimos de lo que no funcionó", "n-a"]],
-    H19: [["¿Qué mantener?", "n-b"], ["¿Qué hacer distinto?", "n-a"]]
+    H19: [["¿Qué mantener?", "n-b"], ["¿Qué hacer distinto? (recomendación)", "n-a"]]
   };
   const VOTOS = {
     H9: { item: "Cambio significativo", extra: [["r", "Resultado", RS.map(r => [r[0], r[0] + " · " + r[1]])], ["por", "¿Por qué es significativo? (palabras del grupo)"], ["grupos", "Grupos que lo priorizaron"]] },
-    H17: { item: "Lección (cuando…, entonces…, por lo que…)", extra: [["origen", "Proviene de", [["Alcanzado", "Resultado alcanzado"], ["No alcanzado", "Resultado no alcanzado"]]]] }
+    H17: { item: "Lección (cuando…, entonces…, por lo que…)", extra: [["origen", "Proviene de", [["Alcanzado", "Resultado alcanzado"], ["No alcanzado", "Resultado no alcanzado"], ["Emergente", "Aspecto emergente no previsto"]]]] }
   };
 
   /* ---------------- vistas ---------------- */
