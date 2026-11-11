@@ -119,9 +119,11 @@ textarea{min-height:70px;resize:vertical}
     H16: { fila: "Resultado no alcanzado", cols: ["Realismo", "Imprevistos", "Metodología", "Tiempo estimado", "Otros factores"] }
   };
   const COLS = {
-    H12: [["Aprendimos de lo que funcionó", "n-b"], ["Aprendimos de lo que no funcionó", "n-a"]],
-    H19: [["¿Qué mantener?", "n-b"], ["¿Qué hacer distinto? (recomendación)", "n-a"]]
+    H12: [["Aprendimos de lo que funcionó", "n-b"], ["Aprendimos de lo que no funcionó", "n-a"]]
   };
+  // H19: columnas de la Tabla 18 del Producto 2
+  const H19C = ["Aprendizaje", "¿Qué mantener?", "¿Qué hacer distinto? (recomendación)", "¿Para qué momento? (diseño, implementación o seguimiento)", "Prioridad (alta, media o baja)"];
+  const PRIO = { Alta: "#FDE3CC", Media: "#FFF3C4", Baja: "#F4F4F4" };
   const VOTOS = {
     H9: { item: "Cambio significativo", extra: [["r", "Resultado", RS.map(r => [r[0], r[0] + " · " + r[1]])], ["por", "¿Por qué es significativo? (palabras del grupo)"]] },
     H17: { item: "Lección (cuando…, entonces…, por lo que…)", extra: [["origen", "Proviene de", [["Alcanzado", "Resultado alcanzado"], ["No alcanzado", "Resultado no alcanzado"], ["Emergente", "Aspecto emergente no previsto"]]]] }
@@ -177,9 +179,21 @@ textarea{min-height:70px;resize:vertical}
       const cs = COLS[H.c]; S.notes = S.notes || [];
       return `<div class="card pad"><div class="form"><label class="f wide">Frase completa<input id="tx" maxlength="240" placeholder="Ej.: Cuando las familias intercambian semillas, la diversificación se mantiene sin apoyo externo"></label>
         <label class="f">Columna<select id="co">${opt(cs.map((c, i) => [String(i), c[0]]))}</select></label>
-        ${H.c === "H19" ? `<label class="f">Momento<select id="mo">${opt(["Diseño", "Implementación", "Seguimiento"])}</select></label><label class="f">Prioridad<select id="pr">${opt(["Alta", "Media", "Baja"])}</select></label>` : `<label class="f">Mesa<select id="me">${opt(MESAS)}</select></label>`}
+        <label class="f">Mesa<select id="me">${opt(MESAS)}</select></label>
         <button class="btn pri" id="add">Agregar</button></div></div>
-        <div class="grid g2" style="margin-top:18px">${cs.map((c, i) => `<div class="col"><h4>${esc(c[0])}</h4><div class="cards">${S.notes.filter(n => n.co === String(i)).map(n => `<div class="note ${c[1]}">${esc(n.tx)}<span class="meta">${esc([n.me && "Mesa " + n.me, n.mo, n.pr && "prioridad " + n.pr.toLowerCase()].filter(Boolean).join(" · "))}</span><button class="del" data-del="${n.id}">×</button></div>`).join("")}</div></div>`).join("")}</div>`;
+        <div class="grid g2" style="margin-top:18px">${cs.map((c, i) => `<div class="col"><h4>${esc(c[0])}</h4><div class="cards">${S.notes.filter(n => n.co === String(i)).map(n => `<div class="note ${c[1]}">${esc(n.tx)}<span class="meta">${esc(n.me ? "Mesa " + n.me : "")}</span><button class="del" data-del="${n.id}">×</button></div>`).join("")}</div></div>`).join("")}</div>`;
+    },
+    aprendizajes() {
+      S.rows = S.rows || [];
+      return `<div class="card pad"><div class="form">
+        <label class="f wide">${H19C[0]}<input id="tx" maxlength="240" placeholder="Ej.: Cuando las organizaciones gestionan su propio espacio de venta, los circuitos cortos se mantienen"></label>
+        <label class="f wide">${H19C[1]}<input id="mt" maxlength="240"></label>
+        <label class="f wide">${H19C[2]}<input id="hd" maxlength="240"></label>
+        <label class="f">¿Para qué momento?<select id="mo">${opt(["Diseño", "Implementación", "Seguimiento"])}</select></label>
+        <label class="f">Prioridad<select id="pr">${opt(["Alta", "Media", "Baja"])}</select></label>
+        <button class="btn pri" id="add">Agregar fila</button></div></div>
+        <div style="overflow-x:auto;margin-top:14px"><table class="mx"><thead><tr><th style="width:56px">N.°</th>${H19C.map(c => `<th>${esc(c)}</th>`).join("")}<th class="noprint"></th></tr></thead>
+        <tbody>${S.rows.map((r, i) => `<tr><td>${i + 1}.</td><td>${esc(r.tx)}</td><td>${esc(r.mt)}</td><td>${esc(r.hd)}</td><td>${esc(r.mo)}</td><td style="background:${PRIO[r.pr] || "#fff"}">${esc(r.pr)}</td><td class="noprint"><button class="del" style="border:0;background:none;color:#a33;font-size:18px" data-del="${r.id}">×</button></td></tr>`).join("") || `<tr><td colspan="${H19C.length + 2}" class="muted">Agregue una fila por aprendizaje: qué mantener, qué hacer distinto, para qué momento y con qué prioridad.</td></tr>`}</tbody></table></div>`;
     },
     matriz() {
       const cfg = MATRIZ[H.c]; S.rows = S.rows || [];
@@ -234,7 +248,8 @@ textarea{min-height:70px;resize:vertical}
     const m = H.mode, tx = val("tx");
     if (m === "muro") { if (!tx) return toast("Escriba el cambio"); S.notes.push({ id: uid(), tx, me: val("me"), r: val("rr"), ti: val("ti") }); }
     if (m === "votos") { if (!tx) return toast("Escriba el elemento"); const o = { id: uid(), tx, v: 0 }; VOTOS[H.c].extra.forEach(([k]) => o[k] = val("x_" + k)); S.items.push(o); }
-    if (m === "columnas") { if (!tx) return toast("Escriba la frase"); S.notes.push({ id: uid(), tx, co: val("co"), me: val("me"), mo: val("mo"), pr: val("pr") }); }
+    if (m === "columnas") { if (!tx) return toast("Escriba la frase"); S.notes.push({ id: uid(), tx, co: val("co"), me: val("me") }); }
+    if (m === "aprendizajes") { if (!tx) return toast("Escriba el aprendizaje"); S.rows.push({ id: uid(), tx, mt: val("mt"), hd: val("hd"), mo: val("mo"), pr: val("pr") }); }
     if (m === "matriz") { if (!tx) return toast("Escriba la fila"); S.rows.push({ id: uid(), tx, c: {} }); }
     if (m === "padron") { const nm = val("nm"); if (!nm) return toast("Escriba el nombre"); S.rows.push({ id: uid(), nm, og: val("og"), cat: val("ct"), sx: val("sx"), ed: val("ed"), dy: val("dy"), me: val("me") }); }
     if (m === "encuesta") { if (!tx) return; S.ab.push({ pq: val("pq"), tx }); }
@@ -271,7 +286,8 @@ textarea{min-height:70px;resize:vertical}
     if (m === "votos") { const ex = VOTOS[H.c].extra; return [[VOTOS[H.c].item, "Votos", ...ex.map(x => x[1])], ...[...S.items].sort((a, b) => b.v - a.v).map(x => [x.tx, x.v || 0, ...ex.map(([k]) => x[k] || "")])]; }
     if (m === "ficha") { const c = FICHAS[H.c]; return [[c.item, ...c.q], ...S.fichas.map(f => [f.item, ...c.q.map((q, i) => f["q" + i] || "")])]; }
     if (m === "arbol") return [["Mesa", "Resultado no alcanzado", "Causa 1", "Causa 2", "Causa 3", "Consecuencia 1", "Consecuencia 2"], ...S.trees.map(t => [t.mesa, t.res, t.c0, t.c1, t.c2, t.k0, t.k1])];
-    if (m === "columnas") return [["Columna", "Frase", "Mesa", "Momento", "Prioridad"], ...S.notes.map(n => [COLS[H.c][n.co][0], n.tx, n.me, n.mo, n.pr])];
+    if (m === "columnas") return [["Columna", "Frase", "Mesa"], ...S.notes.map(n => [COLS[H.c][n.co][0], n.tx, n.me])];
+    if (m === "aprendizajes") return [["N.°", ...H19C], ...S.rows.map((r, i) => [i + 1, r.tx, r.mt, r.hd, r.mo, r.pr])];
     if (m === "matriz") { const c = MATRIZ[H.c]; return [[c.fila, ...c.cols.flatMap(x => [x + " (alta)", x + " (media)", x + " (baja)"])], ...S.rows.map(r => [r.tx, ...c.cols.flatMap((x, j) => { const v = r.c[j] || { n: 0, v: 0, b: 0 }; return [v.n, v.v, v.b]; })])]; }
     if (m === "padron") return [["N.°", "Nombre", "Organización", "Categoría", "Sexo", "Edad", "Día", "Mesa"], ...S.rows.map((r, i) => [i + 1, r.nm, r.og, r.cat, r.sx, r.ed, r.dy, r.me])];
     if (m === "encuesta") return [["Aspecto", "Muy malo", "Malo", "Regular", "Bueno", "Muy bueno"], ...S.t.map((r, i) => [ENC_AS[i], ...r]), [], ["Pregunta", "Respuesta"], ...S.ab.map(x => [x.pq === "v" ? "Lo más valioso" : "Qué mejorarías", x.tx])];
