@@ -810,10 +810,15 @@ const FASES = ["respuestas", "votacion", "resultados"];
 const FASE_NOMBRE = { respuestas: "Respuestas", votacion: "Votación", resultados: "Resultados" };
 const FASE_TXT = {
   respuestas: "Escribe en el chat de tu grupo una idea concreta (una por mensaje).",
-  votacion: "Tienes 3 minutos y 1 voto. Elige la respuesta de tu grupo que te parece más significativa.",
+  votacion: "Tienes 3 minutos y 2 votos. Elige las dos respuestas de tu grupo que te parecen más significativas.",
   resultados: "Estas son las prioridades de tu grupo."
 };
 const CUPO = 15, MAX_MSG = 1, TOP = 3, GRACIA = 15000, VOTO_MS = 3 * 60000;
+// Cada persona tiene 2 votos por pregunta (Productos 1 y 2: dos adhesivos, cada voto vale lo mismo).
+// Se guardan en un solo documento <uid>_<pregunta> con id = "clave1|clave2" (compatible con las reglas de Firestore).
+const MAX_VOTOS = 2;
+const vsel = d => typeof d?.id === "string" && d.id ? d.id.split("|").filter(Boolean) : [];
+const togSel = (arr, key) => arr.includes(key) ? arr.filter(k => k !== key) : arr.length >= MAX_VOTOS ? null : [...arr, key];
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const LS = { name: "taller-fb-nombre" };
 
@@ -921,7 +926,7 @@ function stageOverlay(fase) {
   aviso("etapa");
   const i = FASES.indexOf(fase) + 1;
   overlay(h("div", { class: "ocard" }, h("div", { class: "eyebrow" }, "Etapa " + i + " de 3"), h("div", { class: "bignum" }, i), h("h3", {}, FASE_NOMBRE[fase]),
-    h("p", {}, isFac() ? "Todos los grupos pasaron a esta etapa." : fase === "votacion" ? `Tienes ${minVoto()} y 1 voto. Elige la respuesta de tu grupo que mejor describe el problema.` : FASE_TXT[fase])), 2600);
+    h("p", {}, isFac() ? "Todos los grupos pasaron a esta etapa." : fase === "votacion" ? `Tienes ${minVoto()} y 2 votos. Elige las dos respuestas de tu grupo más significativas.` : FASE_TXT[fase])), 2600);
   if (fase === "resultados") setTimeout(bigBurst, 500);
 }
 function timeUpOverlay() {
@@ -1337,14 +1342,14 @@ const archivosDe = (g, q = curQ()) => S.arch.filter(a => (a.todos || a.gs.includ
 const myProps = () => gdata(curG()).resp.filter(r => r.uid === S.uid && qOf(r) === qActiva());
 const voteId = () => S.uid + "_" + qActiva();
 const minVoto = () => { const m = Math.max(1, Math.round(durVoto(S.room) / 60000)); return m + (m === 1 ? " minuto" : " minutos"); };
-const myVote = () => { const v = gdata(curG()).votos.get(voteId())?.id; return typeof v === "string" ? v : null; };
+const myVote = () => vsel(gdata(curG()).votos.get(voteId()));
 const votosDe = (g, q) => [...gdata(g).votos.values()].filter(d => qOf(d) === q);
 function tally(g, q = curQ()) {
   const props = proposals(g, q), valid = new Set(props.map(p => p.key)), c = new Map();
-  let voters = 0;
-  for (const d of votosDe(g, q)) if (valid.has(d?.id)) { voters++; c.set(d.id, (c.get(d.id) || 0) + 1); }
+  let voters = 0, votos = 0;
+  for (const d of votosDe(g, q)) { const ids = vsel(d).filter(k => valid.has(k)); if (ids.length) voters++; for (const k of ids) { votos++; c.set(k, (c.get(k) || 0) + 1); } }
   const ranked = props.map(p => ({ ...p, n: c.get(p.key) || 0 })).sort((a, b) => b.n - a.n || a.ts - b.ts);
-  return { ranked, voters, votos: voters, props };
+  return { ranked, voters, votos, props };
 }
 
 /* ---------- acciones ---------- */
@@ -1611,12 +1616,14 @@ let voteQ = Promise.resolve();
 function vote(key) {
   if (S.room.fase !== "votacion" || isFac()) return;
   const g = curG(), q = qActiva(), vid = voteId(), ref = grupoRef(g).collection("votos").doc(vid);
-  const quitar = myVote() === key, antes = gdata(g).votos.get(vid);
-  if (quitar) gdata(g).votos.delete(vid); else gdata(g).votos.set(vid, { id: key, q, uid: S.uid });
+  const sel = togSel(myVote(), key);
+  if (!sel) { toast("Ya diste tus 2 votos. Toca una de tus respuestas marcadas para quitarla y cambiarla.", 4000); return; }
+  const quitar = !sel.length, puso = sel.includes(key), id = sel.join("|"), antes = gdata(g).votos.get(vid);
+  if (quitar) gdata(g).votos.delete(vid); else gdata(g).votos.set(vid, { id, q, uid: S.uid });
   S.pulse = key; render();
   voteQ = voteQ
-    .then(() => quitar ? ref.delete() : ref.set({ id: key, q, uid: S.uid, nombre: S.nombre.slice(0, 50), ts: nowMs() }))
-    .then(() => { if (!quitar) voteOverlay(); else toast("Quitaste tu voto."); })
+    .then(() => quitar ? ref.delete() : ref.set({ id, q, uid: S.uid, nombre: S.nombre.slice(0, 50), ts: nowMs() }))
+    .then(() => { if (!puso) toast("Quitaste un voto."); else if (sel.length >= Math.min(MAX_VOTOS, proposals(g, q).length)) voteOverlay(); else toast(`Voto ${sel.length} de ${MAX_VOTOS} guardado. Elige otra respuesta.`); })
     .catch(e => {
       // el voto no se guardó: se desmarca y se explica por qué
       if (antes) gdata(g).votos.set(vid, antes); else gdata(g).votos.delete(vid);
@@ -1866,7 +1873,7 @@ function viewChat(g) {
     out.push(next(h("div", { class: "ic" }, lot), fac ? "Todo listo para empezar" : "Prepárate para responder",
       fac ? "Inicia la ronda en el panel de arriba y los grupos podrán escribir." : "Lee la pregunta y piensa tu respuesta. Podrás escribir en cuanto el facilitador inicie el tiempo."));
   } else if (S.room.fase === "votacion") {
-    out.push(next(h("div", { class: "ic" }, "2"), "¡La votación está abierta!", fac ? "Los grupos están eligiendo su respuesta." : `Elige la respuesta de tu grupo que mejor describe el problema. Tienes ${minVoto()}.`,
+    out.push(next(h("div", { class: "ic" }, "2"), "¡La votación está abierta!", fac ? "Los grupos están eligiendo sus respuestas." : `Elige las 2 respuestas de tu grupo más significativas. Tienes ${minVoto()}.`,
       fac ? "Ver la votación →" : "Ir a votar →", ir("votacion")));
   } else if (S.room.fase === "resultados") {
     out.push(next(h("div", { class: "ic" }, "3"), "¡Ya están los resultados!", fac ? "Cada grupo ya ve sus prioridades." : "Descubre qué priorizó tu grupo.", "Ver resultados →", ir("resultados")));
@@ -1888,16 +1895,16 @@ function viewVote(g) {
   const open = S.room.fase === "votacion" && !fac;
   const t = tally(g), nm = miembrosDe(g).length;
   out.push(h("div", { class: "card" }, h("div", { class: "vhead" },
-    h("div", {}, h("h2", {}, fac ? `Votación · ${gname(g)}` : "Elige 1 respuesta"),
+    h("div", {}, h("h2", {}, fac ? `Votación · ${gname(g)}` : "Elige 2 respuestas"),
       h("p", {}, fac ? `${t.voters} de ${nm} integrantes ya votaron.${S.room.fase === "votacion" && faltanVotar(g).length ? " Faltan: " + faltanVotar(g).join(", ") + "." : ""} Los votos se muestran en Resultados.`
-        : S.room.fase === "votacion" ? `Toca la respuesta que mejor describe el cuello de botella. Tienes ${minVoto()} y puedes cambiar tu voto hasta el final.`
+        : S.room.fase === "votacion" ? `Tienes 2 votos: toca las dos respuestas más significativas (cada voto vale lo mismo). Tienes ${minVoto()} y puedes cambiarlos hasta el final.`
         : S.room.fase === "respuestas" ? `La votación empieza sola cuando termine el tiempo para responder y dura ${minVoto()}.` : "La votación está cerrada.")),
     null)));
   if (!props.length) { out.push(h("div", { class: "card empty" }, h("b", {}, "No hay respuestas para votar"), "Las respuestas del grupo aparecerán aquí.")); return out; }
   const list = h("div", { class: "vlist" });
   let stagger = 0;
   for (const p of props) {
-    const on = mv === p.key, fresh = !S.seenVote.has(p.key); S.seenVote.add(p.key);
+    const on = !!mv && mv.includes(p.key), fresh = !S.seenVote.has(p.key); S.seenVote.add(p.key);
     const b = h("button", { class: "vitem" + (fresh ? " enter" : "") + (S.pulse === p.key ? " pulse" : ""), "aria-pressed": on, disabled: !open, onclick: () => vote(p.key) },
       h("span", { class: "box", style: "border-radius:50%" }, on ? svgCheck() : null),
       h("span", { class: "body" }, h("div", { class: "who" }, p.uid === S.uid ? "Tú" : p.a), h("div", { class: "txt" }, p.t)));
@@ -1906,7 +1913,7 @@ function viewVote(g) {
     list.append(b);
   }
   out.push(list);
-  if (open) out.push(h("div", { class: "sys" }, mv ? "Listo: tu voto está guardado." : "Aún no has votado."));
+  if (open) out.push(h("div", { class: "sys" }, !mv.length ? "Aún no has votado: tienes 2 votos." : mv.length < Math.min(MAX_VOTOS, props.length) ? `Llevas ${mv.length} de ${MAX_VOTOS} votos: elige otra respuesta.` : "Listo: tus votos están guardados."));
   return out;
 }
 
@@ -1934,7 +1941,7 @@ function viewResults(g, entering) {
     out.push(h("div", { class: "winner" + (entering && !REDUCED ? " rise" : ""), role: "status" },
       svgTrophy(), h("div", { class: "lbl" }, "Respuesta ganadora"),
       h("div", { class: "wt" }, w.t),
-      h("div", { class: "wmeta" }, h("span", {}, `${w.n} ${w.n === 1 ? "voto" : "votos"} de ${voters}`), h("span", {}, w.uid === S.uid ? "Tu respuesta" : "Propuesta de " + w.a))));
+      h("div", { class: "wmeta" }, h("span", {}, `${w.n} ${w.n === 1 ? "voto" : "votos"} · ${voters} ${voters === 1 ? "votante" : "votantes"}`), h("span", {}, w.uid === S.uid ? "Tu respuesta" : "Propuesta de " + w.a))));
   } else if (win.length > 1) {
     out.push(h("div", { class: "winner" + (entering && !REDUCED ? " rise" : ""), role: "status" },
       svgTrophy(), h("div", { class: "lbl" }, `Empate en el primer lugar · ${win[0].n} ${win[0].n === 1 ? "voto" : "votos"} cada una`),
@@ -2061,11 +2068,11 @@ const plenVotosGrupo = (g, q) => [...S.plen.values()].filter(v => v.q === q && (
 // ganadoras del plenario (si pasó directo, la única propuesta, aunque no tenga votos)
 const ganadorasPlen = (p, ranked) => p?.directa ? ranked.slice(0, 1) : ganadoras(ranked);
 const plenFase = () => { const p = plen(); return p ? (!p.fin ? "preparacion" : nowMs() < p.fin ? "votacion" : "resultados") : null; };
-const myPlenVote = () => { const p = plen(); return p ? (S.plen.get(S.uid + "_" + p.q)?.id || null) : null; };
+const myPlenVote = () => { const p = plen(); return p ? vsel(S.plen.get(S.uid + "_" + p.q)) : []; };
 function plenTallyFor(p) {
   if (!p) return { ranked: [], voters: 0 };
   const c = new Map(); let voters = 0;
-  for (const v of S.plen.values()) if (v.q === p.q && p.items.some(i => i.id === v.id)) { voters++; c.set(v.id, (c.get(v.id) || 0) + 1); }
+  for (const v of S.plen.values()) if (v.q === p.q) { const ids = vsel(v).filter(id => p.items.some(i => i.id === id)); if (ids.length) voters++; for (const id of ids) c.set(id, (c.get(id) || 0) + 1); }
   const ranked = p.items.map((it, i) => ({ ...it, key: it.id, n: c.get(it.id) || 0, ts: i })).sort((a, b) => b.n - a.n || a.ts - b.ts);
   return { ranked, voters };
 }
@@ -2101,11 +2108,13 @@ let plenQ = Promise.resolve();
 function votePlen(id) {
   const p = plen(); if (!p || plenFase() !== "votacion" || isFac() || !me()) return;
   const vid = S.uid + "_" + p.q, ref = salaRef().collection("plenario").doc(vid);
-  const quitar = myPlenVote() === id, antes = S.plen.get(vid);
-  if (quitar) S.plen.delete(vid); else S.plen.set(vid, { id, q: p.q, uid: S.uid });
+  const sel = togSel(myPlenVote(), id);
+  if (!sel) { toast("Ya diste tus 2 votos. Toca una de las propuestas marcadas para quitarla y cambiarla.", 4000); return; }
+  const quitar = !sel.length, puso = sel.includes(id), sid = sel.join("|"), antes = S.plen.get(vid);
+  if (quitar) S.plen.delete(vid); else S.plen.set(vid, { id: sid, q: p.q, uid: S.uid });
   S.pulse = id; S.sig = ""; render();
-  plenQ = plenQ.then(() => quitar ? ref.delete() : ref.set({ id, q: p.q, uid: S.uid, g: me().grupo, ts: nowMs() }))
-    .then(() => { if (!quitar) voteOverlay(); else toast("Quitaste tu voto."); })
+  plenQ = plenQ.then(() => quitar ? ref.delete() : ref.set({ id: sid, q: p.q, uid: S.uid, g: me().grupo, ts: nowMs() }))
+    .then(() => { if (!puso) toast("Quitaste un voto."); else if (sel.length >= Math.min(MAX_VOTOS, p.items.filter(i => (i.q || p.q) === p.q).length)) voteOverlay(); else toast(`Voto ${sel.length} de ${MAX_VOTOS} guardado. Elige otra propuesta.`); })
     .catch(e => { if (antes) S.plen.set(vid, antes); else S.plen.delete(vid); S.sig = ""; render(); fbError(e); });
 }
 function plenOverlay(tipo) {
@@ -2113,7 +2122,7 @@ function plenOverlay(tipo) {
   if (tipo === "prep") overlay(h("div", { class: "ocard" }, h("div", { class: "eyebrow" }, "Plenario · todos los grupos"), h("div", { class: "bignum" }, "4"),
     h("h3", {}, "¡Llegan las ganadoras de cada grupo!"), h("p", {}, isFac() ? "Revisa y edita las propuestas. Cuando estén listas, inicia la votación." : "El facilitador está revisando las propuestas. La votación empieza en un momento.")), 3000);
   else if (tipo === "inicio") overlay(h("div", { class: "ocard" }, h("div", { class: "eyebrow" }, "Plenario · todos los grupos"), h("div", { class: "bignum" }, "4"),
-    h("h3", {}, "¡Votación de todo el taller!"), h("p", {}, isFac() ? "Todos los participantes eligen entre las ganadoras de cada grupo." : "Elige la mejor entre las respuestas ganadoras de todos los grupos. Tienes 3 minutos.")), 3000);
+    h("h3", {}, "¡Votación de todo el taller!"), h("p", {}, isFac() ? "Todos los participantes eligen entre las ganadoras de cada grupo." : "Tienes 2 votos: elige las dos mejores entre las respuestas ganadoras de todos los grupos. Tienes 3 minutos.")), 3000);
   else { overlay(h("div", { class: "ocard" }, svgTrophy(), h("h3", {}, "¡Tenemos la ganadora del plenario!"), h("p", {}, BLOQUE2_ACTIVO ? "Ahora todos los grupos pasan al Bloque 2: propongan la solución y su responsable." : "Esta es la prioridad que eligió todo el taller.")), 3200); setTimeout(bigBurst, 400); }
 }
 function checkPlenario() {
@@ -2139,7 +2148,8 @@ function plenGraficas(p, proj) {
   const { ranked, voters } = plenTallyFor(p);
   if (!voters) return null;
   const n = nGrupos(), pct = (a, b) => b ? Math.round(a / b * 100) : 0;
-  const votos = [...S.plen.values()].filter(v => v.q === p.q && p.items.some(i => i.id === v.id));
+  // un registro por voto (cada persona aporta hasta 2)
+  const votos = [...S.plen.values()].filter(v => v.q === p.q).flatMap(v => vsel(v).filter(id => p.items.some(i => i.id === id)).map(id => ({ ...v, id })));
   const grupoDe = uid => S.miembros.get(uid)?.grupo || 0;
   const win = ganadoras(ranked), w0 = win[0];
   const apoyo = w0 ? new Set(votos.filter(v => v.id === w0.id).map(v => grupoDe(v.uid)).filter(Boolean)).size : 0;
@@ -2148,7 +2158,7 @@ function plenGraficas(p, proj) {
   const kpi = (v, u, t) => h("div", { class: "pg-kpi" }, h("b", {}, v, u ? h("small", {}, u) : null), h("span", {}, t));
   const kpis = h("div", { class: "pg-kpis" },
     kpi(`${pct(voters, total)}%`, null, `participación · ${voters} de ${total} votaron`),
-    w0 ? kpi(`${pct(w0.n, voters)}%`, null, `de los votos para la ganadora (${w0.n} ${w0.n === 1 ? "voto" : "votos"})`) : null,
+    w0 ? kpi(`${pct(w0.n, voters)}%`, null, `de los votantes eligió la ganadora (${w0.n} ${w0.n === 1 ? "voto" : "votos"})`) : null,
     w0 ? kpi(apoyo, `de ${gruposVotan}`, "grupos votaron por la ganadora") : null);
   // 1) votos por propuesta
   const max = Math.max(1, ...ranked.map(r => r.n));
@@ -2185,7 +2195,7 @@ function plenGraficas(p, proj) {
   // 3) participación por grupo
   const part = h("div", { class: "pg-card" }, h("h4", {}, "Participación por grupo"), h("p", { class: "pg-sub" }, "Integrantes que votaron en el plenario."),
     ...Array.from({ length: n }, (_, i) => i + 1).filter(g => miembrosDe(g).length).map(g => {
-      const m = miembrosDe(g).length, v = votos.filter(x => grupoDe(x.uid) === g).length;
+      const m = miembrosDe(g).length, v = new Set(votos.filter(x => grupoDe(x.uid) === g).map(x => x.uid)).size;
       return h("div", { class: "pg-b", title: `${gname(g)}: ${v} de ${m}` }, h("div", { class: "lb" }, h("span", { class: "t" }, gname(g)), h("span", { class: "v" }, `${v}/${m}`)),
         h("div", { class: "tr" }, h("i", { style: `width:${pct(v, m)}%` })));
     }));
@@ -2195,7 +2205,7 @@ function plenGraficas(p, proj) {
   if (qs.length > 1) {
     const filasQ = qs.map(q => {
       const c = new Map(); let tot = 0;
-      for (const v of S.plen.values()) if (v.q === q) { tot++; c.set(v.id, (c.get(v.id) || 0) + 1); }
+      for (const v of S.plen.values()) if (v.q === q) for (const id of vsel(v)) { tot++; c.set(id, (c.get(id) || 0) + 1); }
       const top = [...c.entries()].sort((a, b) => b[1] - a[1])[0];
       const x = top ? textoPlen(top[0], q === p.q ? p : null) : null;
       return { q, tot, n: top ? top[1] : 0, ...x };
@@ -2225,7 +2235,7 @@ function viewPlenario(entering) {
       h("p", {}, f === "preparacion"
         ? (fac ? "Revisa y edita la redacción de las ganadoras. Nadie puede votar hasta que inicies la votación." : "Estas son las ganadoras de cada grupo. El facilitador las está revisando; la votación empieza en un momento.")
         : f === "votacion"
-        ? (fac ? `${voters} de ${S.miembros.size} participantes ya votaron.` : "Estas son las respuestas ganadoras de todos los grupos. Tienes 1 voto para elegir la que debe priorizar todo el taller.")
+        ? (fac ? `${voters} de ${S.miembros.size} participantes ya votaron.` : "Estas son las respuestas ganadoras de todos los grupos. Tienes 2 votos para elegir las dos que debe priorizar todo el taller (cada voto vale lo mismo).")
         : "La propuesta con más votos de todo el taller es la ganadora del plenario.")),
     null)));
   if (f === "preparacion") {
@@ -2239,7 +2249,7 @@ function viewPlenario(entering) {
   if (f === "votacion") {
     const list = h("div", { class: "vlist" });
     p.items.forEach((it, i) => {
-      const on = mv === it.id;
+      const on = mv.includes(it.id);
       const b = h("button", { class: "vitem" + (entering ? " enter" : "") + (S.pulse === it.id ? " pulse" : ""), style: `--d:${i * 0.06}s`, "aria-pressed": on, disabled: !open, onclick: () => votePlen(it.id) },
         h("span", { class: "box", style: "border-radius:50%" }, on ? svgCheck() : null),
         h("span", { class: "body" }, h("div", { class: "who" }, `${gname(it.g)} · ${it.a}`), h("div", { class: "txt" }, it.t)));
@@ -2247,7 +2257,7 @@ function viewPlenario(entering) {
       list.append(b);
     });
     out.push(list);
-    if (open) out.push(h("div", { class: "sys" }, mv ? "Listo: tu voto del plenario está guardado." : "Aún no has votado en el plenario."));
+    if (open) out.push(h("div", { class: "sys" }, !mv.length ? "Aún no has votado en el plenario: tienes 2 votos." : mv.length < Math.min(MAX_VOTOS, p.items.length) ? `Llevas ${mv.length} de ${MAX_VOTOS} votos del plenario: elige otra propuesta.` : "Listo: tus votos del plenario están guardados."));
     return out;
   }
   const win = ganadorasPlen(p, ranked);
@@ -2813,11 +2823,11 @@ function guia() {
   } else if (p) {
     tab = "plenario";
     if (pf === "preparacion") txt = "Plenario: el facilitador revisa las propuestas finalistas";
-    else if (pf === "votacion") { ok = !!myPlenVote(); txt = ok ? "Tu voto del plenario está guardado. Puedes cambiarlo" : "Vota por la mejor propuesta de todo el taller"; }
+    else if (pf === "votacion") { ok = myPlenVote().length > 0; txt = ok ? "Tus votos del plenario están guardados. Puedes cambiarlos" : "Vota por las 2 mejores propuestas de todo el taller"; }
     else txt = "Mira la propuesta ganadora del plenario";
   } else if (S.room.espera) { tab = "respuestas"; txt = "Lee la pregunta: el facilitador iniciará el tiempo"; }
   else if (f === "respuestas") { tab = "respuestas"; ok = myProps().length > 0; txt = ok ? "Respuesta enviada. Puedes editarla hasta que acabe el tiempo" : "Escribe tu respuesta (1 por persona)"; }
-  else if (f === "votacion") { tab = "votacion"; ok = !!myVote(); txt = ok ? "Tu voto está guardado. Puedes cambiarlo" : "Vota por 1 respuesta de tu grupo"; }
+  else if (f === "votacion") { tab = "votacion"; ok = myVote().length > 0; txt = ok ? "Tus votos están guardados. Puedes cambiarlos" : "Vota por 2 respuestas de tu grupo"; }
   else { tab = "resultados"; txt = "Mira la respuesta ganadora de tu grupo"; }
   const aqui = currentTab() === tab, sig = [txt, ok, aqui].join("|");
   el.hidden = false; el.classList.toggle("ok", ok);
