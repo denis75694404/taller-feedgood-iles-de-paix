@@ -140,6 +140,21 @@
     if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     else if (el.requestFullscreen) el.requestFullscreen().catch(() => {}); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
   }
+
+  /* ajusta la escala para que todo el contenido quepa en la pantalla, sin desplazarse */
+  function fitStage(stage, avail, min) {
+    if (!stage) return;
+    stage.style.zoom = 1;
+    if (window.innerWidth < 860) return;           // en el celular se mantiene el desplazamiento
+    const h = () => stage.getBoundingClientRect().height;
+    if (h() <= avail) return;
+    let lo = min || 0.35, hi = 1;
+    for (let k = 0; k < 9; k++) { const z = (lo + hi) / 2; stage.style.zoom = z; if (h() <= avail) lo = z; else hi = z; }
+    stage.style.zoom = lo;
+  }
+  const fitTool = () => { const m = $("#modal"); if (!m.classList.contains("full")) return; const bar = m.querySelector(".fbar");
+    fitStage(m.querySelector(".fstage"), window.innerHeight - (bar ? bar.offsetHeight : 0)); };
+  window.addEventListener("resize", () => fitTool());
   const tabHtml = t => `<figure class="tfmt"><figcaption>${esc(t.cap)}${t.nota ? ` <span class="muted">· ${esc(t.nota)}</span>` : ""}</figcaption><div class="tscroll"><table>
     <thead><tr>${t.cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
     <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${esc(c) || "&nbsp;"}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
@@ -155,7 +170,7 @@
         <span class="sp"></span>
         <button class="btn ghost sm" data-fs title="Pantalla completa (F)">${fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"}</button>
         <button class="x" data-close aria-label="Cerrar (Esc)">×</button></div>
-      <header class="fhero"><img src="${h.img}" alt=""><div class="in"><div class="eyebrow">${h.c} · ${esc(h.s)}</div><h2>${esc(h.n)}</h2><p>${esc(h.p)}</p></div></header>
+      <div class="fstage"><header class="fhero"><img src="${h.img}" alt=""><div class="in"><div class="eyebrow">${h.c} · ${esc(h.s)}</div><h2>${esc(h.n)}</h2><p>${esc(h.p)}</p></div></header>
       <div class="fbody">
         <div class="kv"><div><b>Sesión</b>${esc(h.s)}</div><div><b>Responsable</b>${esc(h.who)}</div><div><b>Formato</b>${esc(h.f)}</div><div><b>Tipo</b>${h.mode ? "Interactiva" : "Ficha y formato"}</div></div>
         ${h.q ? `<blockquote class="fq">${esc(h.q)}</blockquote>` : ""}
@@ -163,9 +178,11 @@
           ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}–${b.t1}</span>`).join("")}</div>` : ""}</section>
           ${h.tab ? `<section><h3>Formato</h3>${h.tab.map(tabHtml).join("")}</section>` : ""}</div>
         <div class="chips" style="margin-top:22px">${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}
-        <a class="btn sec" href="${D.docs[1].u}" target="_blank" rel="noopener">${ic("file")}Formato en el Producto 2</a></div></div>`;
+        <a class="btn sec" href="${D.docs[1].u}" target="_blank" rel="noopener">${ic("file")}Formato en el Producto 2</a></div></div></div>`;
     $("#modal").classList.add("on", "full"); document.body.style.overflow = "hidden";
     $("#modal").scrollTop = 0;
+    fitTool(); if (document.fonts) document.fonts.ready.then(fitTool);
+    $("#modalBox").querySelectorAll("img").forEach(im => im.complete || im.addEventListener("load", fitTool, { once: true }));
     if (location.hash !== "#/herramientas/" + h.c) history.replaceState(null, "", "#/herramientas/" + h.c);
   }
   function closeModal() {
@@ -173,7 +190,7 @@
     if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     if (curTool) { curTool = null; history.replaceState(null, "", "#/herramientas"); }
   }
-  document.addEventListener("fullscreenchange", () => { const b = document.querySelector("[data-fs]"); if (b) b.textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; });
+  document.addEventListener("fullscreenchange", () => { const b = document.querySelector("[data-fs]"); if (b) b.textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; setTimeout(fitTool, 60); });
   document.addEventListener("click", e => {
     const f = e.target.closest("[data-tf]"); if (f) { tf = f.dataset.tf; renderTools(); return; }
     const t = e.target.closest("[data-tool]"); if (t) { openTool(t.dataset.tool); return; }
