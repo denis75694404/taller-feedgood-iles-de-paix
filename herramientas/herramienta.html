@@ -12,7 +12,9 @@
 <style>
 #main{margin-left:0}
 #main .wrap{max-width:none;padding:0 clamp(16px,3vw,48px)}
-html:fullscreen body{overflow:auto;background:#F8F1EC}
+html:fullscreen body{overflow:hidden;background:#F8F1EC}
+html:fullscreen .thead{min-height:18vh}
+html:fullscreen #app{padding-bottom:12px!important}
 html:fullscreen #main{font-size:1.12rem}
 .fq{margin:18px 0 10px;padding:16px 22px;border-left:6px solid var(--terra);background:var(--crema);border-radius:0 16px 16px 0;font-size:clamp(1.2rem,2.2vw,1.9rem);font-weight:700;color:var(--terra-dd)}
 .thead{position:relative;color:#fff;min-height:30vh;display:flex;align-items:flex-end;overflow:hidden}
@@ -272,7 +274,21 @@ textarea{min-height:70px;resize:vertical}
     }
   };
 
-  function render() { $("#app").innerHTML = (H.q ? `<blockquote class="fq">${esc(H.q)}</blockquote>` : "") + R[H.mode](); }
+
+  /* ajusta la escala para que todo el contenido quepa en la pantalla, sin desplazarse */
+  function fitStage(stage, avail, min) {
+    if (!stage) return;
+    stage.style.zoom = 1;
+    if (window.innerWidth < 860) return;           // en el celular se mantiene el desplazamiento
+    const h = () => stage.getBoundingClientRect().height;
+    if (h() <= avail) return;
+    let lo = min || 0.35, hi = 1;
+    for (let k = 0; k < 9; k++) { const z = (lo + hi) / 2; stage.style.zoom = z; if (h() <= avail) lo = z; else hi = z; }
+    stage.style.zoom = lo;
+  }
+  const fitPage = () => { if (fsOn()) fitStage($("#main"), window.innerHeight, 0.3); else $("#main").style.zoom = 1; };
+  window.addEventListener("resize", () => fitPage());
+  function render() { $("#app").innerHTML = (H.q ? `<blockquote class="fq">${esc(H.q)}</blockquote>` : "") + R[H.mode](); fitPage(); }
 
   /* ---------------- acciones ---------------- */
   const hora = () => new Date(Date.now() - 5 * 3600e3).toISOString().slice(11, 16);
@@ -321,7 +337,7 @@ textarea{min-height:70px;resize:vertical}
     if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     else { const el = document.documentElement; const rq = el.requestFullscreen || el.webkitRequestFullscreen; if (rq) rq.call(el); }
   }
-  document.addEventListener("fullscreenchange", () => { $("#bFs").textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; });
+  document.addEventListener("fullscreenchange", () => { $("#bFs").textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; setTimeout(fitPage, 60); });
   document.addEventListener("keydown", e => { if ((e.key === "f" || e.key === "F") && !/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) toggleFs(); });
 
   /* exportar e importar */
