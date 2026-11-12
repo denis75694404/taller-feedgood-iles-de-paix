@@ -10,257 +10,294 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700;800;900&display=swap">
 <style>
 :root{
-  --ink:#3D2520;--muted:#6b5e5a;
-  --sol:#D99A1E;--sol-l:#FFF4D6;--flor:#B27D71;--flor-l:#F8EDE8;
-  --nar:#E07B39;--nar-l:#FCE4D6;--azu:#5F7A9E;--azu-l:#E1E8F2;--ver:#5E9B4A;--ver-l:#E2EFDA;--rai:#8C4A3E;--rai-l:#F3E5E1;
+  --ink:#3D2520;--muted:#6b5e5a;--rai:#8C4A3E;--rai-l:#F3E5E1;
+  --nar:#E07B39;--azu:#4F6F99;--ver:#4F8F3C;--sol:#D99A1E;--flor:#C98A00;--tom:#D8402B;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;font-family:Figtree,system-ui,Arial,sans-serif;color:var(--ink);background:#FBF6EF;overflow:hidden}
+html,body{margin:0;height:100%;font-family:Figtree,system-ui,Arial,sans-serif;color:var(--ink);background:#2c1a14;overflow:hidden}
 button{font:inherit;cursor:pointer}
+.app{height:100vh;display:flex;flex-direction:column}
 
-/* cielo y suelo */
-.sky{position:fixed;inset:0;background:linear-gradient(180deg,#CFE6F2 0%,#EAF4EC 55%,#F7EFE2 100%);transition:background 1.4s ease;z-index:0}
-body[data-step="4"] .sky,body[data-step="5"] .sky{background:linear-gradient(180deg,#FFE3A3 0%,#FFF3D2 45%,#F7EFE2 100%)}
-.sun{position:fixed;right:6vw;top:100vh;width:13vh;height:13vh;border-radius:50%;z-index:1;
-  background:radial-gradient(circle at 40% 40%,#FFE89A,#F2B33D 70%);box-shadow:0 0 0 1.6vh rgba(242,179,61,.22),0 0 9vh 3vh rgba(242,179,61,.45);
-  transition:top 1.8s cubic-bezier(.2,.8,.2,1)}
-.sun::before{content:"";position:absolute;inset:-4vh;border-radius:50%;background:repeating-conic-gradient(rgba(242,179,61,.38) 0 6deg,transparent 6deg 22.5deg);
-  -webkit-mask:radial-gradient(circle,transparent 52%,#000 53%);mask:radial-gradient(circle,transparent 52%,#000 53%);animation:spin 26s linear infinite}
-body[data-step="4"] .sun,body[data-step="5"] .sun{top:4vh}
+/* escenario 16:9 que siempre cabe en la pantalla */
+.wrap{flex:1;min-height:0;container-type:size;display:flex;align-items:center;justify-content:center}
+.scene{position:relative;width:min(100cqw,177.78cqh);aspect-ratio:16/9;container-type:inline-size;overflow:hidden;cursor:pointer;
+  background:linear-gradient(180deg,#BFE1F2 0%,#E4F3EA 62%,#E4F3EA 72%);transition:background 1.6s ease}
+.scene svg.art{position:absolute;inset:0;width:100%;height:100%}
+body[data-step="4"] .scene,body[data-step="5"] .scene{background:linear-gradient(180deg,#FFD889 0%,#FFF0C9 50%,#F3F6E4 72%)}
+
+/* animaciones de la planta (SVG) */
+.sway{transform-box:view-box;transform-origin:800px 650px;animation:sway 6s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-1.3deg)}50%{transform:rotate(1.3deg)}}
+.draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.8s ease}
+.grow .draw.stem,.roots-on .draw.root{stroke-dashoffset:0}
+.roots-on .draw.root:nth-of-type(2){transition-delay:.15s}.roots-on .draw.root:nth-of-type(3){transition-delay:.3s}
+.roots-on .draw.root:nth-of-type(4){transition-delay:.45s}.roots-on .draw.root:nth-of-type(5){transition-delay:.6s}
+.leaf{transform-box:fill-box;transform:scale(0);transition:transform .9s cubic-bezier(.3,1.5,.5,1)}
+.leaf.l{transform-origin:right center}.leaf.r{transform-origin:left center}
+.grow .leaf{transform:scale(1)}
+.flutter{transform-box:fill-box;animation:flutter 3.2s ease-in-out infinite}
+.flutter.l{transform-origin:right center}.flutter.r{transform-origin:left center;animation-name:flutterR}
+@keyframes flutter{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
+@keyframes flutterR{0%,100%{transform:rotate(0)}50%{transform:rotate(5deg)}}
+.bloom{transform-box:fill-box;transform-origin:center;transform:scale(0) rotate(-120deg);transition:transform 1.2s cubic-bezier(.3,1.6,.5,1)}
+.bloom-on .bloom{transform:scale(1) rotate(0)}
+.tomato{transform-box:fill-box;transform-origin:center top;transform:scale(0);transition:transform 1.1s cubic-bezier(.3,1.5,.5,1)}
+.tomato .skin{fill:#7CB342;transition:fill 2.2s ease 1s}
+.fruit-on .tomato{transform:scale(1)}.fruit-on .tomato .skin{fill:var(--tom)}
+.fruit-on .tomato:nth-of-type(2){transition-delay:.3s}.fruit-on .tomato:nth-of-type(3){transition-delay:.6s}
+.sun{transform-box:view-box;transform:translateY(640px);transition:transform 2s cubic-bezier(.2,.8,.2,1)}
+.fruit-on .sun{transform:none}
+.rays{transform-box:fill-box;transform-origin:center;animation:spin 30s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.soil{position:fixed;left:0;right:0;bottom:0;height:24vh;z-index:1;background:linear-gradient(180deg,#9A5B45,#6E3A2C);
-  transform:translateY(calc(100% + 4vh));transition:transform 1s ease}
-.soil::before{content:"";position:absolute;left:0;right:0;top:-2.2vh;height:3vh;background:radial-gradient(ellipse at 50% 100%,#6E9460 60%,transparent 62%) 0 0/7vh 3vh repeat-x}
-body:not([data-step="0"]) .soil{transform:none}
+.cloud{animation:drift 60s linear infinite}.cloud.c2{animation-duration:85s;animation-delay:-40s}
+@keyframes drift{from{transform:translateX(-300px)}to{transform:translateX(1900px)}}
+.rain{opacity:0;transition:opacity .6s}.rain-on .rain{opacity:1}
+.rain line{animation:fall 1.1s linear infinite}
+@keyframes fall{from{transform:translateY(-60px);opacity:0}20%{opacity:.9}to{transform:translateY(160px);opacity:0}}
+.sap{opacity:0;transition:opacity .6s}.grow .sap{opacity:1}
+.bee{opacity:0;transition:opacity .8s}.bloom-on .bee{opacity:1}
+.bee .wing{transform-box:fill-box;transform-origin:bottom center;animation:buzz .12s linear infinite alternate}
+@keyframes buzz{to{transform:scaleY(.4)}}
+.seed{transition:opacity .6s}.roots-on .seed{opacity:0}
+.link{stroke-dasharray:6 8;animation:dash 1.2s linear infinite;opacity:0;transition:opacity .6s}
+@keyframes dash{to{stroke-dashoffset:-14}}
 
-/* escenario */
-#stage{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:1.6vh 3vw 0;transform-origin:top center}
-header.top{display:flex;align-items:center;gap:14px}
-header.top .code{font-weight:900;color:#fff;background:var(--rai);border-radius:99px;padding:.25em .8em;font-size:1.6vh}
-header.top h1{margin:0;font-size:3.2vh;line-height:1.1}
-header.top .sub{color:var(--muted);font-size:1.8vh}
-header.top .sp{flex:1}
-.btn{border:1px solid rgba(61,37,32,.25);background:rgba(255,255,255,.85);color:var(--ink);border-radius:99px;padding:.55em 1.1em;font-weight:800;font-size:1.65vh;text-decoration:none;display:inline-flex;align-items:center;gap:.4em;backdrop-filter:blur(4px)}
-.btn.pri{background:var(--rai);color:#fff;border-color:var(--rai)}
-.btn:focus-visible{outline:3px solid var(--sol);outline-offset:2px}
+/* tarjetas de texto */
+.card{position:absolute;background:#fff;border-radius:1.1cqw;padding:.75cqw 1cqw;border-left:.55cqw solid;box-shadow:0 .5cqw 1.6cqw -.6cqw rgba(61,37,32,.45);
+  opacity:0;transform:translateY(1.4cqw) scale(.94);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.9,.3,1.25),filter .6s}
+.card.on{opacity:1;transform:none}
+.card .ey{display:block;font-weight:900;font-size:.95cqw;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.2cqw}
+.card p{margin:0;font-size:1.32cqw;line-height:1.28;font-weight:600}
+.card.focus{box-shadow:0 0 0 .35cqw #fff,0 0 0 .7cqw var(--c),0 1cqw 2.6cqw -.6cqw rgba(61,37,32,.55)}
+.card.on.dim{filter:saturate(.4);opacity:.75}
+.chip{position:absolute;width:16cqw;text-align:center;background:var(--rai-l);color:var(--rai);border-radius:99px;font-weight:800;font-size:1.2cqw;padding:.55cqw .4cqw;
+  box-shadow:0 .3cqw .8cqw -.3cqw rgba(0,0,0,.4);opacity:0;transform:translateY(1.2cqw);transition:opacity .45s,transform .55s cubic-bezier(.3,1.6,.5,1)}
+.chip.on{opacity:1;transform:none}
+.soil-t{position:absolute;left:2.5cqw;top:73.5%;color:#FFE9DF;font-weight:900;font-size:1.55cqw;opacity:0;transition:opacity .6s}
+.soil-t small{display:block;font-weight:600;font-size:1.05cqw;opacity:.9}
+.soil-t.on{opacity:1}
 
-.plant{flex:1;display:grid;grid-template-columns:15vh 1fr;grid-template-rows:auto 4.2vh auto 4.2vh 1fr 4.2vh auto;gap:0 1.6vw;margin-top:1.4vh;min-height:0}
-.lbl{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:1.6vh;border:2px solid;padding:.8vh .4vw;background:#fff}
-.lbl svg{width:6.2vh;height:6.2vh}
-.lbl b{font-size:2vh;letter-spacing:.04em}
-.lbl span{font-size:1.45vh;color:var(--muted);line-height:1.2}
-.lv{opacity:0;transform:translateY(3vh) scale(.97);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.9,.3,1.2)}
-.lv.on{opacity:1;transform:none}
-.card{border-radius:2vh;border:3px solid;padding:1.4vh 1.6vw;position:relative;overflow:hidden}
-.card h2{margin:0 0 .5vh;font-size:2.7vh}
-.card p{margin:0;font-size:2.15vh;line-height:1.3}
-.fruto .card{background:var(--sol-l);border-color:var(--sol)}.fruto .card h2{color:#B5761A}
-.flor .card{background:var(--flor-l);border-color:var(--flor)}.flor .card h2{color:var(--flor)}
-.hl{font-weight:800;color:#B5651D}
-.fruits{position:absolute;right:1.4vw;top:1vh;display:flex;gap:.6vw}
-.fruits i{width:3.2vh;height:3.2vh;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFB27A,#E2572B);transform:scale(0);transition:transform .6s cubic-bezier(.3,1.6,.5,1)}
-.fruto.on .fruits i{transform:scale(1)}.fruto.on .fruits i:nth-child(2){transition-delay:.25s}.fruto.on .fruits i:nth-child(3){transition-delay:.5s}
-.petals{position:absolute;right:1.6vw;top:50%;width:7vh;height:7vh;transform:translateY(-50%) scale(0) rotate(-90deg);transition:transform 1s cubic-bezier(.3,1.5,.5,1) .2s}
-.flor.on .petals{transform:translateY(-50%) scale(1) rotate(0)}
-
-/* conectores con savia que sube */
-.flow{position:relative;display:flex;justify-content:space-around}
-.flow svg{height:100%;width:3.4vh;overflow:visible}
-.flow .ar{fill:none;stroke-width:5;stroke-linecap:round;stroke-dasharray:3 11;animation:sap 1s linear infinite}
-.flow .hd{stroke-dasharray:none}
-@keyframes sap{to{stroke-dashoffset:-14}}
-.flow.single{justify-content:center}
-
-.ramas{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw;min-height:0}
-.rama{border-radius:2vh;padding:1vh .8vw;display:flex;flex-direction:column;gap:1vh;color:#fff;min-height:0;
-  transform:scaleY(0);transform-origin:bottom;transition:transform .9s cubic-bezier(.2,.9,.3,1)}
-.ramas.on .rama{transform:none}.ramas.on .rama:nth-child(2){transition-delay:.2s}.ramas.on .rama:nth-child(3){transition-delay:.4s}
-.rama h3{margin:0;text-align:center;font-size:2.2vh}
-.r{flex:1;background:#fff;color:var(--ink);border-radius:1.4vh;padding:.9vh .8vw;display:flex;gap:.8vw;align-items:center;
-  opacity:0;transform:scale(.6);transition:opacity .5s,transform .6s cubic-bezier(.3,1.6,.5,1)}
-.ramas.on .r{opacity:1;transform:none}
-.ramas.on .rama .r:nth-of-type(1){transition-delay:.8s}.ramas.on .rama .r:nth-of-type(2){transition-delay:1.05s}
-.ramas.on .rama:nth-child(2) .r:nth-of-type(1){transition-delay:1.3s}.ramas.on .rama:nth-child(2) .r:nth-of-type(2){transition-delay:1.55s}
-.ramas.on .rama:nth-child(3) .r:nth-of-type(1){transition-delay:1.8s}.ramas.on .rama:nth-child(3) .r:nth-of-type(2){transition-delay:2.05s}
-.r b{font-size:3.4vh;font-weight:900;min-width:4.6vh}
-.r span{font-size:1.95vh;line-height:1.25}
-.c-nar{background:var(--nar)}.c-nar .r b{color:var(--nar)}
-.c-azu{background:var(--azu)}.c-azu .r b{color:var(--azu)}
-.c-ver{background:var(--ver)}.c-ver .r b{color:var(--ver)}
-
-.raiz .card{background:var(--rai);border-color:var(--rai);color:#fff;padding:1.2vh 1.2vw}
-.raiz .card h2{text-align:center;color:#fff;font-size:2.4vh}
-.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:.8vh .8vw;margin-top:.6vh}
-.chips span{background:var(--rai-l);color:var(--rai);border-radius:99px;text-align:center;font-weight:800;font-size:1.8vh;padding:.75vh .4vw;
-  opacity:0;transform:translateY(2vh);transition:opacity .4s,transform .5s cubic-bezier(.3,1.6,.5,1)}
-.raiz.on .chips span{opacity:1;transform:none}
-.raiz.on .chips span:nth-child(2){transition-delay:.1s}.raiz.on .chips span:nth-child(3){transition-delay:.2s}.raiz.on .chips span:nth-child(4){transition-delay:.3s}
-.raiz.on .chips span:nth-child(5){transition-delay:.4s}.raiz.on .chips span:nth-child(6){transition-delay:.5s}.raiz.on .chips span:nth-child(7){transition-delay:.6s}.raiz.on .chips span:nth-child(8){transition-delay:.7s}
-
-/* resaltado del nivel que se explica */
-.lv.focus .card,.ramas.focus .rama{box-shadow:0 0 0 .6vh rgba(255,255,255,.9),0 1.4vh 4vh -1vh rgba(61,37,32,.45)}
-.dim{filter:saturate(.45) brightness(1.08);transition:filter .6s}
-
-/* narración y controles */
-.narr{position:relative;z-index:3;margin:1.2vh auto 0;max-width:min(1100px,92vw);text-align:center;font-size:2.35vh;font-weight:700;min-height:6.4vh;
-  background:rgba(255,255,255,.92);border-radius:1.6vh;padding:1vh 1.6vw;box-shadow:0 .8vh 2.4vh -1vh rgba(0,0,0,.25)}
-.narr q{quotes:"«" "»";color:var(--rai)}
-.ctrl{position:relative;z-index:3;display:flex;justify-content:center;align-items:center;gap:1vw;padding:1.1vh 0 1.4vh}
-.dots{display:flex;gap:.7vw}
-.dots button{width:1.6vh;height:1.6vh;border-radius:50%;border:2px solid var(--rai);background:#fff;padding:0}
-.dots button.on{background:var(--rai)}
-.intro{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2vh;padding:4vw;
-  background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.9),rgba(255,255,255,.55));transition:opacity .8s,visibility .8s}
-.intro h2{font-size:6vh;margin:0;line-height:1.05}
-.intro p{font-size:2.8vh;margin:0;max-width:60ch;color:var(--muted)}
-.intro .seed{width:14vh;height:14vh;animation:bob 2.4s ease-in-out infinite}
-@keyframes bob{50%{transform:translateY(-1.4vh) rotate(-4deg)}}
+/* portada */
+.intro{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1.4cqw;padding:0 10cqw 18cqw;
+  transition:opacity .8s,visibility .8s}
+.intro h2{font-size:4.2cqw;margin:0;line-height:1.05;text-shadow:0 2px 0 #fff}
+.intro p{font-size:1.9cqw;margin:0;max-width:60ch;font-weight:600}
+.intro .go{font-size:1.7cqw;padding:.9cqw 2cqw}
 body:not([data-step="0"]) .intro{opacity:0;visibility:hidden}
-.intro .btn{font-size:2.4vh}
 
-@media (max-aspect-ratio:4/5){
-  html,body{overflow:auto}#stage{height:auto;min-height:100vh}
-  .plant{grid-template-columns:1fr;grid-template-rows:none;gap:1vh}
-  .lbl{flex-direction:row;gap:2vw;justify-content:flex-start}.lbl svg{width:5vh;height:5vh}
-  .ramas{grid-template-columns:1fr}.chips{grid-template-columns:repeat(2,1fr)}.flow{height:4vh}
-}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-@media print{.ctrl,.narr,.intro,.btn{display:none!important}.lv,.r,.chips span,.rama{opacity:1!important;transform:none!important}}
+/* barra inferior */
+.bar{flex:none;background:#2c1a14;color:#fff;padding:1vh 2vw 1.2vh;display:flex;flex-direction:column;gap:.8vh;align-items:center}
+.narr{font-size:clamp(14px,2.3vh,26px);font-weight:700;text-align:center;min-height:2.6em;line-height:1.3;max-width:1200px}
+.narr q{quotes:"«" "»";color:#FFD27A}
+.ctrl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+.btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;border-radius:99px;padding:.5em 1.1em;font-weight:800;font-size:clamp(12px,1.7vh,18px);text-decoration:none;display:inline-flex;gap:.4em;align-items:center}
+.btn.pri{background:#C0573E;border-color:#C0573E}
+.btn:disabled{opacity:.4}
+.btn:focus-visible{outline:3px solid #FFD27A;outline-offset:2px}
+.dots{display:flex;gap:8px}
+.dots button{width:13px;height:13px;border-radius:50%;border:2px solid #fff;background:transparent;padding:0}
+.dots button.on{background:#FFD27A;border-color:#FFD27A}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important;transition-delay:0s!important}}
 </style>
 </head>
 <body data-step="0">
-<div class="sky"></div><div class="sun" aria-hidden="true"></div><div class="soil" aria-hidden="true"></div>
+<div class="app">
+<div class="wrap"><div class="scene" id="scene">
+<svg class="art" viewBox="0 0 1600 900" aria-hidden="true">
+  <defs>
+    <linearGradient id="soilG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9A5B45"/><stop offset="1" stop-color="#5E3126"/></linearGradient>
+    <radialGradient id="sunG"><stop offset="0" stop-color="#FFF1A8"/><stop offset=".7" stop-color="#F5B53C"/><stop offset="1" stop-color="#F09A22"/></radialGradient>
+    <radialGradient id="tomG" cx=".35" cy=".35"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <path id="stemPath" d="M800 650 C 788 560, 814 470, 798 380 S 806 240, 800 150"/>
+    <g id="leafShape"><path d="M0 0 C 45 -52, 150 -58, 210 0 C 150 50, 45 50, 0 0Z"/><path d="M8 0 H 196" stroke="#2E6B26" stroke-width="3" fill="none"/>
+      <path d="M60 0 L 90 -22 M110 0 L 140 -20 M60 0 L 90 22 M110 0 L 140 20" stroke="#2E6B26" stroke-width="2" fill="none"/></g>
+  </defs>
 
-<div class="intro" id="intro">
-  <svg class="seed" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 92 C50 70 50 55 50 40" stroke="#5E9B4A" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <path d="M50 58 C35 55 24 44 22 30 C38 31 48 42 50 58Z" fill="#6E9460"/><path d="M50 48 C62 44 72 33 74 20 C60 22 51 32 50 48Z" fill="#8DB86F"/>
-    <ellipse cx="50" cy="92" rx="22" ry="6" fill="#8C4A3E"/></svg>
+  <!-- nubes -->
+  <g class="cloud" opacity=".85"><ellipse cx="0" cy="90" rx="70" ry="24" fill="#fff"/><ellipse cx="40" cy="74" rx="46" ry="26" fill="#fff"/><ellipse cx="-38" cy="80" rx="34" ry="20" fill="#fff"/></g>
+  <g class="cloud c2" opacity=".7"><ellipse cx="0" cy="150" rx="56" ry="18" fill="#fff"/><ellipse cx="30" cy="138" rx="36" ry="20" fill="#fff"/></g>
+
+  <!-- sol -->
+  <g class="sun"><g class="rays"><g stroke="#F5B53C" stroke-width="7" stroke-linecap="round">
+      <path d="M1060 20 V0"/><path d="M1060 200 V180"/><path d="M970 110 H950"/><path d="M1170 110 H1150"/>
+      <path d="M997 47 L983 33"/><path d="M1123 173 L1137 187"/><path d="M997 173 L983 187"/><path d="M1123 47 L1137 33"/></g></g>
+    <circle cx="1060" cy="110" r="62" fill="url(#sunG)"/></g>
+
+  <!-- lluvia -->
+  <g class="rain" stroke="#5FA8D3" stroke-width="3" stroke-linecap="round">
+    <line x1="700" y1="200" x2="694" y2="222"/><line x1="760" y1="160" x2="754" y2="182" style="animation-delay:.3s"/><line x1="850" y1="190" x2="844" y2="212" style="animation-delay:.6s"/>
+    <line x1="900" y1="150" x2="894" y2="172" style="animation-delay:.15s"/><line x1="640" y1="170" x2="634" y2="192" style="animation-delay:.8s"/><line x1="960" y1="210" x2="954" y2="232" style="animation-delay:.45s"/></g>
+
+  <!-- suelo -->
+  <path d="M0 650 Q 200 632 400 648 T 800 646 T 1200 650 T 1600 644 V900 H0Z" fill="url(#soilG)"/>
+  <path d="M0 650 Q 200 632 400 648 T 800 646 T 1200 650 T 1600 644" fill="none" stroke="#6E9460" stroke-width="12"/>
+  <g fill="#7A4535" opacity=".55"><circle cx="120" cy="760" r="6"/><circle cx="330" cy="820" r="4"/><circle cx="1290" cy="790" r="5"/><circle cx="1480" cy="850" r="7"/><circle cx="560" cy="870" r="4"/></g>
+
+  <!-- semilla -->
+  <ellipse class="seed" cx="800" cy="668" rx="18" ry="11" fill="#C9A26B" stroke="#7A5A33" stroke-width="3"/>
+
+  <!-- raíces -->
+  <g fill="none" stroke="#E8C9A8" stroke-width="7" stroke-linecap="round">
+    <path class="draw root" pathLength="1" d="M800 650 C 800 700, 798 760, 802 860"/>
+    <path class="draw root" pathLength="1" d="M800 670 C 760 700, 700 720, 620 790"/>
+    <path class="draw root" pathLength="1" d="M800 670 C 840 700, 900 720, 980 790"/>
+    <path class="draw root" pathLength="1" d="M801 720 C 770 760, 730 800, 700 860"/>
+    <path class="draw root" pathLength="1" d="M801 720 C 830 760, 870 800, 900 860"/>
+  </g>
+
+  <!-- planta de tomate -->
+  <g class="sway">
+    <path class="draw stem" pathLength="1" d="M800 650 C 788 560, 814 470, 798 380 S 806 240, 800 150" fill="none" stroke="#3F7A2E" stroke-width="18" stroke-linecap="round"/>
+    <!-- hojas: abajo (chacra y mercado), al medio (autoridades y leyes), arriba (gente y mujeres) -->
+    <g class="leaf l" style="transition-delay:.9s"><g class="flutter l"><use href="#leafShape" transform="translate(796 560) scale(-1 1)" fill="#5E9B4A"/></g></g>
+    <g class="leaf r" style="transition-delay:1.1s"><g class="flutter r" style="animation-delay:-1s"><use href="#leafShape" transform="translate(804 545)" fill="#5E9B4A"/></g></g>
+    <g class="leaf l" style="transition-delay:1.4s"><g class="flutter l" style="animation-delay:-.6s"><use href="#leafShape" transform="translate(800 450) scale(-.92 .92)" fill="#68A852"/></g></g>
+    <g class="leaf r" style="transition-delay:1.6s"><g class="flutter r" style="animation-delay:-1.8s"><use href="#leafShape" transform="translate(804 432) scale(.92)" fill="#68A852"/></g></g>
+    <g class="leaf l" style="transition-delay:1.9s"><g class="flutter l" style="animation-delay:-1.3s"><use href="#leafShape" transform="translate(800 335) scale(-.82 .82)" fill="#74B45C"/></g></g>
+    <g class="leaf r" style="transition-delay:2.1s"><g class="flutter r" style="animation-delay:-.3s"><use href="#leafShape" transform="translate(802 318) scale(.82)" fill="#74B45C"/></g></g>
+    <!-- flores amarillas de tomate -->
+    <g class="bloom"><g fill="#FFD43B" stroke="#E0A800" stroke-width="2">
+      <path d="M800 150 l-8 -26 l8 6 l8 -6Z"/><path d="M800 150 l24 -12 l-6 8 l8 6Z"/><path d="M800 150 l16 22 l-9 -3 l-6 9Z"/><path d="M800 150 l-16 22 l2 -10 l-10 -4Z"/><path d="M800 150 l-25 -10 l10 -1 l3 -9Z"/></g>
+      <circle cx="800" cy="150" r="7" fill="#C98A00"/></g>
+    <g class="bloom" style="transition-delay:.25s"><path d="M806 205 Q 830 196 846 197" stroke="#3F7A2E" stroke-width="5" fill="none"/><g fill="#FFD43B" stroke="#E0A800" stroke-width="2">
+      <path d="M852 196 l-7 -22 l7 5 l7 -5Z"/><path d="M852 196 l21 -10 l-5 7 l7 5Z"/><path d="M852 196 l14 19 l-8 -3 l-5 8Z"/><path d="M852 196 l-14 19 l2 -9 l-9 -3Z"/><path d="M852 196 l-21 -9 l9 -1 l2 -8Z"/></g>
+      <circle cx="852" cy="196" r="6" fill="#C98A00"/></g>
+    <!-- tomates -->
+    <g class="tomato"><path d="M760 248 Q 770 236 790 238" stroke="#3F7A2E" stroke-width="5" fill="none"/><circle class="skin" cx="752" cy="282" r="34"/><circle cx="752" cy="282" r="34" fill="url(#tomG)"/>
+      <path d="M752 250 l-14 -6 l10 10 l-12 4 l14 2 l2 10 l4 -10 l14 -2 l-12 -4 l10 -10Z" fill="#3F7A2E"/></g>
+    <g class="tomato"><path d="M806 262 Q 830 250 850 258" stroke="#3F7A2E" stroke-width="5" fill="none"/><circle class="skin" cx="862" cy="294" r="30"/><circle cx="862" cy="294" r="30" fill="url(#tomG)"/>
+      <path d="M862 266 l-12 -5 l9 9 l-11 3 l12 2 l2 9 l3 -9 l12 -2 l-11 -3 l9 -9Z" fill="#3F7A2E"/></g>
+    <g class="tomato"><circle class="skin" cx="812" cy="238" r="22"/><circle cx="812" cy="238" r="22" fill="url(#tomG)"/>
+      <path d="M812 218 l-9 -4 l7 7 l-8 2 l9 1 l1 7 l2 -7 l9 -1 l-8 -2 l7 -7Z" fill="#3F7A2E"/></g>
+    <!-- savia que sube -->
+    <g class="sap" fill="#C8F07A">
+      <circle r="6"><animateMotion dur="3s" repeatCount="indefinite"><mpath href="#stemPath"/></animateMotion></circle>
+      <circle r="5"><animateMotion dur="3s" begin="1s" repeatCount="indefinite"><mpath href="#stemPath"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="3s" begin="2s" repeatCount="indefinite"><mpath href="#stemPath"/></animateMotion></circle>
+    </g>
+  </g>
+
+  <!-- abeja -->
+  <g class="bee"><g>
+    <animateMotion dur="7s" repeatCount="indefinite" path="M900 120 C 980 60, 1000 220, 880 210 S 700 120, 760 90 S 860 160, 900 120"/>
+    <ellipse class="wing" cx="-2" cy="-12" rx="7" ry="10" fill="#E8F4FF" opacity=".9"/>
+    <ellipse cx="0" cy="0" rx="15" ry="10" fill="#F5C518"/><path d="M-5 -9 V9 M3 -9 V9" stroke="#3D2520" stroke-width="4"/><circle cx="14" cy="-1" r="5" fill="#3D2520"/></g></g>
+
+  <!-- conectores de hojas, flor y fruto a sus tarjetas -->
+  <g stroke-width="3" fill="none">
+    <path class="link" data-s="2" stroke="#E07B39" d="M592 560 H 512"/>
+    <path class="link" data-s="2" stroke="#E07B39" d="M1010 545 H 1088"/>
+    <path class="link" data-s="2" stroke="#4F6F99" d="M610 450 H 512"/>
+    <path class="link" data-s="2" stroke="#4F6F99" d="M995 432 H 1088"/>
+    <path class="link" data-s="2" stroke="#4F8F3C" d="M630 335 H 512"/>
+    <path class="link" data-s="2" stroke="#4F8F3C" d="M975 318 H 1088"/>
+    <path class="link" data-s="3" stroke="#C98A00" d="M872 190 C 960 170, 1020 150, 1088 120"/>
+    <path class="link" data-s="4" stroke="#D8402B" d="M718 282 C 640 250, 580 200, 512 140"/>
+  </g>
+</svg>
+
+<!-- tarjetas -->
+<div class="card" data-s="4" style="--c:var(--tom);border-color:var(--tom);left:2.5%;top:5%;width:29.5%">
+  <span class="ey" style="color:var(--tom)">El fruto · el gran sueño</span>
+  <p>Las familias productoras, sobre todo las mujeres y los jóvenes, <b style="color:var(--tom)">viven mejor</b>: comen sano, ganan más, trabajan con menos carga y cuidan su tierra, su agua y su ambiente.</p></div>
+<div class="card" data-s="3" style="--c:var(--flor);border-color:var(--flor);left:68%;top:5%;width:29.5%">
+  <span class="ey" style="color:var(--flor)">La flor · lo que logramos juntos</span>
+  <p>Productores, organizaciones, autoridades y vecinos <b>se comprometen más</b> a producir, vender y comer de forma sana, y a cuidar el ambiente.</p></div>
+
+<div class="card leafc" data-s="2" style="--c:var(--ver);border-color:var(--ver);left:2.5%;top:31%;width:29.5%">
+  <span class="ey" style="color:var(--ver)">Una hoja · con la gente</span><p>La población conoce, se compromete y prefiere alimentos sanos y locales.</p></div>
+<div class="card leafc" data-s="2" style="--c:var(--ver);border-color:var(--ver);left:68%;top:29%;width:29.5%">
+  <span class="ey" style="color:var(--ver)">Una hoja · con las mujeres</span><p>Las mujeres participan y deciden en la familia, la organización y la comunidad.</p></div>
+<div class="card leafc" data-s="2" style="--c:var(--azu);border-color:var(--azu);left:2.5%;top:44%;width:29.5%">
+  <span class="ey" style="color:var(--azu)">Una hoja · con las autoridades</span><p>Autoridades y organizaciones del territorio deciden juntas sobre la alimentación.</p></div>
+<div class="card leafc" data-s="2" style="--c:var(--azu);border-color:var(--azu);left:68%;top:42.5%;width:29.5%">
+  <span class="ey" style="color:var(--azu)">Una hoja · con las leyes</span><p>Leyes y políticas que defienden los derechos de los campesinos.</p></div>
+<div class="card leafc" data-s="2" style="--c:var(--nar);border-color:var(--nar);left:2.5%;top:56.5%;width:29.5%">
+  <span class="ey" style="color:var(--nar)">Una hoja · en la chacra</span><p>Producimos con agroecología y cuidamos el suelo, el agua y los árboles.</p></div>
+<div class="card leafc" data-s="2" style="--c:var(--nar);border-color:var(--nar);left:68%;top:55.5%;width:29.5%">
+  <span class="ey" style="color:var(--nar)">Una hoja · en el mercado</span><p>Acopiamos, guardamos, transformamos y vendemos de forma justa.</p></div>
+
+<div class="soil-t" data-s="1">La raíz · lo que hace el programa con sus socios<small>Sin raíz, nada crece</small></div>
+<div class="chip" data-s="1" style="left:2.5%;top:84%">Capacitar</div>
+<div class="chip" data-s="1" style="left:19.5%;top:84%">Financiar</div>
+<div class="chip" data-s="1" style="left:2.5%;top:91.5%">Invertir en equipos</div>
+<div class="chip" data-s="1" style="left:19.5%;top:91.5%">Organizar y concertar</div>
+<div class="chip" data-s="1" style="left:64.5%;top:77%">Informar y sensibilizar</div>
+<div class="chip" data-s="1" style="left:81.5%;top:77%">Investigar e innovar</div>
+<div class="chip" data-s="1" style="left:64.5%;top:84.5%">Defender derechos</div>
+<div class="chip" data-s="1" style="left:81.5%;top:84.5%">Hacer alianzas</div>
+
+<div class="intro">
   <h2>¿Cómo pensaba el programa<br>lograr el cambio?</h2>
-  <p>La teoría del cambio de Feed Good contada como una planta. Se lee <b>de abajo hacia arriba</b>: de la raíz al fruto.</p>
-  <button class="btn pri" data-go="1">Empezar por la raíz ▶</button>
+  <p>Lo contamos como una planta de tomate: de la semilla y la raíz hasta el fruto.</p>
+  <button class="btn pri go" data-go="1">Sembrar ▶</button>
 </div>
+</div></div>
 
-<div id="stage">
-  <header class="top">
-    <span class="code">H23</span>
-    <div><h1>La teoría del cambio en sencillo</h1><div class="sub">Programa Feed Good 2022–2026 · Huánuco</div></div>
-    <span class="sp"></span>
-    <a class="btn" href="../index.html#/herramientas/H23">← Portal</a>
-  </header>
-
-  <div class="plant">
-    <!-- fruto -->
-    <div class="lbl lv fruto" data-s="4" style="border-color:var(--sol)">
-      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 14c2-6 7-9 12-9-1 6-5 9-12 9z" fill="#6E9460"/><circle cx="32" cy="38" r="20" fill="#E8743B"/><circle cx="25" cy="31" r="5" fill="#FFB27A"/></svg>
-      <b style="color:#B5761A">EL FRUTO</b><span>El gran sueño</span></div>
-    <div class="lv fruto" data-s="4"><div class="card"><div class="fruits"><i></i><i></i><i></i></div>
-      <h2>El gran sueño</h2>
-      <p>Las familias productoras, sobre todo las mujeres y los jóvenes, <span class="hl">viven mejor</span>: comen sano, ganan más, trabajan con menos carga y cuidan su tierra, su agua y su ambiente.</p></div></div>
-
-    <div></div><div class="flow single lv" data-s="4"><svg viewBox="0 0 30 40" preserveAspectRatio="none"><path class="ar" d="M15 40 V8" stroke="var(--sol)"/><path class="hd" d="M5 12 L15 1 L25 12" fill="var(--sol)"/></svg></div>
-
-    <!-- flor -->
-    <div class="lbl lv flor" data-s="3" style="border-color:var(--flor)">
-      <svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#E6A4B4"><ellipse cx="32" cy="16" rx="8" ry="12"/><ellipse cx="32" cy="48" rx="8" ry="12"/><ellipse cx="16" cy="32" rx="12" ry="8"/><ellipse cx="48" cy="32" rx="12" ry="8"/></g><circle cx="32" cy="32" r="8" fill="#F2C14E"/></svg>
-      <b style="color:var(--flor)">LA FLOR</b><span>Lo que logramos juntos</span></div>
-    <div class="lv flor" data-s="3"><div class="card">
-      <svg class="petals" viewBox="0 0 64 64" aria-hidden="true"><g fill="#E6A4B4"><ellipse cx="32" cy="14" rx="8" ry="13"/><ellipse cx="32" cy="50" rx="8" ry="13"/><ellipse cx="14" cy="32" rx="13" ry="8"/><ellipse cx="50" cy="32" rx="13" ry="8"/></g><circle cx="32" cy="32" r="9" fill="#F2C14E"/></svg>
-      <h2>Lo que logramos juntos</h2>
-      <p style="padding-right:8vh">Productores, organizaciones, autoridades y vecinos <b>se comprometen más</b> a producir, vender y comer de forma sana, y a cuidar el ambiente.</p></div></div>
-
-    <div></div><div class="flow lv" data-s="3">
-      <svg viewBox="0 0 30 40" preserveAspectRatio="none"><path class="ar" d="M15 40 V8" stroke="var(--nar)"/><path class="hd" d="M5 12 L15 1 L25 12" fill="var(--nar)"/></svg>
-      <svg viewBox="0 0 30 40" preserveAspectRatio="none"><path class="ar" d="M15 40 V8" stroke="var(--azu)"/><path class="hd" d="M5 12 L15 1 L25 12" fill="var(--azu)"/></svg>
-      <svg viewBox="0 0 30 40" preserveAspectRatio="none"><path class="ar" d="M15 40 V8" stroke="var(--ver)"/><path class="hd" d="M5 12 L15 1 L25 12" fill="var(--ver)"/></svg></div>
-
-    <!-- ramas -->
-    <div class="lbl lv ramasL" data-s="2" style="border-color:var(--ver)">
-      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 60V24M32 40 16 26M32 34 48 20" stroke="#6E4A2E" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="14" cy="22" rx="8" ry="5" fill="#E07B39"/><ellipse cx="50" cy="16" rx="8" ry="5" fill="#5F7A9E"/><ellipse cx="32" cy="16" rx="6" ry="9" fill="#5E9B4A"/></svg>
-      <b style="color:var(--ver)">LAS RAMAS</b><span>Los seis cambios (R1 a R6)</span></div>
-    <div class="ramas lv" data-s="2">
-      <div class="rama c-nar"><h3>En la chacra y el mercado</h3>
-        <div class="r"><b>R1</b><span>Producimos con agroecología y cuidamos el suelo, el agua y los árboles.</span></div>
-        <div class="r"><b>R2</b><span>Acopiamos, guardamos, transformamos y vendemos de forma justa.</span></div></div>
-      <div class="rama c-azu"><h3>Con autoridades y leyes</h3>
-        <div class="r"><b>R3</b><span>Autoridades y organizaciones del territorio deciden juntas sobre la alimentación.</span></div>
-        <div class="r"><b>R4</b><span>Leyes y políticas que defienden los derechos de los campesinos.</span></div></div>
-      <div class="rama c-ver"><h3>Con la gente y las mujeres</h3>
-        <div class="r"><b>R5</b><span>La población conoce, se compromete y prefiere alimentos sanos y locales.</span></div>
-        <div class="r"><b>R6</b><span>Las mujeres participan y deciden en la familia, la organización y la comunidad.</span></div></div>
-    </div>
-
-    <div></div><div class="flow lv" data-s="2">
-      <svg viewBox="0 0 30 40" preserveAspectRatio="none"><path class="ar" d="M15 40 V8" stroke="var(--rai)"/><path class="hd" d="M5 12 L15 1 L25 12" fill="var(--rai)"/></svg>
-      <svg viewBox="0 0 30 40" preserveAspectRatio="none"><path class="ar" d="M15 40 V8" stroke="var(--rai)"/><path class="hd" d="M5 12 L15 1 L25 12" fill="var(--rai)"/></svg>
-      <svg viewBox="0 0 30 40" preserveAspectRatio="none"><path class="ar" d="M15 40 V8" stroke="var(--rai)"/><path class="hd" d="M5 12 L15 1 L25 12" fill="var(--rai)"/></svg></div>
-
-    <!-- raíz -->
-    <div class="lbl lv raizL" data-s="1" style="border-color:var(--rai)">
-      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4v22M32 26c-6 8-14 10-20 20M32 26c6 8 14 10 20 20M32 26v30M32 40c-5 4-8 9-9 16M32 40c5 4 8 9 9 16" stroke="#8C4A3E" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
-      <b style="color:var(--rai)">LA RAÍZ</b><span>Lo que hace el programa</span></div>
-    <div class="raiz lv" data-s="1"><div class="card"><h2>Lo que hace el programa con sus socios</h2>
-      <div class="chips"><span>Capacitar</span><span>Financiar</span><span>Invertir en equipos</span><span>Organizar y concertar</span>
-        <span>Informar y sensibilizar</span><span>Investigar e innovar</span><span>Defender derechos</span><span>Hacer alianzas</span></div></div></div>
-  </div>
-
+<div class="bar">
   <div class="narr" id="narr" aria-live="polite"></div>
   <div class="ctrl">
-    <button class="btn" id="prev" aria-label="Paso anterior">◀ Anterior</button>
+    <a class="btn" href="../index.html#/herramientas/H23">← Portal</a>
+    <button class="btn" id="prev">◀ Anterior</button>
     <div class="dots" id="dots"></div>
-    <button class="btn pri" id="next" aria-label="Paso siguiente">Siguiente ▶</button>
+    <button class="btn pri" id="next">Siguiente ▶</button>
     <button class="btn" id="play">▶ Reproducir</button>
     <button class="btn" id="fs" title="Pantalla completa (F)">⛶ Pantalla completa</button>
   </div>
+</div>
 </div>
 
 <script>
 (function () {
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const NARR = [
-    "",
-    "<b>La raíz</b> es lo que hace el programa con sus socios: capacitar, financiar, organizar, informar… Sin raíz, nada crece.",
-    "<b>Las ramas</b> son los seis cambios que buscamos (R1 a R6): en la chacra y el mercado, con autoridades y leyes, y con la gente y las mujeres.",
+    "La teoría del cambio del programa Feed Good, contada como una planta de tomate.",
+    "<b>La raíz</b> es lo que hace el programa con sus socios: capacitar, financiar, organizar, informar… Con agua y cuidado, la semilla echa raíces.",
+    "<b>Las hojas</b> son los seis cambios que buscamos: en la chacra y en el mercado, con las autoridades y las leyes, con la gente y con las mujeres.",
     "<b>La flor</b> es lo que logramos juntos: que todos se comprometan más a producir, vender y comer sano, cuidando el ambiente.",
     "<b>El fruto</b> es el gran sueño: que las familias productoras, sobre todo las mujeres y los jóvenes, vivan mejor.",
     "Ahora conversemos: <q>¿Qué de esto vimos en nuestra chacra, nuestra organización o nuestra comunidad?</q>"
   ];
-  const MAX = NARR.length - 1;
+  const MAX = NARR.length - 1, sc = $("#scene");
   let step = 0, timer = null;
   $("#dots").innerHTML = NARR.slice(1).map((_, i) => `<button aria-label="Paso ${i + 1}" data-go="${i + 1}"></button>`).join("");
 
   function go(n) {
     step = Math.max(0, Math.min(MAX, n));
     document.body.dataset.step = step;
-    $$(".lv").forEach(el => { const s = +el.dataset.s; el.classList.toggle("on", step >= s); });
-    // resalta el nivel que se explica y atenúa los anteriores
-    $$(".plant > *").forEach(el => el.classList.remove("focus", "dim"));
-    if (step >= 1 && step <= 4) $$(".plant .lv").forEach(el => { const s = +el.dataset.s; if (s === step) el.classList.add("focus"); else if (s < step) el.classList.add("dim"); });
+    sc.classList.toggle("roots-on", step >= 1);
+    sc.classList.toggle("rain-on", step === 1 || step === 2);
+    sc.classList.toggle("grow", step >= 2);
+    sc.classList.toggle("bloom-on", step >= 3);
+    sc.classList.toggle("fruit-on", step >= 4);
+    $$("[data-s]").forEach(el => {
+      const s = +el.dataset.s, on = step >= s;
+      el.classList.toggle("on", on);
+      if (el.classList.contains("link")) el.style.opacity = on ? 1 : 0;
+      if (el.classList.contains("card")) {
+        el.classList.toggle("focus", on && s === step && step < MAX);
+        el.classList.toggle("dim", on && s < step && step < MAX);
+      }
+    });
+    // las tarjetas de las hojas y las raíces aparecen una tras otra, al ritmo de la planta
+    $$(".leafc").forEach((c, i) => c.style.transitionDelay = step === 2 ? (1 + i * .25) + "s" : "0s");
+    $$(".chip").forEach((c, i) => c.style.transitionDelay = step === 1 ? (.6 + i * .12) + "s" : "0s");
     $("#narr").innerHTML = NARR[step];
-    $("#narr").style.visibility = step ? "visible" : "hidden";
     $$("#dots button").forEach((b, i) => b.classList.toggle("on", i + 1 === step));
-    $("#prev").disabled = step <= 1; $("#next").textContent = step >= MAX ? "↺ Volver a empezar" : "Siguiente ▶";
-    fit();
+    $("#prev").disabled = step <= 0;
+    $("#next").textContent = step >= MAX ? "↺ Volver a empezar" : step === 0 ? "Sembrar ▶" : "Siguiente ▶";
   }
-  function next() { go(step >= MAX ? 1 : step + 1); }
+  const next = () => go(step >= MAX ? 0 : step + 1);
   function play() {
     if (timer) { clearInterval(timer); timer = null; $("#play").textContent = "▶ Reproducir"; return; }
-    if (step >= MAX || step === 0) go(1);
-    $("#play").textContent = "❚❚ Pausa";
-    timer = setInterval(() => { if (step >= MAX) { play(); return; } go(step + 1); }, 6500);
+    if (step >= MAX) go(0);
+    $("#play").textContent = "❚❚ Pausa"; next();
+    timer = setInterval(() => { if (step >= MAX) { play(); return; } next(); }, 7000);
   }
   const fsOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
   function toggleFs() {
     if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     else { const el = document.documentElement, rq = el.requestFullscreen || el.webkitRequestFullscreen; if (rq) rq.call(el); }
-  }
-  // todo el contenido cabe en la pantalla, sin desplazarse
-  function fit() {
-    const st = $("#stage"); st.style.zoom = 1;
-    if (matchMedia("(max-aspect-ratio:4/5)").matches) return;
-    const h = () => st.scrollHeight * (parseFloat(st.style.zoom) || 1);
-    if (h() <= innerHeight) return;
-    let lo = .5, hi = 1; for (let k = 0; k < 8; k++) { const z = (lo + hi) / 2; st.style.zoom = z; if (h() <= innerHeight) lo = z; else hi = z; }
-    st.style.zoom = lo;
   }
   document.addEventListener("click", e => {
     const g = e.target.closest("[data-go]"); if (g) { go(+g.dataset.go); return; }
@@ -268,20 +305,18 @@ body:not([data-step="0"]) .intro{opacity:0;visibility:hidden}
     if (e.target.closest("#prev")) return go(step - 1);
     if (e.target.closest("#play")) return play();
     if (e.target.closest("#fs")) return toggleFs();
-    if (e.target.closest(".plant") && step) next();
+    if (e.target.closest("#scene")) next();
   });
   document.addEventListener("keydown", e => {
-    if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); step ? next() : go(1); }
+    if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); next(); }
     if (e.key === "ArrowLeft" || e.key === "PageUp") go(step - 1);
     if (e.key === "f" || e.key === "F") toggleFs();
     if (e.key === "Home") go(0);
     if (e.key === "End") go(MAX);
   });
-  document.addEventListener("fullscreenchange", () => { $("#fs").textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; setTimeout(fit, 80); });
-  addEventListener("resize", fit);
+  document.addEventListener("fullscreenchange", () => { $("#fs").textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; });
   const q = new URLSearchParams(location.search).get("paso");
   go(q !== null ? +q : 0);
-  if (document.fonts) document.fonts.ready.then(fit);
 })();
 </script>
 </body>
