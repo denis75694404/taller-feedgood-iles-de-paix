@@ -130,7 +130,7 @@
     $("#toolChips").innerHTML = GRUPOS.map(([k, t]) => `<button class="chip ${k === tf ? "on" : ""}" data-tf="${k}">${t}</button>`).join("");
     $("#toolGrid").innerHTML = D.herr.filter(h => tf === "todas" || h.d.includes(tf)).map(h => `<button class="tcard lift" data-tool="${h.c}">
       <img class="ph" src="${h.img}" alt="" loading="lazy"><div class="bd"><span class="cd">${h.c}</span><span class="nm">${esc(h.n)}</span>
-      <span class="ty">${esc(h.s)} · ${esc(h.f)}</span>${h.mode ? `<span class="badge">${ic("pen")}Interactiva</span>` : ""}</div></button>`).join("");
+      <span class="ty">${esc(h.s)} · ${esc(h.f)}</span>${h.url ? `<span class="badge">${ic("users")}Animación</span>` : h.mode ? `<span class="badge">${ic("pen")}Interactiva</span>` : ""}</div></button>`).join("");
   }
   /* cada herramienta se presenta en pantalla completa (proyección en sala) */
   let curTool = null;
@@ -172,12 +172,12 @@
         <button class="x" data-close aria-label="Cerrar (Esc)">×</button></div>
       <div class="fstage"><header class="fhero"><img src="${h.img}" alt=""><div class="in"><div class="eyebrow">${h.c} · ${esc(h.s)}</div><h2>${esc(h.n)}</h2><p>${esc(h.p)}</p></div></header>
       <div class="fbody">
-        <div class="kv"><div><b>Sesión</b>${esc(h.s)}</div><div><b>Responsable</b>${esc(h.who)}</div><div><b>Formato</b>${esc(h.f)}</div><div><b>Tipo</b>${h.mode ? "Interactiva" : "Ficha y formato"}</div></div>
+        <div class="kv"><div><b>Sesión</b>${esc(h.s)}</div><div><b>Responsable</b>${esc(h.who)}</div><div><b>Formato</b>${esc(h.f)}</div><div><b>Tipo</b>${h.url ? "Animación" : h.mode ? "Interactiva" : "Ficha y formato"}</div></div>
         ${h.q ? `<blockquote class="fq">${esc(h.q)}</blockquote>` : ""}
         <div class="fcols"><section><h3>Instrucciones</h3><ol class="fins">${h.i.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
           ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}–${b.t1}</span>`).join("")}</div>` : ""}</section>
           ${h.tab ? `<section><h3>Formato</h3>${h.tab.map(tabHtml).join("")}</section>` : ""}</div>
-        <div class="chips" style="margin-top:22px">${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}
+        <div class="chips" style="margin-top:22px">${h.url ? `<a class="btn pri" href="${h.url}">▶ Ver la animación en pantalla completa</a>` : ""}${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}
         <a class="btn sec" href="${D.docs[1].u}" target="_blank" rel="noopener">${ic("file")}Formato en el Producto 2</a></div></div></div>`;
     $("#modal").classList.add("on", "full"); document.body.style.overflow = "hidden";
     $("#modal").scrollTop = 0;

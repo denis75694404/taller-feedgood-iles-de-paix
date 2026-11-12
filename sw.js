@@ -3,9 +3,9 @@
    - Estilos, scripts, fotos e íconos propios: se muestran desde la copia guardada y se actualizan en segundo plano.
    - Librerías de CDN con versión fija y fuentes: se guardan una vez.
    - Firebase (datos en vivo) nunca se guarda. */
-const VERSION = "taller-feedgood-2026-11-12b";
+const VERSION = "taller-feedgood-2026-11-12c";
 const PRECACHE = ["./", "index.html", "assets/app.css", "assets/app.js", "assets/data.js", "assets/creditos.js", "img/idp-paisaje.jpg", "img/idp-yunta.jpg", "img/idp-vivero.jpg", "img/logo_idp.png", "img/logo_idp_blanco.png",
-  "herramientas/herramienta.html", "trabajemos-juntos/grupos.html", "trabajemos-juntos/fbconfig.js", "trabajemos-juntos/img/grupo.jpg", "trabajemos-juntos/img/administrador-icono.jpg"];
+  "herramientas/herramienta.html", "herramientas/teoria-del-cambio.html", "trabajemos-juntos/grupos.html", "trabajemos-juntos/fbconfig.js", "trabajemos-juntos/img/grupo.jpg", "trabajemos-juntos/img/administrador-icono.jpg"];
 const CDN = /^https:\/\/(cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|unpkg\.com|fonts\.googleapis\.com|fonts\.gstatic\.com|www\.gstatic\.com\/firebasejs)\//;
 const NUNCA = /firestore\.googleapis|identitytoolkit|securetoken|googleapis\.com\/(?!css)|arcgisonline|arcgis\.com|firebaseinstallations/;
 
