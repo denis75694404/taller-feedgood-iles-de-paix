@@ -1,6 +1,8 @@
 /* Portal del taller Feed Good · lógica de vistas, agenda en vivo, herramientas, QR y cronómetro. */
 (function () {
   const D = window.FG;
+  // herramientas en orden: H1 a H23 y luego D1 a D5
+  D.herr.sort((a, b) => (a.c[0] === b.c[0] ? 0 : a.c[0] === "H" ? -1 : 1) || parseInt(a.c.slice(1)) - parseInt(b.c.slice(1)));
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
