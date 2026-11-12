@@ -102,6 +102,8 @@
     const d = D.dias.find(x => x.key === day), n = nowPe();
     const opened = new Set([...document.querySelectorAll("#timeline .blk-row.open")].map(x => x.dataset.b));
     $("#dayInfo").textContent = d.tema + ". " + d.publico + ".";
+    const pv = D.previo; if (pv && $("#previo")) $("#previo").innerHTML = `<div class="previo"><div class="pv-d"><b>${esc(pv.label)}</b><span>${pv.t0}–${pv.t1}</span></div>
+      <div><div class="eyebrow">Antes del taller · ${esc(pv.lugar)}</div><div class="tt">${esc(pv.t)}</div><p class="small muted" style="margin:4px 0 0">${esc(pv.d)}</p></div></div>`;
     $("#timeline").innerHTML = d.bloques.map(b => {
       const live = d.fecha === n.ymd && n.min >= toMin(b.t0) && n.min < toMin(b.t1);
       const past = d.fecha < n.ymd || (d.fecha === n.ymd && n.min >= toMin(b.t1));
@@ -130,22 +132,62 @@
       <img class="ph" src="${h.img}" alt="" loading="lazy"><div class="bd"><span class="cd">${h.c}</span><span class="nm">${esc(h.n)}</span>
       <span class="ty">${esc(h.s)} · ${esc(h.f)}</span>${h.mode ? `<span class="badge">${ic("pen")}Interactiva</span>` : ""}</div></button>`).join("");
   }
+  /* cada herramienta se presenta en pantalla completa (proyección en sala) */
+  let curTool = null;
+  const fsOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+  function toggleFs() {
+    const el = $("#modal");
+    if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else if (el.requestFullscreen) el.requestFullscreen().catch(() => {}); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  }
+  const tabHtml = t => `<figure class="tfmt"><figcaption>${esc(t.cap)}${t.nota ? ` <span class="muted">· ${esc(t.nota)}</span>` : ""}</figcaption><div class="tscroll"><table>
+    <thead><tr>${t.cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
+    <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${esc(c) || "&nbsp;"}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
   function openTool(code) {
     const h = toolByCode(code); if (!h) return;
-    $("#modalBox").innerHTML = `<button class="x" data-close aria-label="Cerrar">×</button><img class="ph" src="${h.img}" alt="">
-      <div class="pad"><div class="eyebrow">${h.c} · ${esc(h.s)}</div><h2>${esc(h.n)}</h2><p>${esc(h.p)}</p>
-      <div class="kv"><div><b>Sesión</b>${esc(h.s)}</div><div><b>Responsable</b>${esc(h.who)}</div><div><b>Formato</b>${esc(h.f)}</div><div><b>Tipo</b>${h.mode ? "Interactiva" : "Ficha y formato"}</div></div>
-      <h3>Instrucciones</h3><ol>${h.i.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
-      <div class="chips" style="margin-top:14px">${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta</a>` : ""}
-      <a class="btn sec" href="${D.docs[1].u}" target="_blank" rel="noopener">${ic("file")}Formato en el Producto 2</a></div></div>`;
-    $("#modal").classList.add("on");
+    curTool = h.c;
+    const list = D.herr, i = list.indexOf(h), prev = list[(i - 1 + list.length) % list.length], next = list[(i + 1) % list.length];
+    const ses = D.dias.flatMap(d => d.bloques).filter(b => (b.h || []).includes(h.c) && b.c);
+    $("#modalBox").innerHTML = `<div class="fbar noprint">
+        <button class="btn ghost sm" data-tool="${prev.c}" title="Herramienta anterior (←)">‹ ${prev.c}</button>
+        <span class="fcount">${i + 1} / ${list.length}</span>
+        <button class="btn ghost sm" data-tool="${next.c}" title="Herramienta siguiente (→)">${next.c} ›</button>
+        <span class="sp"></span>
+        <button class="btn ghost sm" data-fs title="Pantalla completa (F)">${fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"}</button>
+        <button class="x" data-close aria-label="Cerrar (Esc)">×</button></div>
+      <header class="fhero"><img src="${h.img}" alt=""><div class="in"><div class="eyebrow">${h.c} · ${esc(h.s)}</div><h2>${esc(h.n)}</h2><p>${esc(h.p)}</p></div></header>
+      <div class="fbody">
+        <div class="kv"><div><b>Sesión</b>${esc(h.s)}</div><div><b>Responsable</b>${esc(h.who)}</div><div><b>Formato</b>${esc(h.f)}</div><div><b>Tipo</b>${h.mode ? "Interactiva" : "Ficha y formato"}</div></div>
+        ${h.q ? `<blockquote class="fq">${esc(h.q)}</blockquote>` : ""}
+        <div class="fcols"><section><h3>Instrucciones</h3><ol class="fins">${h.i.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
+          ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}–${b.t1}</span>`).join("")}</div>` : ""}</section>
+          ${h.tab ? `<section><h3>Formato</h3>${h.tab.map(tabHtml).join("")}</section>` : ""}</div>
+        <div class="chips" style="margin-top:22px">${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}
+        <a class="btn sec" href="${D.docs[1].u}" target="_blank" rel="noopener">${ic("file")}Formato en el Producto 2</a></div></div>`;
+    $("#modal").classList.add("on", "full"); document.body.style.overflow = "hidden";
+    $("#modal").scrollTop = 0;
+    if (location.hash !== "#/herramientas/" + h.c) history.replaceState(null, "", "#/herramientas/" + h.c);
   }
+  function closeModal() {
+    $("#modal").classList.remove("on", "full"); document.body.style.overflow = "";
+    if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    if (curTool) { curTool = null; history.replaceState(null, "", "#/herramientas"); }
+  }
+  document.addEventListener("fullscreenchange", () => { const b = document.querySelector("[data-fs]"); if (b) b.textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; });
   document.addEventListener("click", e => {
     const f = e.target.closest("[data-tf]"); if (f) { tf = f.dataset.tf; renderTools(); return; }
     const t = e.target.closest("[data-tool]"); if (t) { openTool(t.dataset.tool); return; }
-    if (e.target.closest("[data-close]") || e.target.id === "modal") $("#modal").classList.remove("on");
+    if (e.target.closest("[data-fs]")) { toggleFs(); return; }
+    if (e.target.closest("[data-close]") || e.target.id === "modal") closeModal();
   });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") { $("#modal").classList.remove("on"); closeTimer(); } });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") { if (!fsOn()) closeModal(); closeTimer(); return; }
+    if (!curTool || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    const L = D.herr, i = L.findIndex(x => x.c === curTool);
+    if (e.key === "ArrowRight") openTool(L[(i + 1) % L.length].c);
+    if (e.key === "ArrowLeft") openTool(L[(i - 1 + L.length) % L.length].c);
+    if (e.key === "f" || e.key === "F") toggleFs();
+  });
 
   /* participa: QR hacia Trabajemos juntos */
   const tjUrl = () => new URL("trabajemos-juntos/grupos.html", location.href).href;
@@ -160,7 +202,7 @@
     $("#modalBox").innerHTML = `<button class="x" data-close aria-label="Cerrar">×</button><div class="pad" style="text-align:center">
       <div class="eyebrow">Trabajemos juntos · Taller Feed Good</div><h2>Escanee y entre a su mesa</h2><div id="qrL" style="display:inline-block;margin:10px auto"></div>
       <p class="muted" style="word-break:break-all">${esc(tjUrl())}</p></div>`;
-    $("#modal").classList.add("on");
+    $("#modal").classList.remove("full"); $("#modal").classList.add("on");
     if (window.QRCode) new QRCode($("#qrL"), { text: tjUrl(), width: 420, height: 420, colorDark: "#3d2520", colorLight: "#ffffff" });
   });
 
@@ -209,7 +251,7 @@
   $("#tmClose").onclick = closeTimer;
 
   /* arranque */
-  function deep() { const p = location.hash.split("/"); if (p[1] === "herramientas" && p[2]) openTool(p[2]); }
+  function deep() { const p = location.hash.split("/"); if (p[1] === "herramientas" && p[2]) { if (p[2] !== curTool) openTool(p[2]); } else if (curTool) closeModal(); }
   renderTools(); renderAgenda(); renderNow(); route(); deep();
   window.addEventListener("hashchange", () => { renderAgenda(); deep(); });
   setInterval(() => { renderNow(); if ($("#v-agenda").classList.contains("on")) renderAgenda(); }, 30000);

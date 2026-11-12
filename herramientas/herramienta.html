@@ -11,7 +11,11 @@
 <link rel="stylesheet" href="../assets/app.css">
 <style>
 #main{margin-left:0}
-.thead{position:relative;color:#fff;min-height:220px;display:flex;align-items:flex-end;overflow:hidden}
+#main .wrap{max-width:none;padding:0 clamp(16px,3vw,48px)}
+html:fullscreen body{overflow:auto;background:#F8F1EC}
+html:fullscreen #main{font-size:1.12rem}
+.fq{margin:18px 0 10px;padding:16px 22px;border-left:6px solid var(--terra);background:var(--crema);border-radius:0 16px 16px 0;font-size:clamp(1.2rem,2.2vw,1.9rem);font-weight:700;color:var(--terra-dd)}
+.thead{position:relative;color:#fff;min-height:30vh;display:flex;align-items:flex-end;overflow:hidden}
 .thead img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .thead::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(94,58,50,.92))}
 .thead .in{position:relative;z-index:2;padding:22px 0;width:100%}
@@ -61,6 +65,7 @@ textarea{min-height:70px;resize:vertical}
 .scale button{padding:.6rem .2rem;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:.8rem}
 .scale button b{display:block;font-size:1.1rem;color:var(--terra-d)}
 .empty{padding:24px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:16px}
+.tbl.big{font-size:clamp(.95rem,1.25vw,1.12rem)}.tbl.big td{padding:10px}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--terra-dd);color:#fff;padding:.6rem 1rem;border-radius:12px;font-weight:700;display:none;z-index:99}
 @media (max-width:760px){.tree{grid-template-columns:1fr}.tree .arrow{transform:rotate(90deg)}.scale{grid-template-columns:1fr repeat(5,1fr)}}
 </style>
@@ -69,7 +74,7 @@ textarea{min-height:70px;resize:vertical}
 <div id="main">
   <div class="thead"><img id="ph" src="" alt=""><div class="in"><div class="wrap">
     <a class="btn ghost sm noprint" href="../index.html#/herramientas">← Volver al portal</a>
-    <div class="eyebrow" id="ey" style="margin-top:12px"></div><h1 id="tt" style="font-size:clamp(1.6rem,3.4vw,2.4rem)"></h1><p id="pp" style="margin:0;opacity:.92"></p>
+    <div class="eyebrow" id="ey" style="margin-top:12px"></div><h1 id="tt" style="font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.05"></h1><p id="pp" style="margin:0;opacity:.92;font-size:clamp(1.05rem,1.7vw,1.35rem)"></p>
   </div></div></div>
   <div class="wrap">
     <div class="bar noprint">
@@ -77,6 +82,7 @@ textarea{min-height:70px;resize:vertical}
       <button class="btn sec sm" id="bJson">Respaldo (JSON)</button>
       <label class="btn sec sm" style="cursor:pointer">Restaurar respaldo<input type="file" id="fJson" accept=".json" hidden></label>
       <button class="btn sec sm" onclick="print()">Imprimir</button>
+      <button class="btn pri sm" id="bFs" title="Pantalla completa (F)">⛶ Pantalla completa</button>
       <span class="sp"></span>
       <button class="btn sm" style="color:#a33" id="bClear">Borrar todo</button>
     </div>
@@ -123,6 +129,11 @@ textarea{min-height:70px;resize:vertical}
   };
   // H19: columnas de la Tabla 18 del Producto 2
   const H19C = ["Aprendizaje", "¿Qué mantener?", "¿Qué hacer distinto? (recomendación)", "¿Para qué momento? (diseño, implementación o seguimiento)", "Prioridad (alta, media o baja)"];
+  // H17 (herramienta de taller) y H18: formatos del Producto 2
+  const H17T = ["¿Cómo lo hacíamos antes?", "¿Cómo lo hacemos ahora?", "Aprendizaje"];
+  const H18C = ["Propósito", "Intereses / cambio significativo", "Conclusión"];
+  const PROP = (H.tab && H.c === "H18") ? H.tab[0].rows[0][0] : "";
+  const GRUPOS = ["Grupo 1", "Grupo 2", "Grupo 3"];
   const PRIO = { Alta: "#FDE3CC", Media: "#FFF3C4", Baja: "#F4F4F4" };
   const VOTOS = {
     H9: { item: "Cambio significativo", extra: [["r", "Resultado", RS.map(r => [r[0], r[0] + " · " + r[1]])], ["por", "¿Por qué es significativo? (palabras del grupo)"]] },
@@ -155,6 +166,27 @@ textarea{min-height:70px;resize:vertical}
           <div class="vb"><i style="width:${100 * (x.v || 0) / tot}%"></i></div></div>
           <div class="vctl noprint"><button data-v="${x.id}|-1">−</button><b>${x.v || 0}</b><button data-v="${x.id}|1">+</button><button class="del" data-del="${x.id}" title="Quitar" style="font-size:16px">×</button></div></div>`).join("")
           : `<div class="empty">Agregue los elementos y registre los votos con + y −.</div>`}`;
+    },
+    lecciones() {
+      S.taller = S.taller || [];
+      return `<h3>1. Herramienta de taller</h3><div class="card pad"><div class="form">
+        ${H17T.map((c, i) => `<label class="f">${esc(c)}<textarea id="t${i}"></textarea></label>`).join("")}
+        <label class="f">Mesa<select id="tme">${opt(MESAS)}</select></label>
+        <button class="btn pri" id="addT">Agregar a la tabla</button></div></div>
+        <div style="overflow-x:auto;margin-top:12px"><table class="tbl big"><thead><tr><th>Mesa</th>${H17T.map(c => `<th>${esc(c)}</th>`).join("")}<th class="noprint"></th></tr></thead>
+        <tbody>${S.taller.map(r => `<tr><td>${esc(r.me)}</td><td>${esc(r.t0)}</td><td>${esc(r.t1)}</td><td><b>${esc(r.t2)}</b></td><td class="noprint" style="white-space:nowrap"><button class="btn sec sm" data-tolec="${r.id}" title="Redactar como lección">→ Lección</button> <button class="del" style="border:0;background:none;color:#a33;font-size:18px" data-del="${r.id}">×</button></td></tr>`).join("") || `<tr><td colspan="5" class="muted">Ejemplo: antes guardábamos el plátano maduro fuera de la refrigeradora y se malograba en tres días; ahora lo pelamos y lo guardamos en un táper de vidrio con tapa hermética en la refrigeradora; aprendimos que así se conserva hasta 10 días.</td></tr>`}</tbody></table></div>
+        <h3 style="margin-top:28px">2. Herramienta de procesamiento</h3>` + R.votos();
+    },
+    conclusiones() {
+      S.rows = S.rows || [];
+      return `<div class="card pad"><div class="form">
+        <label class="f">Grupo<select id="gr">${opt(GRUPOS, S.lastGr)}</select></label>
+        <label class="f wide">${H18C[1]}<textarea id="it"></textarea></label>
+        <label class="f wide">${H18C[2]}<textarea id="tx"></textarea></label>
+        <button class="btn pri" id="add">Agregar conclusión</button></div></div>
+        <div style="overflow-x:auto;margin-top:14px"><table class="tbl big"><thead><tr>${H18C.map((c, i) => `<th${i === 0 ? ' style="width:26%"' : ""}>${esc(c)}</th>`).join("")}<th>Grupo</th><th class="noprint"></th></tr></thead>
+        <tbody>${S.rows.length ? S.rows.map((r, i) => `<tr>${i === 0 ? `<td rowspan="${S.rows.length}" style="background:var(--crema);font-weight:700">${esc(PROP)}</td>` : ""}<td>${esc(r.it)}</td><td><b>${esc(r.tx)}</b></td><td>${esc(r.gr)}</td><td class="noprint"><button class="del" style="border:0;background:none;color:#a33;font-size:18px" data-del="${r.id}">×</button></td></tr>`).join("")
+          : `<tr><td style="background:var(--crema);font-weight:700">${esc(PROP)}</td><td colspan="4" class="muted">Cada grupo anota los intereses o el cambio significativo y redacta su conclusión (tres por grupo).</td></tr>`}</tbody></table></div>`;
     },
     ficha() {
       const cfg = FICHAS[H.c]; S.fichas = S.fichas || []; S.cur = S.cur || (S.fichas[0] && S.fichas[0].id);
@@ -240,15 +272,16 @@ textarea{min-height:70px;resize:vertical}
     }
   };
 
-  function render() { $("#app").innerHTML = R[H.mode](); }
+  function render() { $("#app").innerHTML = (H.q ? `<blockquote class="fq">${esc(H.q)}</blockquote>` : "") + R[H.mode](); }
 
   /* ---------------- acciones ---------------- */
   const hora = () => new Date(Date.now() - 5 * 3600e3).toISOString().slice(11, 16);
   function add() {
     const m = H.mode, tx = val("tx");
     if (m === "muro") { if (!tx) return toast("Escriba el cambio"); S.notes.push({ id: uid(), tx, me: val("me"), r: val("rr"), ti: val("ti") }); }
-    if (m === "votos") { if (!tx) return toast("Escriba el elemento"); const o = { id: uid(), tx, v: 0 }; VOTOS[H.c].extra.forEach(([k]) => o[k] = val("x_" + k)); S.items.push(o); }
+    if (m === "votos" || m === "lecciones") { if (!tx) return toast("Escriba el elemento"); const o = { id: uid(), tx, v: 0 }; VOTOS[H.c].extra.forEach(([k]) => o[k] = val("x_" + k)); S.items.push(o); }
     if (m === "columnas") { if (!tx) return toast("Escriba la frase"); S.notes.push({ id: uid(), tx, co: val("co"), me: val("me") }); }
+    if (m === "conclusiones") { if (!tx) return toast("Escriba la conclusión"); S.lastGr = val("gr"); S.rows.push({ id: uid(), gr: val("gr"), it: val("it"), tx }); }
     if (m === "aprendizajes") { if (!tx) return toast("Escriba el aprendizaje"); S.rows.push({ id: uid(), tx, mt: val("mt"), hd: val("hd"), mo: val("mo"), pr: val("pr") }); }
     if (m === "matriz") { if (!tx) return toast("Escriba la fila"); S.rows.push({ id: uid(), tx, c: {} }); }
     if (m === "padron") { const nm = val("nm"); if (!nm) return toast("Escriba el nombre"); S.rows.push({ id: uid(), nm, og: val("og"), cat: val("ct"), sx: val("sx"), ed: val("ed"), dy: val("dy"), me: val("me") }); }
@@ -259,7 +292,10 @@ textarea{min-height:70px;resize:vertical}
   document.addEventListener("click", e => {
     const t = e.target;
     if (t.id === "add") return add();
-    if (t.dataset.del) { const k = t.dataset.del; ["notes", "items", "rows"].forEach(a => S[a] && (S[a] = S[a].filter(x => x.id !== k))); save(); render(); return; }
+    if (t.id === "addT") { const o = { id: uid(), me: val("tme"), t0: val("t0"), t1: val("t1"), t2: val("t2") }; if (!o.t2) return toast("Escriba el aprendizaje"); S.taller.push(o); save(); render(); toast("Guardado"); return; }
+    if (t.dataset.tolec) { const r = S.taller.find(x => x.id === t.dataset.tolec); const i = $("#tx"); if (r && i) { i.value = "Cuando "; i.placeholder = "A partir de: " + r.t2; i.focus(); i.scrollIntoView({ block: "center" }); } return; }
+    if (t.id === "bFs") return toggleFs();
+    if (t.dataset.del) { const k = t.dataset.del; ["notes", "items", "rows", "taller"].forEach(a => S[a] && (S[a] = S[a].filter(x => x.id !== k))); save(); render(); return; }
     if (t.dataset.v) { const [k, d] = t.dataset.v.split("|"); const x = S.items.find(i => i.id === k); x.v = Math.max(0, (x.v || 0) + Number(d)); save(); render(); return; }
     if (t.dataset.cur) { S.cur = t.dataset.cur; save(); render(); return; }
     if (t.id === "newF") { const f = { id: uid(), item: "" }; S.fichas.push(f); S.cur = f.id; save(); render(); return; }
@@ -279,6 +315,15 @@ textarea{min-height:70px;resize:vertical}
   document.addEventListener("change", e => { if (e.target.dataset.tk) { const f = S.trees.find(x => x.id === S.cur); f[e.target.dataset.tk] = e.target.value; save(); } });
   document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT" && !e.target.dataset.fk && !e.target.dataset.tk) add(); });
 
+  /* pantalla completa */
+  const fsOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+  function toggleFs() {
+    if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else { const el = document.documentElement; const rq = el.requestFullscreen || el.webkitRequestFullscreen; if (rq) rq.call(el); }
+  }
+  document.addEventListener("fullscreenchange", () => { $("#bFs").textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; });
+  document.addEventListener("keydown", e => { if ((e.key === "f" || e.key === "F") && !/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) toggleFs(); });
+
   /* exportar e importar */
   function rowsCsv() {
     const m = H.mode;
@@ -287,6 +332,8 @@ textarea{min-height:70px;resize:vertical}
     if (m === "ficha") { const c = FICHAS[H.c]; return [[c.item, ...c.q], ...S.fichas.map(f => [f.item, ...c.q.map((q, i) => f["q" + i] || "")])]; }
     if (m === "arbol") return [["Mesa", "Resultado no alcanzado", "Causa 1", "Causa 2", "Causa 3", "Consecuencia 1", "Consecuencia 2"], ...S.trees.map(t => [t.mesa, t.res, t.c0, t.c1, t.c2, t.k0, t.k1])];
     if (m === "columnas") return [["Columna", "Frase", "Mesa"], ...S.notes.map(n => [COLS[H.c][n.co][0], n.tx, n.me])];
+    if (m === "lecciones") { const ex = VOTOS.H17.extra; return [["Herramienta de taller"], ["Mesa", ...H17T], ...(S.taller || []).map(r => [r.me, r.t0, r.t1, r.t2]), [], ["Herramienta de procesamiento"], [VOTOS.H17.item, "Votos", ...ex.map(x => x[1])], ...[...(S.items || [])].sort((a, b) => b.v - a.v).map(x => [x.tx, x.v || 0, ...ex.map(([k]) => x[k] || "")])]; }
+    if (m === "conclusiones") return [[...H18C, "Grupo"], ...S.rows.map(r => [PROP, r.it, r.tx, r.gr])];
     if (m === "aprendizajes") return [["N.°", ...H19C], ...S.rows.map((r, i) => [i + 1, r.tx, r.mt, r.hd, r.mo, r.pr])];
     if (m === "matriz") { const c = MATRIZ[H.c]; return [[c.fila, ...c.cols.flatMap(x => [x + " (alta)", x + " (media)", x + " (baja)"])], ...S.rows.map(r => [r.tx, ...c.cols.flatMap((x, j) => { const v = r.c[j] || { n: 0, v: 0, b: 0 }; return [v.n, v.v, v.b]; })])]; }
     if (m === "padron") return [["N.°", "Nombre", "Organización", "Categoría", "Sexo", "Edad", "Día", "Mesa"], ...S.rows.map((r, i) => [i + 1, r.nm, r.og, r.cat, r.sx, r.ed, r.dy, r.me])];
