@@ -242,11 +242,13 @@ body:not([data-step="0"]) .intro{opacity:0;visibility:hidden}
     <div class="dots" id="dots"></div>
     <button class="btn pri" id="next">Siguiente ▶</button>
     <button class="btn" id="play">▶ Reproducir</button>
+    <button class="btn" id="mus" title="Música andina de fondo (M)" aria-pressed="true">♪ Música: sí</button>
     <button class="btn" id="fs" title="Pantalla completa (F)">⛶ Pantalla completa</button>
   </div>
 </div>
 </div>
 
+<script src="../assets/huayno.js?v=20261112g"></script>
 <script>
 (function () {
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
@@ -287,6 +289,17 @@ body:not([data-step="0"]) .intro{opacity:0;visibility:hidden}
     $("#prev").disabled = step <= 0;
     $("#next").textContent = step >= MAX ? "↺ Volver a empezar" : step === 0 ? "Sembrar ▶" : "Siguiente ▶";
   }
+  // música de fondo: huayno instrumental; arranca con el primer toque (los navegadores no permiten sonido antes)
+  let musOn = true; try { musOn = localStorage.getItem("fg-h23-musica") !== "no"; } catch (e) { }
+  const paintMus = () => { $("#mus").textContent = musOn ? "♪ Música: sí" : "♪ Música: no"; $("#mus").setAttribute("aria-pressed", musOn); };
+  function toggleMus() {
+    musOn = !musOn; try { localStorage.setItem("fg-h23-musica", musOn ? "si" : "no"); } catch (e) { }
+    musOn ? Huayno.start() : Huayno.stop(); paintMus();
+  }
+  const wake = () => { if (musOn && window.Huayno && !Huayno.playing) Huayno.start(); };
+  document.addEventListener("pointerdown", e => { if (!e.target.closest("#mus")) wake(); });
+  document.addEventListener("keydown", e => { if (e.key !== "m" && e.key !== "M") wake(); });
+  paintMus();
   const next = () => go(step >= MAX ? 0 : step + 1);
   function play() {
     if (timer) { clearInterval(timer); timer = null; $("#play").textContent = "▶ Reproducir"; return; }
@@ -305,12 +318,14 @@ body:not([data-step="0"]) .intro{opacity:0;visibility:hidden}
     if (e.target.closest("#prev")) return go(step - 1);
     if (e.target.closest("#play")) return play();
     if (e.target.closest("#fs")) return toggleFs();
+    if (e.target.closest("#mus")) return toggleMus();
     if (e.target.closest("#scene")) next();
   });
   document.addEventListener("keydown", e => {
     if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); next(); }
     if (e.key === "ArrowLeft" || e.key === "PageUp") go(step - 1);
     if (e.key === "f" || e.key === "F") toggleFs();
+    if (e.key === "m" || e.key === "M") toggleMus();
     if (e.key === "Home") go(0);
     if (e.key === "End") go(MAX);
   });
