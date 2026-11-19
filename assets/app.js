@@ -189,10 +189,12 @@
     ${f.nota ? `<p class="small muted" style="margin:6px 0 0">${esc(f.nota)}</p>` : ""}${f.pasos ? `<div class="fpasos"><b>Instrucciones:</b><ol>${f.pasos.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div>` : ""}</figure>`;
   const progHtml = () => D.dias.map((d, i) => tabHtml({ cap: `Programa del día ${i + 1} · ${d.label}`, cols: ["Hora", "Sesión"],
     rows: d.bloques.map(b => [b.t0 + "–" + b.t1, (b.c ? b.c + " · " : "") + b.t]) })).join("");
+  // las flechas ‹ › recorren solo las herramientas del filtro elegido (Día 1, Día 2, Comunes, etc.)
+  const navList = h => { const f = D.herr.filter(x => tf === "todas" || x.d.includes(tf)); return f.includes(h) ? f : D.herr; };
   function openTool(code) {
     const h = toolByCode(code); if (!h) return;
     curTool = h.c; escCur = escLoad(h.c); fMode = null;
-    const list = D.herr, i = list.indexOf(h), prev = list[(i - 1 + list.length) % list.length], next = list[(i + 1) % list.length];
+    const list = navList(h), i = list.indexOf(h), prev = list[(i - 1 + list.length) % list.length], next = list[(i + 1) % list.length];
     const ses = D.dias.flatMap(d => d.bloques).filter(b => (b.h || []).includes(h.c) && b.c);
     $("#modalBox").innerHTML = `<div class="fbar noprint">
         <button class="btn ghost sm" data-tool="${prev.c}" title="Herramienta anterior (←)">‹ ${prev.c}</button>
@@ -286,7 +288,7 @@
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") { if (!fsOn()) closeModal(); closeTimer(); return; }
     if (!curTool || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
-    const L = D.herr, i = L.findIndex(x => x.c === curTool);
+    const L = navList(toolByCode(curTool)), i = L.findIndex(x => x.c === curTool);
     if (e.key === "ArrowRight") openTool(L[(i + 1) % L.length].c);
     if (e.key === "ArrowLeft") openTool(L[(i - 1 + L.length) % L.length].c);
     if (e.key === "f" || e.key === "F") toggleFs();
