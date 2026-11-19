@@ -36,8 +36,7 @@
         <h1>Cinco años de cambios en el sistema alimentario: los miramos juntos</h1>
         <p class="lead">Celebrando los cambios que sembramos juntos. Aquí están la agenda en vivo, las herramientas de cada jornada y la dinámica por mesas.</p>
         <div class="acts">
-          <a class="btn pri" href="#/participa" data-i="users">Participar con mi mesa</a>
-          <a class="btn ghost" href="#/agenda" data-i="calendar">Ver la agenda</a>
+          <a class="btn pri" href="#/agenda" data-i="calendar">Ver la agenda</a>
           <a class="btn ghost" href="#/herramientas" data-i="wrench">Herramientas</a>
         </div>
       </div></div>
@@ -73,6 +72,7 @@
       <section class="blk" style="padding-top:0">
         <blockquote class="quote">«Esto no es un examen al programa ni a las personas: es una conversación para aprender. Lo que no funcionó vale tanto como lo que sí».</blockquote>
       </section>
+      <footer class="cred" id="credits"></footer>
     </div>
   </section>
 
@@ -104,47 +104,6 @@
     </div>
   </section>
 
-  <!-- ===================== participa ===================== -->
-  <section class="view" id="v-participa">
-    <div class="wrap">
-      <section class="blk">
-        <div class="grid g2" style="align-items:center">
-          <div>
-            <div class="eyebrow">Trabajemos juntos</div>
-            <h2>Tu voz cuenta: participa desde tu celular</h2>
-            <p class="muted">La dinámica en vivo por mesas: el miércoles 25 para identificar los cambios y lo que no se logró, y el jueves 26 para los aprendizajes.</p>
-            <ol>
-              <li>Escanee el código o abra el enlace.</li>
-              <li>Escriba su nombre y elija el color de su mesa.</li>
-              <li>Responda, vote (un voto) y vea las prioridades de su mesa.</li>
-            </ol>
-            <div class="chips" style="margin-top:14px">
-              <a class="btn pri" id="tjLink" href="trabajemos-juntos/grupos.html" target="_blank" rel="noopener" data-i="users">Entrar a mi mesa</a>
-              <button class="btn sec" id="qrBig" data-i="maximize">Proyectar el QR</button>
-            </div>
-            <p class="small muted" style="margin-top:12px">Requiere internet. Si falla la conexión, el facilitador usa la versión de una sola pantalla.</p>
-          </div>
-          <div style="text-align:center">
-            <div class="qrbox"><div id="qr"></div></div>
-            <p class="small muted" id="qrUrl" style="word-break:break-all;margin-top:8px"></p>
-          </div>
-        </div>
-      </section>
-    </div>
-  </section>
-
-  <!-- ===================== facilitador ===================== -->
-  <section class="view" id="v-facilitador">
-    <div class="wrap">
-      <section class="blk">
-        <div class="eyebrow">Facilitador</div>
-        <h2>Panel de trabajo del equipo consultor</h2>
-        <p class="muted">El panel de «Trabajemos juntos» pide la clave de administrador. Las demás herramientas son de libre acceso.</p>
-        <div class="grid g3" id="facGrid"></div>
-      </section>
-      <footer class="cred" id="credits"></footer>
-    </div>
-  </section>
 </div>
 
 <nav id="tabbar" aria-label="Secciones"></nav>
@@ -167,8 +126,7 @@
 <script src="assets/data.js?v=20261119v"></script>
 <script src="assets/formatos.js?v=20261119v"></script>
 <script src="assets/creditos.js?v=20261119a"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="assets/app.js?v=20261119u"></script>
+<script src="assets/app.js?v=20261119w"></script>
 <script>if ("serviceWorker" in navigator && location.protocol.startsWith("http")) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));</script>
 </body>
 </html>

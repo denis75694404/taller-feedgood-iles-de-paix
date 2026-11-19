@@ -28,7 +28,7 @@
   document.querySelectorAll("[data-i]").forEach(el => el.insertAdjacentHTML("afterbegin", ic(el.dataset.i)));
 
   /* navegación */
-  const NAV = [["inicio", "Inicio", "home"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"], ["participa", "Participa", "users"], ["facilitador", "Facilitador", "shield"]];
+  const NAV = [["inicio", "Inicio", "home"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"]];
   const navHtml = list => list.map(([k, t, i]) => `<a class="nav-btn" data-k="${k}" href="#/${k}">${ic(i)}<span>${t}</span></a>`).join("");
   $("#rail").insertAdjacentHTML("beforeend", navHtml(NAV));
   $("#tabbar").innerHTML = navHtml(NAV);
@@ -39,7 +39,6 @@
     document.querySelectorAll(".view").forEach(x => x.classList.toggle("on", x.id === "v-" + v));
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("on", b.dataset.k === v));
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
-    if (v === "participa") drawQR();
   }
   window.addEventListener("hashchange", route);
   // un solo clic en el menú: si la dirección ya es la del botón (no hay hashchange), igual cierra la ficha y muestra la vista
@@ -115,7 +114,7 @@
       const live = d.fecha === n.ymd && n.min >= toMin(b.t0) && n.min < toMin(b.t1);
       const past = d.fecha < n.ymd || (d.fecha === n.ymd && n.min >= toMin(b.t1));
       if (b.pausa) return `<div class="blk-row pausa ${live ? "now" : ""} ${past ? "past" : ""}"><div class="hr">${b.t0}–${b.t1}</div><div><div class="tt">${esc(b.t)}</div></div><div></div></div>`;
-      const tools = (b.h || []).map(c => c === "TJ" ? `<a class="tcode" href="#/participa">Trabajemos juntos</a>` : `<a class="tcode" href="#/herramientas/${c}">${c}</a>`).join("");
+      const tools = (b.h || []).map(c => c === "TJ" ? `<a class="tcode" href="trabajemos-juntos/grupos.html" target="_blank" rel="noopener">Trabajemos juntos</a>` : `<a class="tcode" href="#/herramientas/${c}">${c}</a>`).join("");
       return `<div class="blk-row ${live ? "now" : ""} ${live || opened.has(b.t0) ? "open" : ""} ${past ? "past" : ""}" data-b="${b.t0}">
         <div class="hr">${b.t0}–${b.t1}<span class="code">${b.c}</span></div>
         <div><div class="tt">${esc(b.t)}</div><div class="who">${esc(b.who)}</div><div class="tl">${tools}</div>
@@ -294,45 +293,11 @@
     if (e.key === "f" || e.key === "F") toggleFs();
   });
 
-  /* participa: QR hacia Trabajemos juntos */
-  const tjUrl = () => new URL("trabajemos-juntos/grupos.html", location.href).href;
-  let qrDone = false;
-  function drawQR() {
-    $("#qrUrl").textContent = tjUrl();
-    if (qrDone || !window.QRCode) return;
-    new QRCode($("#qr"), { text: tjUrl(), width: 220, height: 220, colorDark: "#3d2520", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
-    qrDone = true;
-  }
-  $("#qrBig").addEventListener("click", () => {
-    $("#modalBox").innerHTML = `<button class="x" data-close aria-label="Cerrar">×</button><div class="pad" style="text-align:center">
-      <div class="eyebrow">Trabajemos juntos · Taller Feed Good</div><h2>Escanee y entre a su mesa</h2><div id="qrL" style="display:inline-block;margin:10px auto"></div>
-      <p class="muted" style="word-break:break-all">${esc(tjUrl())}</p></div>`;
-    $("#modal").classList.remove("full"); $("#modal").classList.add("on");
-    if (window.QRCode) new QRCode($("#qrL"), { text: tjUrl(), width: 420, height: 420, colorDark: "#3d2520", colorLight: "#ffffff" });
-  });
-
   /* créditos */
   const cr = (D.creditos || []).concat((window.FG_CREDITOS || []).map(c => [c.archivo, c.titulo, c.autor, c.licencia, c.fuente]));
   $("#credits").innerHTML = "<b>Créditos de las fotografías.</b> " + cr.map(([f, t, a, l, u]) => `${esc(t)}: ${esc(a)} (${esc(l)}, <a href="${u}" target="_blank" rel="noopener">fuente</a>)`).join(" · ") +
     ". Las fotos de Wikimedia Commons se usan según su licencia; las de Iles de Paix provienen de su sitio web.";
 
-  /* facilitador */
-  const FAC = [
-    ["Panel de Trabajemos juntos", "Crea la sesión del día 1 (miércoles 25) o del día 2 (jueves 26), envía la pregunta y controla las rondas (pide clave).", "trabajemos-juntos/admin.html", "shield", true],
-    ["Versión sin internet", "La misma dinámica en una sola laptop, con pegado del chat de WhatsApp.", "trabajemos-juntos/pantalla-unica.html", "wifioff", true],
-    ["Relatoría en vivo (D1)", "Registro de los aportes clave por sesión y mesa, con exportación a CSV.", "herramientas/herramienta.html?id=D1", "pen", false],
-    ["Cronómetro de la sesión", "Proyecta el tiempo de la sesión en curso o de la que elija.", "#timer", "timer", false],
-    ["Modo proyección", "Oculta los menús y agranda la letra para la pantalla de la sala.", "#proj", "monitor", false],
-    ["Evaluación del taller (H22)", "Encuesta en una pantalla para cerrar cada jornada.", "herramientas/herramienta.html?id=H22", "users", false]
-  ];
-  $("#facGrid").innerHTML = FAC.map(([t, d, u, i, ext]) => `<a class="card pad lift" style="text-decoration:none;display:block" href="${u}" ${ext ? 'target="_blank" rel="noopener"' : ""} data-fac="${u}">
-    <div class="now" style="grid-template-columns:auto 1fr"><div class="ico">${ic(i)}</div><div><h3 style="margin:0 0 4px">${esc(t)}</h3><p class="small muted" style="margin:0">${esc(d)}</p></div></div></a>`).join("");
-  document.addEventListener("click", e => {
-    const a = e.target.closest("[data-fac]"); if (!a) return;
-    const u = a.dataset.fac;
-    if (u === "#timer") { e.preventDefault(); const s = status(); openTimer(s.b && !s.b.pausa ? s.b : { t: "Sesión", t0: "00:00", t1: "00:15", c: "" }); }
-    if (u === "#proj") { e.preventDefault(); document.documentElement.classList.add("proj"); location.hash = "#/inicio"; }
-  });
   $("#projX").addEventListener("click", () => document.documentElement.classList.remove("proj"));
 
   /* cronómetro */
