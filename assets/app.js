@@ -182,7 +182,7 @@
         <div class="fcols"><section><h3>Instrucciones</h3><ol class="fins">${h.i.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
           ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}–${b.t1}</span>`).join("")}</div>` : ""}</section>
           ${h.tab || h.fig || h.prog ? `<section>${h.fig ? h.fig.map(figHtml).join("") : ""}${h.tab ? `<h3>Formato</h3>${h.tab.map(tabHtml).join("")}` : ""}${h.prog ? progHtml() : ""}</section>` : ""}</div>
-        <div class="chips" style="margin-top:22px">${h.url ? `<a class="btn pri" href="${h.url}">▶ Ver la animación en pantalla completa</a>` : ""}${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}</div></div></div>`;
+        <div class="chips" style="margin-top:22px">${h.url ? `<a class="btn pri" href="${h.url}">▶ Ver la animación en pantalla completa</a>` : ""}${h.anim && toolByCode(h.anim) ? `<a class="btn pri" href="${toolByCode(h.anim).url}?desde=${h.c}">▶ Ver la animación de ${h.anim}: ${esc(toolByCode(h.anim).n)}</a>` : ""}${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}</div></div></div>`;
     $("#modal").classList.add("on", "full"); document.body.style.overflow = "hidden";
     $("#modal").scrollTop = 0;
     fitTool(); if (document.fonts) document.fonts.ready.then(fitTool);

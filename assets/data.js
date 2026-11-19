@@ -115,7 +115,7 @@ window.FG = {
     { c: "H4", n: "Acuerdos de convivencia", d: ["c"], s: "S1.3, S2.2", who: "Facilitador", f: "Papelógrafo", img: "img/kotosh-plantas.jpg",
       p: "Construir con el grupo las reglas que permiten que todas las voces cuenten.",
       i: ["Una persona habla a la vez.", "Todas hablan antes de que alguien repita.", "Lo dicho se registra sin nombres.", "Lo que no funcionó también cuenta.", "Celulares en silencio, salvo para votar o registrar."] },
-    { c: "H5", n: "Teoría del cambio y resultados R1–R6", d: ["c"], s: "S1.3, S1.5, S1.8, S2.4", who: "Iles de Paix", f: "Diapositiva y seis papelógrafos", img: "img/valle-liriopampa.jpg",
+    { c: "H5", n: "Teoría del cambio y resultados R1–R6", anim: "H23", d: ["c"], s: "S1.3, S1.5, S1.8, S2.4", who: "Iles de Paix", f: "Diapositiva y seis papelógrafos", img: "img/valle-liriopampa.jpg",
       p: "Recordar lo que el programa se propuso lograr y tenerlo a la vista todo el taller.",
       i: ["Un papelógrafo por resultado, con letra de al menos 4 cm.", "Enunciado, dos o tres líneas de acción y el logro previsto con su avance (dato del programa).", "Sirve para contrastar el muro de cambios (S1.5), los resultados no alcanzados (S1.8) y el análisis por criterio (S2.4)."] },
     { c: "H23", n: "La teoría del cambio en sencillo", d: ["c"], s: "S1.3, S1.5, S2.4", who: "Facilitador y representante de Iles de Paix", f: "Animación en pantalla e impresa A3", img: "img/idp-vivero.jpg",

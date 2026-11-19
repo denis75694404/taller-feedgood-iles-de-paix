@@ -274,7 +274,8 @@ body[data-step="6"] .card.on,body[data-step="6"] .chip.on,body[data-step="6"] .s
 <div class="bar">
   <div class="narr" id="narr" aria-live="polite"></div>
   <div class="ctrl">
-    <a class="btn" href="../index.html#/herramientas/H23">← Portal</a>
+    <a class="btn" id="volverPortal" href="../index.html#/herramientas/H23">← Portal</a>
+    <script>(function () { const d = new URLSearchParams(location.search).get("desde"); if (d && /^[HD]\d{1,2}$/.test(d)) document.getElementById("volverPortal").href = "../index.html#/herramientas/" + d; })();</script>
     <button class="btn" id="prev">◀ Anterior</button>
     <div class="dots" id="dots"></div>
     <button class="btn pri" id="next">Siguiente ▶</button>
