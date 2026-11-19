@@ -108,15 +108,15 @@ input,select,textarea{font-size:clamp(1.05rem,1.4vw,1.3rem) !important}
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<script src="../assets/data.js?v=20261119h"></script>
+<script src="../assets/data.js?v=20261119j"></script>
 <script>
 (function () {
   const D = window.FG, $ = s => document.querySelector(s);
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const id = new URLSearchParams(location.search).get("id") || "H6";
   const H = D.herr.find(x => x.c === id) || D.herr[0];
-  // H6 y H8 comparten el mismo muro
-  const KEY = "fg-" + ({ H8: "H6" }[H.c] || H.c);
+  // H6 y H7 comparten el mismo muro
+  const KEY = "fg-" + ({ H7: "H6" }[H.c] || H.c);
   const MESAS = ["Naranja", "Verde", "Azul", "Amarilla", "Terracota", "Morada"];
   const RS = [["R1", "Producción"], ["R2", "Cadenas"], ["R3", "Gobernanza"], ["R4", "Incidencia"], ["R5", "Sensibilización"], ["R6", "Mujeres y jóvenes"], ["Otro", "Otros cambios"]];
   const CATS = [["P", "Productora o productor"], ["T", "Transformador o MPE"], ["O", "Organización"], ["S", "Servicio técnico o autoridad"], ["C", "Consumidor o comunidad educativa"], ["A", "Socio u ONG"], ["E", "Equipo del programa"]];

@@ -100,8 +100,8 @@
     ["R4", "Incidencia nacional", "Plataformas y redes, propuestas de política", ""],
     ["R5", "Sensibilización", "Programas escolares, campañas, radio, iniciativas ciudadanas", ""],
     ["R6", "Mujeres y jóvenes", "Empoderamiento económico, liderazgo, nuevas masculinidades", ""]] }] });
-  add("H8", { fig: ["tarjeta", "circulos"] });
-  add("H7", { tab: [{ cap: "Criterios de priorización", nota: "La plenaria puede ajustar o añadir criterios.", cols: ["Criterio", "Pregunta para el grupo"], rows: [
+  add("H7", { fig: ["tarjeta", "circulos"] });
+  add("H8", { tab: [{ cap: "Criterios de priorización", nota: "La plenaria puede ajustar o añadir criterios.", cols: ["Criterio", "Pregunta para el grupo"], rows: [
     ["Amplitud", "¿A cuántas personas, familias u organizaciones alcanza este cambio?"],
     ["Profundidad", "¿Cuánto cambia la vida, el trabajo o la alimentación de quienes lo viven?"],
     ["Permanencia", "¿Seguirá cuando el programa termine?"],
@@ -141,7 +141,7 @@
   add("H19", { tab: [{ cap: "Matriz de aprendizajes y recomendaciones", nota: "¿Qué recomendarías si el proyecto se vuelve a realizar o se da uno similar?", cols: ["Aprendizaje", "¿Qué mantener?", "¿Qué hacer distinto? (recomendación)", "¿Para qué momento? (diseño, implementación o seguimiento)", "Prioridad (alta, media o baja)"], rows: filas(4, 5, k => (k + 1) + ".") }] });
   add("H21", { tab: [{ cap: "Estructura del informe final y fuentes de cada sección", nota: "Anexos: notas no editadas del taller, padrones, registro fotográfico, matrices completas, historias de cambio y matriz de trazabilidad (D4).", cols: ["N.°", "Sección", "Fuente en el taller", "Páginas aprox."], rows: [
     ["1", "Contexto y objetivos del ejercicio", "Documentos del programa; S1.2", "1,5"], ["2", "Metodología y desarrollo del taller", "Agenda; padrones H1; evaluación H22", "2"],
-    ["3", "Principales cambios observados", "S1.3 a S1.5 (H6, H8)", "3"], ["4", "Cambios considerados más significativos", "S1.6 (H9); S2.4 (H15); historias de cambio (H20)", "2"],
+    ["3", "Principales cambios observados", "S1.3 a S1.5 (H6, H7)", "3"], ["4", "Cambios considerados más significativos", "S1.6 (H9); S2.4 (H15); historias de cambio (H20)", "2"],
     ["5", "Contribución del programa a dichos cambios", "S1.7 (H10); S2.4", "2,5"], ["6", "Principales resultados no alcanzados", "S1.8 (H11)", "2"],
     ["7", "Análisis de los resultados según los criterios", "S2.4 (H15)", "3"], ["8", "Dificultades y factores explicativos", "S2.5 (H16)", "1,5"],
     ["9", "Principales lecciones aprendidas", "S1.9, S2.6 y S2.7 (H12, H17)", "1"], ["10", "Aprendizajes e implicaciones para los futuros programas", "S2.8 (H19)", "1"],
