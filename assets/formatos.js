@@ -50,7 +50,7 @@
         </svg>`; })() },
     muro: { cap: "Estructura del muro de cambios", nota: "Cada tarjeta lleva el código de su mesa (por ejemplo, M3) para la trazabilidad.",
       pasos: ["Escribe tu nombre en un pósit.", "Adhiérelo sobre la columna que quisieras profundizar o discutir.", "El facilitador menciona los nombres de los integrantes de cada grupo y se forman nuevos equipos para trabajar la siguiente herramienta."],
-      svg: (() => { const C = [["R1", "Producción", "#4E8A3E"], ["R2", "Cadenas", "#E8742A"], ["R3", "Gobernanza", "#2F6DB5"], ["R4", "Incidencia", "#7A4A9E"], ["R5", "Sensibilización", "#D9A400"], ["R6", "Mujeres y jóvenes", "#B5532F"], ["", "Otros cambios", "#7d6b5d"]];
+      svg: (() => { const C = [["R1", "Agroecología", "#4E8A3E"], ["R2", "Comercio justo", "#E8742A"], ["R3", "Gobernanza", "#2F6DB5"], ["R4", "Políticas públicas", "#7A4A9E"], ["R5", "Ciudadanía", "#D9A400"], ["R6", "Mujeres y jóvenes", "#B5532F"], ["", "Otros cambios", "#7d6b5d"]];
         let g = ""; C.forEach(([r, n, col], k) => { const x = 10 + k * 112;
           g += `<rect x="${x}" y="10" width="104" height="70" rx="8" fill="${col}"/>${T(x + 52, 40, r || "Otros", { c: "#fff", fs: 18 })}${T(x + 52, 62, r ? n : "cambios", { c: "#fff", fs: n.length > 12 ? 11 : 13 })}
           <rect x="${x}" y="88" width="104" height="300" rx="6" fill="#fffaf2" stroke="${col}" stroke-width="2"/>`;
@@ -93,13 +93,13 @@
     ["Lo dicho se registra sin nombres", "La relatoría anota la categoría de actor, no el nombre; las citas con nombre requieren autorización."],
     ["Lo que no funcionó también cuenta", "Se valoran los errores y las dificultades como fuente de aprendizaje."],
     ["Celulares en silencio", "Se usan solo para la evaluación con QR o para registrar las producciones."]] }] });
-  add("H5", { figPre: ["tarjetaSimple"], tab: [{ cap: "Contenido de los seis papelógrafos de resultados", nota: "El logro previsto y su avance se completan con el marco lógico y los informes del programa.", cols: ["R", "Enunciado breve", "Líneas de acción", "Logro previsto y avance"], rows: [
-    ["R1", "Producción agroecológica resiliente", "Diversificación, agroforestería, suelos y agua, semillas campesinas", ""],
-    ["R2", "Cadenas de valor territoriales justas", "Circuitos cortos, transformación local, MPE de mujeres y jóvenes, poscosecha", ""],
-    ["R3", "Gobernanza territorial", "Espacios de concertación multiactor", ""],
-    ["R4", "Incidencia nacional", "Plataformas y redes, propuestas de política", ""],
-    ["R5", "Sensibilización", "Programas escolares, campañas, radio, iniciativas ciudadanas", ""],
-    ["R6", "Mujeres y jóvenes", "Empoderamiento económico, liderazgo, nuevas masculinidades", ""]] }] });
+  add("H5", { figPre: ["tarjetaSimple"], tab: [{ cap: "Contenido de los seis papelógrafos de resultados", nota: "El logro previsto y su avance se completan con el marco lógico y los informes del programa.", cols: ["R", "Resultado", "Descripción", "Logro previsto y avance"], rows: [
+    ["R1", "Producción agroecológica y ambiente", "Prácticas agroecológicas y gestión sostenible de suelos, agua, semillas y biodiversidad.", ""],
+    ["R2", "Transformación y comercio justo", "Almacenamiento, transformación y comercialización en circuitos justos y sostenibles, con valor agregado local.", ""],
+    ["R3", "Gobernanza territorial inclusiva", "Actores públicos, privados y sociales acuerdan y coordinan acciones para sistemas alimentarios sostenibles.", ""],
+    ["R4", "Incidencia en políticas públicas", "Organizaciones y redes promueven políticas que respalden los derechos de la agricultura familiar y la economía social y solidaria.", ""],
+    ["R5", "Participación y movilización ciudadana", "Ciudadanía informada y organizada que participa y actúa por una alimentación sana, local y sostenible.", ""],
+    ["R6", "Participación de mujeres y jóvenes", "Mujeres con mayor acceso a recursos y decisiones, y jóvenes con oportunidades de participación y liderazgo.", ""]] }] });
   add("H7", { fig: ["tarjeta", "circulos"] });
   add("H8", { tab: [{ cap: "Criterios de priorización", nota: "La plenaria puede ajustar o añadir criterios.", cols: ["Criterio", "Pregunta para el grupo"], rows: [
     ["Amplitud", "¿A cuántas personas, familias u organizaciones alcanza este cambio?"],

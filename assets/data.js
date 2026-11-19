@@ -190,12 +190,12 @@ window.FG = {
       p: "Dejar constancia de la autorización para grabar y citar.", i: ["Consentimiento verbal de la plenaria al inicio de cada día.", "Registro firmado para cada entrevista de historia de cambio."] }
   ],
   resultados: [
-    { r: "R1", n: "Producción agroecológica", d: "Diversificación, agroforestería, suelos, agua y semillas campesinas.", img: "img/idp-vivero.jpg" },
-    { r: "R2", n: "Transformación y comercialización", d: "Circuitos cortos, valor agregado local y MPE de mujeres y jóvenes.", img: "img/mercado-cocina.jpg" },
-    { r: "R3", n: "Gobernanza territorial", d: "Espacios de concertación multiactor sobre sistemas alimentarios.", img: "img/valle-la-union.jpg" },
-    { r: "R4", n: "Incidencia nacional", d: "Plataformas y redes que influyen en las políticas públicas.", img: "img/ficafe-feria.jpg" },
-    { r: "R5", n: "Sensibilización", d: "Escuelas, campañas y radio por una alimentación sana y local.", img: "img/mercado-plato.jpg" },
-    { r: "R6", n: "Mujeres y jóvenes", d: "Empoderamiento económico, liderazgo y nuevas masculinidades.", img: "img/negritos-panao.jpg" }
+    { r: "R1", n: "Producción agroecológica y ambiente", d: "Prácticas agroecológicas y gestión sostenible de suelos, agua, semillas y biodiversidad.", img: "img/idp-vivero.jpg" },
+    { r: "R2", n: "Transformación y comercio justo", d: "Almacenamiento, transformación y comercialización en circuitos justos y sostenibles, con valor agregado local.", img: "img/mercado-cocina.jpg" },
+    { r: "R3", n: "Gobernanza territorial inclusiva", d: "Actores públicos, privados y sociales acuerdan y coordinan acciones para sistemas alimentarios sostenibles.", img: "img/valle-la-union.jpg" },
+    { r: "R4", n: "Incidencia en políticas públicas", d: "Organizaciones y redes promueven políticas que respalden los derechos de la agricultura familiar y la economía social y solidaria.", img: "img/ficafe-feria.jpg" },
+    { r: "R5", n: "Participación y movilización ciudadana", d: "Ciudadanía informada y organizada que participa y actúa por una alimentación sana, local y sostenible.", img: "img/mercado-plato.jpg" },
+    { r: "R6", n: "Participación de mujeres y jóvenes", d: "Mujeres con mayor acceso a recursos y decisiones, y jóvenes con oportunidades de participación y liderazgo.", img: "img/negritos-panao.jpg" }
   ],
   creditos: [
     ["img/idp-paisaje.jpg", "Paisaje andino, Perú", "Iles de Paix", "ilesdepaix.org", "https://www.ilesdepaix.org/decouvrir/activites/pays/perou/"],

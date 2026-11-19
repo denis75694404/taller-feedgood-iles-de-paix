@@ -108,7 +108,7 @@ input,select,textarea{font-size:clamp(1.05rem,1.4vw,1.3rem) !important}
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<script src="../assets/data.js?v=20261119s"></script>
+<script src="../assets/data.js?v=20261119v"></script>
 <script>
 (function () {
   const D = window.FG, $ = s => document.querySelector(s);
@@ -118,7 +118,7 @@ input,select,textarea{font-size:clamp(1.05rem,1.4vw,1.3rem) !important}
   // H6 y H7 comparten el mismo muro
   const KEY = "fg-" + ({ H7: "H6" }[H.c] || H.c);
   const MESAS = ["Naranja", "Verde", "Azul", "Amarilla", "Terracota", "Morada"];
-  const RS = [["R1", "Producción"], ["R2", "Cadenas"], ["R3", "Gobernanza"], ["R4", "Incidencia"], ["R5", "Sensibilización"], ["R6", "Mujeres y jóvenes"], ["Otro", "Otros cambios"]];
+  const RS = [["R1", "Agroecología"], ["R2", "Comercio justo"], ["R3", "Gobernanza"], ["R4", "Políticas públicas"], ["R5", "Ciudadanía"], ["R6", "Mujeres y jóvenes"], ["Otro", "Otros cambios"]];
   const CATS = [["P", "Productora o productor"], ["T", "Transformador o MPE"], ["O", "Organización"], ["S", "Servicio técnico o autoridad"], ["C", "Consumidor o comunidad educativa"], ["A", "Socio u ONG"], ["E", "Equipo del programa"]];
   const SES = D.dias.flatMap(d => d.bloques.filter(b => b.c).map(b => b.c + " · " + b.t));
   let S; try { S = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { S = {}; }
