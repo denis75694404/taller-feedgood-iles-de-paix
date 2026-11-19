@@ -137,9 +137,10 @@
   /* cada herramienta se presenta en pantalla completa (proyección en sala) */
   let curTool = null;
   const fsOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+  let fsBtn = false;                               // la salida de pantalla completa la pidió el botón (no Esc)
   function toggleFs() {
     const el = $("#modal");
-    if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    if (fsOn()) { fsBtn = true; (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
     else if (el.requestFullscreen) el.requestFullscreen().catch(() => {}); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
   }
 
@@ -195,12 +196,17 @@
     if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     if (curTool) { curTool = null; history.replaceState(null, "", "#/herramientas"); }
   }
-  document.addEventListener("fullscreenchange", () => { const b = document.querySelector("[data-fs]"); if (b) b.textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; setTimeout(fitTool, 60); });
+  document.addEventListener("fullscreenchange", () => { if (!fsOn() && !fsBtn && $("#modal").classList.contains("on")) { closeModal(); return; } fsBtn = false; const b = document.querySelector("[data-fs]"); if (b) b.textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; setTimeout(fitTool, 60); });
   document.addEventListener("click", e => {
     const f = e.target.closest("[data-tf]"); if (f) { tf = f.dataset.tf; renderTools(); return; }
     const t = e.target.closest("[data-tool]"); if (t) { openTool(t.dataset.tool); return; }
     if (e.target.closest("[data-fs]")) { toggleFs(); return; }
-    if (e.target.closest("[data-close]") || e.target.id === "modal") closeModal();
+    if (e.target.closest("[data-close]")) { closeModal(); return; }
+    if (e.target.id === "modal") {
+      // clic en el fondo oscuro: si cae sobre un botón del menú (que se ve detrás), cierra y además navega, en un solo clic
+      const nb = document.elementsFromPoint(e.clientX, e.clientY).find(x => x.classList && x.classList.contains("nav-btn"));
+      closeModal(); if (nb) location.hash = nb.getAttribute("href");
+    }
   });
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") { if (!fsOn()) closeModal(); closeTimer(); return; }

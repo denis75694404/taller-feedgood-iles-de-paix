@@ -14,7 +14,7 @@
         <rect x="4" y="4" width="792" height="512" rx="14" fill="#fffaf2" stroke="#3d2520" stroke-width="3"/>
         <rect x="250" y="16" width="300" height="34" rx="6" fill="#3d2520"/>${T(400, 39, "Pantalla y proyector", { c: "#fff" })}
         <rect x="16" y="80" width="34" height="360" rx="6" fill="#e9dcc8" stroke="#3d2520"/>
-        <text x="38" y="260" text-anchor="middle" font-size="14" font-weight="700" fill="#3d2520" transform="rotate(-90 38 260)">Muro de cambios y paneles (H4, H5, H8, H9, H11, H12)</text>
+        <text x="38" y="260" text-anchor="middle" font-size="14" font-weight="700" fill="#3d2520" transform="rotate(-90 38 260)">Muro de cambios y paneles (H4, H5, H6, H9, H11, H12)</text>
         ${mesa(160, 140, "#E8742A", "Naranja")}${mesa(310, 140, "#4E8A3E", "Verde")}${mesa(460, 140, "#2F6DB5", "Azul")}
         ${mesa(160, 300, "#D9A400", "Amarilla")}${mesa(310, 300, "#B5532F", "Terracota")}${mesa(460, 300, "#7A4A9E", "Morada")}
         <rect x="560" y="90" width="220" height="270" rx="110" fill="none" stroke="#3d2520" stroke-dasharray="8 6" stroke-width="2"/>
@@ -99,14 +99,14 @@
     ["R4", "Incidencia nacional", "Plataformas y redes, propuestas de política", ""],
     ["R5", "Sensibilización", "Programas escolares, campañas, radio, iniciativas ciudadanas", ""],
     ["R6", "Mujeres y jóvenes", "Empoderamiento económico, liderazgo, nuevas masculinidades", ""]] }] });
-  add("H6", { fig: ["tarjeta", "circulos"] });
+  add("H8", { fig: ["tarjeta", "circulos"] });
   add("H7", { tab: [{ cap: "Criterios de priorización", nota: "La plenaria puede ajustar o añadir criterios.", cols: ["Criterio", "Pregunta para el grupo"], rows: [
     ["Amplitud", "¿A cuántas personas, familias u organizaciones alcanza este cambio?"],
     ["Profundidad", "¿Cuánto cambia la vida, el trabajo o la alimentación de quienes lo viven?"],
     ["Permanencia", "¿Seguirá cuando el programa termine?"],
     ["Inclusión", "¿Beneficia también a mujeres, jóvenes y a quienes antes quedaban fuera?"],
     ["Sistema alimentario", "¿Mejora la forma en que producimos, transformamos, vendemos o consumimos alimentos?"]] }] });
-  add("H8", { fig: ["muro"] });
+  add("H6", { fig: ["muro"] });
   add("H9", { tab: [{ cap: "Matriz de cambios significativos", cols: ["Orden", "Cambio significativo", "Votos", "Resultado (R1–R6)", "¿Por qué es significativo? (palabras del grupo)"], rows: filas(6, 5) }] });
   add("H10", { tab: [{ cap: "Ficha de análisis de contribución", cols: ["Pregunta", "Respuesta del grupo"], rows: [["Cambio analizado", ""], ["1. ¿Cómo era antes del programa?", ""], ["2. ¿Cómo es ahora?", ""],
     ["3. ¿Qué hizo el programa que ayudó a este cambio?", ""], ["4. ¿Qué hicieron otras personas, organizaciones o instituciones?", ""], ["5. ¿Qué factores del contexto influyeron (clima, precios, políticas, otros)?", ""],
