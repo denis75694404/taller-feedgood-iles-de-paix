@@ -113,7 +113,7 @@
     ["1. ¿Qué hizo el programa que ayudó a este cambio?", ""], ["2. ¿Qué hicieron otras personas, organizaciones o instituciones?", ""], ["3. ¿Qué factores del contexto influyeron (clima, precios, políticas, otros)?", ""],
     ["4. ¿Habría ocurrido sin el programa? (Sí / En parte / No) ¿Por qué?", ""], ["5. ¿Qué aprendimos de este cambio?", ""]] }] });
   add("H11", { fig: ["arbol"] });
-  add("H12", { tab: [{ cap: "Panel de aprendizajes", nota: "Ejemplo: «El plátano pelado, en un táper de vidrio con tapa hermética y en la refrigeradora, se conserva en buen estado hasta 10 días sin perder sus propiedades sensoriales».", cols: ["Aprendimos de lo que funcionó", "Aprendimos de lo que no funcionó"], rows: filas(3, 2, () => "") }] });
+  add("H12", { tab: [{ cap: "Panel de aprendizajes", nota: "Ejemplo: «El plátano pelado, en un táper de vidrio con tapa hermética y en la refrigeradora, se conserva en buen estado hasta 10 días sin perder sus propiedades sensoriales».", ir: "H17", cols: ["Aprendimos de lo que funcionó", "Aprendimos de lo que no funcionó"], rows: filas(3, 2, () => "") }] });
   add("H13", { tab: [{ cap: "Guion de la celebración", cols: ["Momento", "Contenido", "Tiempo"], rows: [
     ["Bienvenida", "Palabras breves de Iles de Paix: gratitud por los cinco años compartidos", "5 min"],
     ["Historia de cambio", "Una productora o un joven cuenta su historia con sus propias palabras", "5 min"],

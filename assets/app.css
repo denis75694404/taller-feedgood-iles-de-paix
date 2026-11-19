@@ -252,3 +252,5 @@ html.toolopen #rail,html.toolopen #tabbar{z-index:90}
 .fnotes{position:absolute;inset:0;pointer-events:none}
 .fnote{position:absolute;pointer-events:auto;min-width:2em;max-width:45%;padding:2px 6px;font-weight:800;font-size:clamp(1.1rem,1.8vw,1.6rem);line-height:1.25;background:rgba(255,255,255,.85);border-radius:6px;outline:none;transform:translateY(-50%)}
 .fnote:focus{box-shadow:0 0 0 2px var(--terra)}
+
+.tfmt figcaption .irbtn{margin-left:8px;vertical-align:middle;font-size:clamp(1rem,1.4vw,1.25rem)}
