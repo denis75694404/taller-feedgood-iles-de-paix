@@ -161,7 +161,7 @@
   const tabHtml = t => `<figure class="tfmt"><figcaption>${esc(t.cap)}${t.nota ? ` <span class="muted">· ${esc(t.nota)}</span>` : ""}</figcaption><div class="tscroll"><table>
     <thead><tr>${t.cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
     <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${esc(c) || "&nbsp;"}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
-  const figHtml = f => `<figure class="tfmt tfig"><figcaption>${esc(f.cap)}</figcaption>${f.svg}${f.nota ? `<p class="small muted" style="margin:6px 0 0">${esc(f.nota)}</p>` : ""}</figure>`;
+  const figHtml = f => `<figure class="tfmt tfig"><figcaption>${esc(f.cap)}</figcaption>${f.svg}${f.nota ? `<p class="small muted" style="margin:6px 0 0">${esc(f.nota)}</p>` : ""}${f.pasos ? `<div class="fpasos"><b>Instrucciones:</b><ol>${f.pasos.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div>` : ""}</figure>`;
   const progHtml = () => D.dias.map((d, i) => tabHtml({ cap: `Programa del día ${i + 1} · ${d.label}`, cols: ["Hora", "Sesión"],
     rows: d.bloques.map(b => [b.t0 + "–" + b.t1, (b.c ? b.c + " · " : "") + b.t]) })).join("");
   function openTool(code) {

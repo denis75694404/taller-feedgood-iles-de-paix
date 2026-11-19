@@ -49,6 +49,7 @@
           <text x="20" y="400" font-size="15" font-weight="700" fill="#4E8A3E">Círculo interior</text><text x="20" y="420" font-size="14" fill="#3d2520">gira en sentido horario</text>
         </svg>`; })() },
     muro: { cap: "Estructura del muro de cambios", nota: "Cada tarjeta lleva el código de su mesa (por ejemplo, M3) para la trazabilidad.",
+      pasos: ["Escribe tu nombre en un pósit.", "Adhiérelo sobre la columna que quisieras profundizar o discutir.", "El facilitador menciona los nombres de los integrantes de cada grupo y se forman nuevos equipos para trabajar la siguiente herramienta."],
       svg: (() => { const C = [["R1", "Producción", "#4E8A3E"], ["R2", "Cadenas", "#E8742A"], ["R3", "Gobernanza", "#2F6DB5"], ["R4", "Incidencia", "#7A4A9E"], ["R5", "Sensibilización", "#D9A400"], ["R6", "Mujeres y jóvenes", "#B5532F"], ["", "Otros cambios", "#7d6b5d"]];
         let g = ""; C.forEach(([r, n, col], k) => { const x = 10 + k * 112;
           g += `<rect x="${x}" y="10" width="104" height="70" rx="8" fill="${col}"/>${T(x + 52, 40, r || "Otros", { c: "#fff", fs: 18 })}${T(x + 52, 62, r ? n : "cambios", { c: "#fff", fs: n.length > 12 ? 11 : 13 })}

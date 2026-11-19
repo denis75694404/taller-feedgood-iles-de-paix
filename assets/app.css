@@ -225,3 +225,7 @@ footer.cred a{color:var(--terra-d)}
 .tfig svg{max-width:1200px;margin:0 auto}
 .tfig p.small{font-size:clamp(1.15rem,1.6vw,1.4rem) !important}
 .fbar .btn{font-size:1rem}
+.fpasos{margin:14px 0 0;padding:16px 22px;background:var(--crema);border-radius:14px;font-size:clamp(1.3rem,2vw,1.8rem);line-height:1.45}
+.fpasos b{color:var(--terra-d)}
+.fpasos ol{margin:8px 0 0;padding-left:1.4em}
+.fpasos li{margin-bottom:.4em}
