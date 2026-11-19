@@ -814,7 +814,7 @@ const FASE_TXT = {
   resultados: "Estas son las prioridades de tu grupo."
 };
 const CUPO = 15, MAX_MSG = 1, TOP = 3, GRACIA = 15000, VOTO_MS = 3 * 60000;
-// Cada persona tiene 2 votos por pregunta (Productos 1 y 2: dos adhesivos, cada voto vale lo mismo).
+// Cada persona tiene 2 votos por pregunta (dos adhesivos, cada voto vale lo mismo).
 // Se guardan en un solo documento <uid>_<pregunta> con id = "clave1|clave2" (compatible con las reglas de Firestore).
 const MAX_VOTOS = 2;
 const vsel = d => typeof d?.id === "string" && d.id ? d.id.split("|").filter(Boolean) : [];

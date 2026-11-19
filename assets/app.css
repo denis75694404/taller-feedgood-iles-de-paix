@@ -188,6 +188,7 @@ footer.cred a{color:var(--terra-d)}
 .fins li{margin-bottom:.55em}
 .fq{margin:18px 0 6px;padding:16px 22px;border-left:6px solid var(--terra);background:var(--crema);border-radius:0 16px 16px 0;font-size:clamp(1.2rem,2.2vw,1.9rem);font-weight:700;color:var(--terra-dd)}
 .tfmt{margin:0 0 18px}
+.tfig svg{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;font-family:inherit}
 .tfmt figcaption{font-weight:800;color:var(--terra-d);margin-bottom:6px;font-size:1rem}
 .tscroll{overflow-x:auto}
 .tfmt table{width:100%;border-collapse:collapse;background:#fff;font-size:clamp(.9rem,1.25vw,1.1rem)}

@@ -1,4 +1,4 @@
-# Render: sitio estático del portal del taller Feed Good (se despliega desde un repositorio privado).
+# Render: sitio estático del portal del taller Feed Good.
 # En Render: New → Blueprint → elegir el repositorio → Apply.
 services:
   - type: web

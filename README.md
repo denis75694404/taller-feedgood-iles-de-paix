@@ -10,8 +10,8 @@ Sistema del taller participativo de autoevaluación final del programa Feed Good
 | `herramientas/herramienta.html?id=…` | Herramientas interactivas: padrón (H1), muro de cambios (H6 y H8), priorización (H9), contribución (H10), árbol de resultados no alcanzados (H11), aprendizajes (H12 y H19), matrices de criterios (H15 y H16), lecciones (H17), historias de cambio (H20), evaluación (H22) y relatoría (D1). Guardan en el navegador del equipo y exportan a CSV y JSON |
 | `herramientas/teoria-del-cambio.html` | Teoría del cambio en sencillo (H23): animación paso a paso de la raíz al fruto, para proyectar en la sala |
 | `trabajemos-juntos/` | Dinámica en vivo por mesas desde el celular: `grupos.html` (participantes), `admin.html` (facilitador, con clave) y `pantalla-unica.html` (respaldo sin internet) |
-| `assets/data.js` | Agenda, herramientas y resultados del programa (fuente: Productos 1 y 2) |
-| `docs/` | Producto 1 y Producto 2 en PDF y Word |
+| `assets/data.js` | Agenda, herramientas y resultados del programa |
+| `assets/formatos.js` | Cuadros, formatos y dibujos de cada herramienta |
 | `img/` | Fotos de Iles de Paix y de Wikimedia Commons; créditos en `img/creditos_commons.json` |
 
 ## Sesiones de «Trabajemos juntos»

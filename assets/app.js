@@ -28,10 +28,10 @@
   document.querySelectorAll("[data-i]").forEach(el => el.insertAdjacentHTML("afterbegin", ic(el.dataset.i)));
 
   /* navegación */
-  const NAV = [["inicio", "Inicio", "home"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"], ["participa", "Participa", "users"], ["documentos", "Documentos", "file"], ["facilitador", "Facilitador", "shield"]];
+  const NAV = [["inicio", "Inicio", "home"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"], ["participa", "Participa", "users"], ["facilitador", "Facilitador", "shield"]];
   const navHtml = list => list.map(([k, t, i]) => `<a class="nav-btn" data-k="${k}" href="#/${k}">${ic(i)}<span>${t}</span></a>`).join("");
   $("#rail").insertAdjacentHTML("beforeend", navHtml(NAV));
-  $("#tabbar").innerHTML = navHtml(NAV.filter(n => n[0] !== "documentos"));
+  $("#tabbar").innerHTML = navHtml(NAV);
 
   function route() {
     const k = (location.hash.replace(/^#\//, "").split("/")[0]) || "inicio";
@@ -115,7 +115,7 @@
         <div class="hr">${b.t0}–${b.t1}<span class="code">${b.c}</span></div>
         <div><div class="tt">${esc(b.t)}</div><div class="who">${esc(b.who)}</div><div class="tl">${tools}</div>
           <div class="detail"><p><b>Objetivo:</b> ${esc(b.obj)}</p><ol>${(b.pasos || []).map(p => `<li>${esc(p)}</li>`).join("")}</ol>
-          <p class="small"><b>Producto o registro:</b> ${esc(b.prod)}</p></div></div>
+          <p class="small"><b>Resultado de la sesión:</b> ${esc(b.prod)}</p></div></div>
         <div class="noprint"><button class="btn sec sm" data-timer="${d.key}|${b.t0}" title="Cronómetro de la sesión">${ic("timer")}</button></div></div>`;
     }).join("");
   }
@@ -160,6 +160,9 @@
   const tabHtml = t => `<figure class="tfmt"><figcaption>${esc(t.cap)}${t.nota ? ` <span class="muted">· ${esc(t.nota)}</span>` : ""}</figcaption><div class="tscroll"><table>
     <thead><tr>${t.cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
     <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${esc(c) || "&nbsp;"}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
+  const figHtml = f => `<figure class="tfmt tfig"><figcaption>${esc(f.cap)}</figcaption>${f.svg}${f.nota ? `<p class="small muted" style="margin:6px 0 0">${esc(f.nota)}</p>` : ""}</figure>`;
+  const progHtml = () => D.dias.map((d, i) => tabHtml({ cap: `Programa del día ${i + 1} · ${d.label}`, cols: ["Hora", "Sesión"],
+    rows: d.bloques.map(b => [b.t0 + "–" + b.t1, (b.c ? b.c + " · " : "") + b.t]) })).join("");
   function openTool(code) {
     const h = toolByCode(code); if (!h) return;
     curTool = h.c;
@@ -178,9 +181,8 @@
         ${h.q ? `<blockquote class="fq">${esc(h.q)}</blockquote>` : ""}
         <div class="fcols"><section><h3>Instrucciones</h3><ol class="fins">${h.i.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
           ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}–${b.t1}</span>`).join("")}</div>` : ""}</section>
-          ${h.tab ? `<section><h3>Formato</h3>${h.tab.map(tabHtml).join("")}</section>` : ""}</div>
-        <div class="chips" style="margin-top:22px">${h.url ? `<a class="btn pri" href="${h.url}">▶ Ver la animación en pantalla completa</a>` : ""}${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}
-        <a class="btn sec" href="${D.docs[1].u}" target="_blank" rel="noopener">${ic("file")}Formato en el Producto 2</a></div></div></div>`;
+          ${h.tab || h.fig || h.prog ? `<section>${h.fig ? h.fig.map(figHtml).join("") : ""}${h.tab ? `<h3>Formato</h3>${h.tab.map(tabHtml).join("")}` : ""}${h.prog ? progHtml() : ""}</section>` : ""}</div>
+        <div class="chips" style="margin-top:22px">${h.url ? `<a class="btn pri" href="${h.url}">▶ Ver la animación en pantalla completa</a>` : ""}${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}</div></div></div>`;
     $("#modal").classList.add("on", "full"); document.body.style.overflow = "hidden";
     $("#modal").scrollTop = 0;
     fitTool(); if (document.fonts) document.fonts.ready.then(fitTool);
@@ -225,10 +227,7 @@
     if (window.QRCode) new QRCode($("#qrL"), { text: tjUrl(), width: 420, height: 420, colorDark: "#3d2520", colorLight: "#ffffff" });
   });
 
-  /* documentos y créditos */
-  $("#docGrid").innerHTML = D.docs.map(d => `<div class="card daycard"><img class="ph" src="${d.img}" alt="" loading="lazy"><div class="pad">
-    <h3>${esc(d.t)}</h3><p class="small muted">${esc(d.d)}</p><div class="chips">
-    <a class="btn pri sm" href="${d.u}" target="_blank" rel="noopener">${ic("file")}Ver PDF</a><a class="btn sec sm" href="${d.w}" download>${ic("download")}Descargar Word</a></div></div></div>`).join("");
+  /* créditos */
   const cr = (D.creditos || []).concat((window.FG_CREDITOS || []).map(c => [c.archivo, c.titulo, c.autor, c.licencia, c.fuente]));
   $("#credits").innerHTML = "<b>Créditos de las fotografías.</b> " + cr.map(([f, t, a, l, u]) => `${esc(t)}: ${esc(a)} (${esc(l)}, <a href="${u}" target="_blank" rel="noopener">fuente</a>)`).join(" · ") +
     ". Las fotos de Wikimedia Commons se usan según su licencia; las de Iles de Paix provienen de su sitio web.";

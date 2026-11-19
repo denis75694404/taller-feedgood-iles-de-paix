@@ -1,4 +1,4 @@
-/* Datos del taller: agenda (Producto 1), herramientas (Producto 2), resultados del programa y créditos de fotos. */
+/* Datos del taller: agenda, herramientas, resultados del programa y créditos de fotos. */
 window.FG = {
   taller: {
     titulo: "Taller participativo de autoevaluación final",
@@ -7,9 +7,9 @@ window.FG = {
     fechas: "25 y 26 de noviembre de 2026",
     frase: "Celebrando los cambios que sembramos juntos."
   },
-  // Acordado en la reunión de revisión de los Productos 1 y 2 con Octavio Mayhua (Islas de Paz)
+  // Acordado con Octavio Mayhua (Islas de Paz)
   previo: { fecha: "2026-11-24", label: "Martes 24 de noviembre", t0: "15:00", t1: "16:00", t: "Reunión con jóvenes participantes del programa", lugar: "Ciudad de Huánuco",
-    d: "Un espacio propio para que la voz de las y los jóvenes llegue al taller con sus ideas y propuestas. Acordado en la reunión de revisión de los Productos 1 y 2 con Octavio Mayhua, de Islas de Paz." },
+    d: "Un espacio propio para que la voz de las y los jóvenes llegue al taller con sus ideas y propuestas. Acordado con Octavio Mayhua, de Islas de Paz." },
   dias: [
     { key: "d1", fecha: "2026-11-25", label: "Miércoles 25 de noviembre", corto: "Mié 25", img: "img/idp-yunta.jpg",
       tema: "Identificación de los cambios significativos", publico: "Grupo amplio: productoras y productores, transformadores, organizaciones, servicios técnicos, autoridades, consumidores y socios",
@@ -196,10 +196,6 @@ window.FG = {
     { r: "R4", n: "Incidencia nacional", d: "Plataformas y redes que influyen en las políticas públicas.", img: "img/ficafe-feria.jpg" },
     { r: "R5", n: "Sensibilización", d: "Escuelas, campañas y radio por una alimentación sana y local.", img: "img/mercado-plato.jpg" },
     { r: "R6", n: "Mujeres y jóvenes", d: "Empoderamiento económico, liderazgo y nuevas masculinidades.", img: "img/negritos-panao.jpg" }
-  ],
-  docs: [
-    { t: "Producto 1. Nota metodológica y agenda", d: "Carta de presentación, comprensión de la misión, enfoque, agenda y matriz metodológica de los dos días.", u: "docs/Producto 1_Nota metodológica y agenda.pdf", w: "docs/Producto 1_Nota metodológica y agenda.docx", img: "img/idp-yunta.jpg" },
-    { t: "Producto 2. Herramientas y materiales", d: "Carta de presentación, fichas, formatos para imprimir, guía para cofacilitadores y lista de materiales con checklist.", u: "docs/Producto 2_Herramientas y materiales de facilitación.pdf", w: "docs/Producto 2_Herramientas y materiales de facilitación.docx", img: "img/idp-vivero.jpg" }
   ],
   creditos: [
     ["img/idp-paisaje.jpg", "Paisaje andino, Perú", "Iles de Paix", "ilesdepaix.org", "https://www.ilesdepaix.org/decouvrir/activites/pays/perou/"],
