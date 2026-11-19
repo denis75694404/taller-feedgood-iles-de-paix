@@ -131,7 +131,7 @@
   });
 
   /* herramientas */
-  const GRUPOS = [["todas", "Todas"], ["c", "Comunes"], ["1", "Día 1"], ["2", "Día 2"], ["doc", "Documentación"]];
+  const GRUPOS = [["todas", "Todas"], ["1", "Día 1"], ["2", "Día 2"], ["doc", "Documentación"]];
   let tf = "todas";
   function renderTools() {
     $("#toolChips").innerHTML = GRUPOS.map(([k, t]) => `<button class="chip ${k === tf ? "on" : ""}" data-tf="${k}">${t}</button>`).join("");
@@ -189,7 +189,7 @@
     ${f.nota ? `<p class="small muted" style="margin:6px 0 0">${esc(f.nota)}</p>` : ""}${f.pasos ? `<div class="fpasos"><b>Instrucciones:</b><ol>${f.pasos.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div>` : ""}</figure>`;
   const progHtml = () => D.dias.map((d, i) => tabHtml({ cap: `Programa del día ${i + 1} · ${d.label}`, cols: ["Hora", "Sesión"],
     rows: d.bloques.map(b => [b.t0 + "–" + b.t1, (b.c ? b.c + " · " : "") + b.t]) })).join("");
-  // las flechas ‹ › recorren solo las herramientas del filtro elegido (Día 1, Día 2, Comunes, etc.)
+  // las flechas ‹ › recorren solo las herramientas del filtro elegido (Día 1, Día 2, Documentación o Todas)
   const navList = h => { const f = D.herr.filter(x => tf === "todas" || x.d.includes(tf)); return f.includes(h) ? f : D.herr; };
   function openTool(code) {
     const h = toolByCode(code); if (!h) return;
