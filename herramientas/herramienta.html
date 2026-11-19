@@ -128,7 +128,7 @@ input,select,textarea{font-size:clamp(1.05rem,1.4vw,1.3rem) !important}
   const opt = (arr, sel) => arr.map(a => { const [v, t] = Array.isArray(a) ? a : [a, a]; return `<option value="${esc(v)}" ${v === sel ? "selected" : ""}>${esc(t)}</option>`; }).join("");
   const val = n => ($("#" + n) || {}).value?.trim() || "";
 
-  $("#ph").src = "../" + H.img; $("#ey").textContent = /^S\d/.test(H.s) ? "Sesión " + H.s : H.s + " las sesiones"; $("#tt").textContent = H.c + ". " + H.n; $("#pp").textContent = H.p;
+  $("#ph").src = "../" + H.img; $("#ey").textContent = /^S\d/.test(H.s) ? "Sesión " + H.s : H.s === "Todas" ? "Todas las sesiones" : H.s; $("#tt").textContent = H.c + ". " + H.n; $("#pp").textContent = H.p;
   document.title = H.c + " · " + H.n + " · Taller Feed Good";
 
   /* ---------------- definiciones por herramienta ---------------- */

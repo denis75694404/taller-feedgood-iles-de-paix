@@ -203,7 +203,7 @@
         <span class="sp"></span>
         <button class="btn ghost sm" data-fs title="Pantalla completa (F)">${fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"}</button>
         <button class="x" data-close aria-label="Cerrar (Esc)">×</button></div>
-      <div class="fstage"><header class="fhero"><img src="${h.img}" alt=""><div class="in"><div class="eyebrow">${/^S\d/.test(h.s) ? "Sesión " + esc(h.s) : esc(h.s) + " las sesiones"}</div><h2>${h.c}. ${esc(h.n)}</h2><p>${esc(h.p)}</p></div></header>
+      <div class="fstage"><header class="fhero"><img src="${h.img}" alt=""><div class="in"><div class="eyebrow">${/^S\d/.test(h.s) ? "Sesión " + esc(h.s) : h.s === "Todas" ? "Todas las sesiones" : esc(h.s)}</div><h2>${h.c}. ${esc(h.n)}</h2><p>${esc(h.p)}</p></div></header>
       <div class="fbody">
         <div class="kv"><div><b>Sesión</b>${esc(h.s)}</div><div><b>Responsable</b>${esc(h.who)}</div><div><b>Formato</b>${esc(h.f)}</div><div><b>Tipo</b>${h.url ? "Animación" : h.mode ? "Interactiva" : "Ficha y formato"}</div></div>
         ${h.q ? `<blockquote class="fq">${esc(h.q)}</blockquote>` : ""}
