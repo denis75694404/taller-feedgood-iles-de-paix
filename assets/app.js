@@ -42,6 +42,11 @@
     if (v === "participa") drawQR();
   }
   window.addEventListener("hashchange", route);
+  // un solo clic en el menú: si la dirección ya es la del botón (no hay hashchange), igual cierra la ficha y muestra la vista
+  document.addEventListener("click", e => {
+    const nb = e.target.closest(".nav-btn"); if (!nb) return;
+    if (location.hash === nb.getAttribute("href")) { e.preventDefault(); if ($("#modal").classList.contains("on")) closeModal(); closeTimer(); route(); }
+  });
 
   /* hora de Huánuco (UTC−5, sin horario de verano) */
   const nowPe = () => { const d = new Date(Date.now() - 5 * 3600e3); return { ymd: d.toISOString().slice(0, 10), min: d.getUTCHours() * 60 + d.getUTCMinutes(), hm: d.toISOString().slice(11, 16) }; };
@@ -185,7 +190,7 @@
           ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}–${b.t1}</span>`).join("")}</div>` : ""}</section>
           ${h.tab || h.fig || h.prog ? `<section>${h.fig ? h.fig.map(figHtml).join("") : ""}${h.tab ? `<h3>Formato</h3>${h.tab.map(tabHtml).join("")}` : ""}${h.prog ? progHtml() : ""}</section>` : ""}</div>
         <div class="chips" style="margin-top:22px">${h.url ? `<a class="btn pri" href="${h.url}">▶ Ver la animación en pantalla completa</a>` : ""}${h.anim && toolByCode(h.anim) ? `<a class="btn pri" href="${toolByCode(h.anim).url}?desde=${h.c}">▶ Ver la animación de ${h.anim}: ${esc(toolByCode(h.anim).n)}</a>` : ""}${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}</div></div></div>`;
-    $("#modal").classList.add("on", "full"); document.body.style.overflow = "hidden";
+    $("#modal").classList.add("on", "full"); document.body.style.overflow = "hidden"; document.documentElement.classList.add("toolopen");
     $("#modal").scrollTop = 0;
     fitTool(); if (document.fonts) document.fonts.ready.then(fitTool);
     $("#modalBox").querySelectorAll("img").forEach(im => im.complete || im.addEventListener("load", fitTool, { once: true }));
@@ -194,7 +199,9 @@
   function closeModal() {
     $("#modal").classList.remove("on", "full"); document.body.style.overflow = "";
     if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-    if (curTool) { curTool = null; history.replaceState(null, "", "#/herramientas"); }
+    document.documentElement.classList.remove("toolopen");
+    // solo reescribe la dirección si sigue apuntando a la ficha; si el menú ya cambió de vista, no la pisa
+    if (curTool) { curTool = null; if (/^#\/herramientas\/./.test(location.hash)) history.replaceState(null, "", "#/herramientas"); }
   }
   document.addEventListener("fullscreenchange", () => { if (!fsOn() && !fsBtn && $("#modal").classList.contains("on")) { closeModal(); return; } fsBtn = false; const b = document.querySelector("[data-fs]"); if (b) b.textContent = fsOn() ? "Salir de pantalla completa" : "⛶ Pantalla completa"; setTimeout(fitTool, 60); });
   document.addEventListener("click", e => {

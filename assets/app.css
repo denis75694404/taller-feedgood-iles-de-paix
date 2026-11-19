@@ -229,3 +229,8 @@ footer.cred a{color:var(--terra-d)}
 .fpasos b{color:var(--terra-d)}
 .fpasos ol{margin:8px 0 0;padding-left:1.4em}
 .fpasos li{margin-bottom:.4em}
+
+/* la ficha abierta deja visible el menú (izquierda o barra inferior) para que responda al primer clic */
+html.toolopen:not(.proj) .modal.full:not(:fullscreen){left:var(--rail)}
+html.toolopen #rail,html.toolopen #tabbar{z-index:90}
+@media (max-width:760px){html.toolopen:not(.proj) .modal.full:not(:fullscreen){left:0;bottom:calc(66px + env(safe-area-inset-bottom))}}
