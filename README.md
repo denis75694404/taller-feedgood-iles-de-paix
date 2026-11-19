@@ -12,7 +12,7 @@ Sistema del taller participativo de autoevaluación final del programa Feed Good
 | `trabajemos-juntos/` | Dinámica en vivo por mesas desde el celular: `grupos.html` (participantes), `admin.html` (facilitador, con clave) y `pantalla-unica.html` (respaldo sin internet) |
 | `assets/data.js` | Agenda, herramientas y resultados del programa |
 | `assets/formatos.js` | Cuadros, formatos y dibujos de cada herramienta |
-| `img/` | Fotos de Iles de Paix y de Wikimedia Commons; créditos en `img/creditos_commons.json` |
+| `img/` | Fotos de Iles de Paix (ilesdepaix.org, créditos en `assets/data.js`) y de Wikimedia Commons (créditos en `img/creditos_commons.json`) |
 
 ## Sesiones de «Trabajemos juntos»
 
