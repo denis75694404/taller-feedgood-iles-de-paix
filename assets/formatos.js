@@ -147,7 +147,7 @@
     ["9", "Principales lecciones aprendidas", "S1.9, S2.6 y S2.7 (H12, H17)", "1"], ["10", "Aprendizajes e implicaciones para los futuros programas", "S2.8 (H19)", "1"],
     ["11", "Conclusiones y recomendaciones", "S2.7 y S2.8 (H18, H19)", "0,5"], ["", "Total del cuerpo principal", "", "20"]] }] });
   add("H22", { tab: [{ cap: "Formulario de evaluación", nota: "Preguntas abiertas: ¿qué fue lo más valioso para ti? y ¿qué mejorarías?", cols: ["Aspecto", "Muy bueno", "Bueno", "Regular", "Malo", "Muy malo"], rows: [
-    ["Pude expresar lo que pienso con libertad", "", "", "", "", ""], ["Se escucharon distintos puntos de vista", "", "", "", "", ""], ["La metodología y las herramientas", "", "", "", "", ""], ["El uso del tiempo", "", "", "", "", ""]] }] });
+    ["Me expresé libremente", "", "", "", "", ""], ["Escuché otras opiniones", "", "", "", "", ""], ["Metodología", "", "", "", "", ""], ["Tiempo preciso", "", "", "", "", ""]] }] });
   add("D1", { tab: [{ cap: "Plantilla de relatoría", nota: "C = idea convergente (compartida por varios); D = idea divergente o minoritaria.", cols: ["Hora", "Sesión y mesa", "Aporte clave (textual)", "Categoría de actor", "C / D", "Código de foto o audio", "Observación"], rows: [["", "S1.4-M1", "", "", "", "", ""]].concat(filas(4, 7, () => "")) }] });
   add("D2", { tab: [{ cap: "Matriz de consolidación diaria", nota: "C = cambio; N = resultado no alcanzado. Respaldo: amplio o particular.", cols: ["Código", "Cambio o resultado no alcanzado", "R", "Votos", "Contribución o causa", "Aprendizaje", "Respaldo"], rows: ["C1", "C2", "N1", "N2"].map(c => [c, "", "", "", "", "", ""]) }] });
   add("D3", { fig: ["foto"] });
