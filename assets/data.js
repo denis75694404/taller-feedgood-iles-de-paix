@@ -42,7 +42,7 @@ window.FG = {
         { c: "", t0: "12:45", t1: "13:45", t: "Almuerzo", who: "Equipo del programa", pausa: true },
         { c: "S1.7", t0: "13:45", t1: "15:00", t: "Contribución del programa a los cambios priorizados", who: "César Delgado y cofacilitadores", h: ["H10"],
           obj: "Analizar la contribución del programa a los cambios priorizados.",
-          pasos: ["Activación breve (5 min).", "Cada persona elige el cambio que quiere analizar; máximo seis por cambio (10 min).", "Guía H10: antes y ahora, qué hizo el programa, qué hicieron otros, qué pesó el contexto y si habría ocurrido sin el programa (35 min).", "Cada mesa presenta en dos minutos; síntesis del facilitador (25 min)."],
+          pasos: ["Activación breve (5 min).", "Cada persona elige el cambio que quiere analizar; máximo seis por cambio (10 min).", "Guía H10: qué hizo el programa, qué hicieron otros, qué pesó el contexto y si habría ocurrido sin el programa (35 min).", "Cada mesa presenta en dos minutos; síntesis del facilitador (25 min)."],
           prod: "Fichas de contribución por cambio" },
         { c: "S1.8", t0: "15:00", t1: "16:00", t: "Resultados esperados que no se materializaron", who: "César Delgado y cofacilitadores", h: ["H11", "TJ"],
           obj: "Identificar los resultados esperados que no se materializaron y sus causas probables.",

@@ -163,15 +163,35 @@
   /* la ficha se muestra a tamaño completo (letra grande para personas mayores) y se recorre con desplazamiento */
   const fitTool = () => { const st = $("#modal .fstage"); if (st) st.style.zoom = 1; };
   window.addEventListener("resize", () => fitTool());
-  const tabHtml = t => `<figure class="tfmt"><figcaption>${esc(t.cap)}${t.nota ? ` <span class="muted">· ${esc(t.nota)}</span>` : ""}</figcaption><div class="tscroll"><table>
+  /* escribir en pantalla: tablas editables y figuras con lápiz y notas (se guarda en este navegador) */
+  const ESC_K = c => "fg-esc-" + c;
+  const escLoad = c => { try { return JSON.parse(localStorage.getItem(ESC_K(c))) || {}; } catch (e) { return {}; } };
+  const escSave = (c, o) => { try { localStorage.setItem(ESC_K(c), JSON.stringify(o)); } catch (e) {} };
+  let escCur = {};
+  const tabHtml = (t, k) => {
+    const ed = k != null, ex = ed ? (escCur.x || {})[k] || 0 : 0;
+    const rows = t.rows.concat(Array.from({ length: ex }, () => t.cols.map(() => "")));
+    const cell = (c, r, j) => { const id = k + "-" + r + "-" + j, v = ed && escCur.t && id in escCur.t ? escCur.t[id] : null;
+      return ed ? `<td contenteditable="true" spellcheck="false" data-cell="${id}">${v != null ? esc(v) : esc(c)}</td>` : `<td>${esc(c) || "&nbsp;"}</td>`; };
+    return `<figure class="tfmt"><figcaption>${esc(t.cap)}${t.nota ? ` <span class="muted">· ${esc(t.nota)}</span>` : ""}</figcaption><div class="tscroll"><table${ed ? ' class="edit"' : ""}>
     <thead><tr>${t.cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
-    <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${esc(c) || "&nbsp;"}</td>`).join("")}</tr>`).join("")}</tbody></table></div></figure>`;
-  const figHtml = f => `<figure class="tfmt tfig"><figcaption>${esc(f.cap)}</figcaption>${f.svg}${f.nota ? `<p class="small muted" style="margin:6px 0 0">${esc(f.nota)}</p>` : ""}${f.pasos ? `<div class="fpasos"><b>Instrucciones:</b><ol>${f.pasos.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div>` : ""}</figure>`;
+    <tbody>${rows.map((r, i) => `<tr>${r.map((c, j) => cell(c, i, j)).join("")}</tr>`).join("")}</tbody></table></div>
+    ${ed ? `<div class="etools noprint"><button class="btn sec sm" data-tadd="${k}">＋ Agregar fila</button><button class="btn ghost sm" data-tclr="${k}">Borrar lo escrito</button><span class="muted small">Toque una celda para escribir.</span></div>` : ""}</figure>`;
+  };
+  const COLS = ["#c0392b", "#1f5fa8", "#2e7d32", "#111"];
+  const inkPaths = k => (((escCur.f || {})[k] || {}).s || []).map(s => `<polyline points="${s.p}" stroke="${s.c}" />`).join("");
+  const noteHtml = (n, i) => `<div class="fnote" contenteditable="true" spellcheck="false" data-note="${i}" style="left:${n.x}%;top:${n.y}%;color:${n.c}">${esc(n.t)}</div>`;
+  const figHtml = (f, k) => `<figure class="tfmt tfig"><figcaption>${esc(f.cap)}</figcaption>
+    <div class="fwrap" data-fig="${k}">${f.svg}<svg class="fink" viewBox="0 0 1000 1000" preserveAspectRatio="none">${inkPaths(k)}</svg><div class="fnotes">${(((escCur.f || {})[k] || {}).n || []).map(noteHtml).join("")}</div></div>
+    <div class="etools noprint" data-figt="${k}"><button class="btn sec sm" data-fmode="pen">✎ Lápiz</button><button class="btn sec sm" data-fmode="txt">T Texto</button>
+      ${COLS.map((c, i) => `<button class="sw${c === fCol ? " on" : ""}" data-fcol="${c}" style="background:${c}" aria-label="Color"></button>`).join("")}
+      <button class="btn ghost sm" data-fundo>↶ Deshacer</button><button class="btn ghost sm" data-fclr>Borrar lo escrito</button></div>
+    ${f.nota ? `<p class="small muted" style="margin:6px 0 0">${esc(f.nota)}</p>` : ""}${f.pasos ? `<div class="fpasos"><b>Instrucciones:</b><ol>${f.pasos.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div>` : ""}</figure>`;
   const progHtml = () => D.dias.map((d, i) => tabHtml({ cap: `Programa del día ${i + 1} · ${d.label}`, cols: ["Hora", "Sesión"],
     rows: d.bloques.map(b => [b.t0 + "–" + b.t1, (b.c ? b.c + " · " : "") + b.t]) })).join("");
   function openTool(code) {
     const h = toolByCode(code); if (!h) return;
-    curTool = h.c;
+    curTool = h.c; escCur = escLoad(h.c); fMode = null;
     const list = D.herr, i = list.indexOf(h), prev = list[(i - 1 + list.length) % list.length], next = list[(i + 1) % list.length];
     const ses = D.dias.flatMap(d => d.bloques).filter(b => (b.h || []).includes(h.c) && b.c);
     $("#modalBox").innerHTML = `<div class="fbar noprint">
@@ -185,10 +205,10 @@
       <div class="fbody">
         <div class="kv"><div><b>Sesión</b>${esc(h.s)}</div><div><b>Responsable</b>${esc(h.who)}</div><div><b>Formato</b>${esc(h.f)}</div><div><b>Tipo</b>${h.url ? "Animación" : h.mode ? "Interactiva" : "Ficha y formato"}</div></div>
         ${h.q ? `<blockquote class="fq">${esc(h.q)}</blockquote>` : ""}
-        ${h.figPre ? h.figPre.map(figHtml).join("") : ""}
+        ${h.figPre ? h.figPre.map((f, j) => figHtml(f, "p" + j)).join("") : ""}
         <div class="fcols"><section><h3>Instrucciones</h3><ol class="fins">${h.i.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
           ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}–${b.t1}</span>`).join("")}</div>` : ""}</section>
-          ${h.tab || h.fig || h.prog ? `<section>${h.fig ? h.fig.map(figHtml).join("") : ""}${h.tab ? `<h3>Formato</h3>${h.tab.map(tabHtml).join("")}` : ""}${h.prog ? progHtml() : ""}</section>` : ""}</div>
+          ${h.tab || h.fig || h.prog ? `<section>${h.fig ? h.fig.map((f, j) => figHtml(f, "f" + j)).join("") : ""}${h.tab ? `<h3>Formato</h3>${h.tab.map((t, j) => tabHtml(t, "t" + j)).join("")}` : ""}${h.prog ? progHtml() : ""}</section>` : ""}</div>
         <div class="chips" style="margin-top:22px">${h.url ? `<a class="btn pri" href="${h.url}">▶ Ver la animación en pantalla completa</a>` : ""}${h.anim && toolByCode(h.anim) ? `<a class="btn pri" href="${toolByCode(h.anim).url}?desde=${h.c}">▶ Ver la animación de ${h.anim}: ${esc(toolByCode(h.anim).n)}</a>` : ""}${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}</div></div></div>`;
     $("#modal").classList.add("on", "full"); document.body.style.overflow = "hidden"; document.documentElement.classList.add("toolopen");
     $("#modal").scrollTop = 0;
@@ -196,6 +216,54 @@
     $("#modalBox").querySelectorAll("img").forEach(im => im.complete || im.addEventListener("load", fitTool, { once: true }));
     if (location.hash !== "#/herramientas/" + h.c) history.replaceState(null, "", "#/herramientas/" + h.c);
   }
+  /* eventos de escritura */
+  let fMode = null, fCol = COLS[0], stroke = null;
+  const escPut = () => curTool && escSave(curTool, escCur);
+  const figData = k => { escCur.f = escCur.f || {}; return escCur.f[k] = escCur.f[k] || { s: [], n: [] }; };
+  const reopen = () => { const y = $("#modal").scrollTop; openTool(curTool); $("#modal").scrollTop = y; };
+  document.addEventListener("input", e => {
+    const td = e.target.closest("[data-cell]"); if (td) { escCur.t = escCur.t || {}; escCur.t[td.dataset.cell] = td.innerText.replace(/\n$/, ""); escPut(); return; }
+    const n = e.target.closest("[data-note]"); if (n) { figData(n.closest("[data-fig]").dataset.fig).n[+n.dataset.note].t = n.innerText; escPut(); }
+  });
+  document.addEventListener("focusout", e => {
+    const n = e.target.closest && e.target.closest("[data-note]"); if (!n || n.innerText.trim()) return;
+    const d = figData(n.closest("[data-fig]").dataset.fig); d.n.splice(+n.dataset.note, 1); escPut(); setTimeout(reopen, 0);
+  });
+  const setMode = (k, m) => {
+    fMode = fMode && fMode.k === k && fMode.m === m ? null : { k, m };
+    document.querySelectorAll("[data-fmode]").forEach(b => b.classList.toggle("on", !!fMode && b.closest("[data-figt]").dataset.figt === fMode.k && b.dataset.fmode === fMode.m));
+    document.querySelectorAll(".fwrap").forEach(w => { const on = !!fMode && w.dataset.fig === fMode.k; w.classList.toggle("act", on); w.classList.toggle("txt", on && fMode.m === "txt"); });
+  };
+  document.addEventListener("click", e => {
+    const a = e.target.closest("[data-tadd]"); if (a) { escCur.x = escCur.x || {}; escCur.x[a.dataset.tadd] = (escCur.x[a.dataset.tadd] || 0) + 1; escPut(); reopen(); return; }
+    const c = e.target.closest("[data-tclr]"); if (c) { if (!confirm("¿Borrar lo escrito en esta tabla?")) return; const k = c.dataset.tclr; Object.keys(escCur.t || {}).forEach(x => x.startsWith(k + "-") && delete escCur.t[x]); if (escCur.x) delete escCur.x[k]; escPut(); reopen(); return; }
+    const bar = e.target.closest("[data-figt]");
+    if (bar) {
+      const k = bar.dataset.figt;
+      const m = e.target.closest("[data-fmode]"); if (m) { setMode(k, m.dataset.fmode); return; }
+      const col = e.target.closest("[data-fcol]"); if (col) { fCol = col.dataset.fcol; document.querySelectorAll("[data-fcol]").forEach(b => b.classList.toggle("on", b.dataset.fcol === fCol)); return; }
+      if (e.target.closest("[data-fundo]")) { figData(k).s.pop(); escPut(); document.querySelector(`[data-fig="${k}"] .fink`).innerHTML = inkPaths(k); return; }
+      if (e.target.closest("[data-fclr]")) { if (!confirm("¿Borrar lo escrito en esta figura?")) return; figData(k); escCur.f[k] = { s: [], n: [] }; escPut(); reopen(); return; }
+    }
+    const w = e.target.closest(".fwrap.txt"); if (w && !e.target.closest("[data-note]")) {
+      const r = w.getBoundingClientRect(), d = figData(w.dataset.fig);
+      d.n.push({ x: +((e.clientX - r.left) / r.width * 100).toFixed(1), y: +((e.clientY - r.top) / r.height * 100).toFixed(1), c: fCol, t: "" });
+      w.querySelector(".fnotes").insertAdjacentHTML("beforeend", noteHtml(d.n[d.n.length - 1], d.n.length - 1));
+      w.querySelector(".fnotes").lastElementChild.focus();
+    }
+  });
+  const ptIn = (svg, e) => { const r = svg.getBoundingClientRect(); return Math.round((e.clientX - r.left) / r.width * 1000) + "," + Math.round((e.clientY - r.top) / r.height * 1000); };
+  document.addEventListener("pointerdown", e => {
+    const w = e.target.closest(".fwrap.act"); if (!w || !fMode || fMode.m !== "pen") return;
+    e.preventDefault(); const svg = w.querySelector(".fink");
+    stroke = { svg, k: w.dataset.fig, p: [ptIn(svg, e)], el: document.createElementNS("http://www.w3.org/2000/svg", "polyline") };
+    stroke.el.setAttribute("stroke", fCol); stroke.el.setAttribute("points", stroke.p.join(" ")); svg.appendChild(stroke.el);
+    try { w.setPointerCapture(e.pointerId); } catch (x) {}
+  });
+  document.addEventListener("pointermove", e => { if (!stroke) return; stroke.p.push(ptIn(stroke.svg, e)); stroke.el.setAttribute("points", stroke.p.join(" ")); });
+  const endStroke = () => { if (!stroke) return; if (stroke.p.length > 1) { figData(stroke.k).s.push({ c: fCol, p: stroke.p.join(" ") }); escPut(); } else stroke.el.remove(); stroke = null; };
+  document.addEventListener("pointerup", endStroke); document.addEventListener("pointercancel", endStroke);
+
   function closeModal() {
     $("#modal").classList.remove("on", "full"); document.body.style.overflow = "";
     if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);

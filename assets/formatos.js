@@ -109,9 +109,9 @@
     ["Sistema alimentario", "¿Mejora la forma en que producimos, transformamos, vendemos o consumimos alimentos?"]] }] });
   add("H6", { fig: ["muro"] });
   add("H9", { tab: [{ cap: "Matriz de cambios significativos", cols: ["Orden", "Cambio significativo", "Votos", "Resultado (R1–R6)", "¿Por qué es significativo? (palabras del grupo)"], rows: filas(6, 5) }] });
-  add("H10", { tab: [{ cap: "Ficha de análisis de contribución", cols: ["Pregunta", "Respuesta del grupo"], rows: [["Cambio analizado", ""], ["1. ¿Cómo era antes del programa?", ""], ["2. ¿Cómo es ahora?", ""],
-    ["3. ¿Qué hizo el programa que ayudó a este cambio?", ""], ["4. ¿Qué hicieron otras personas, organizaciones o instituciones?", ""], ["5. ¿Qué factores del contexto influyeron (clima, precios, políticas, otros)?", ""],
-    ["6. ¿Habría ocurrido sin el programa? (Sí / En parte / No) ¿Por qué?", ""], ["7. ¿Qué aprendimos de este cambio?", ""]] }] });
+  add("H10", { tab: [{ cap: "Ficha de análisis de contribución", cols: ["Pregunta", "Respuesta del grupo"], rows: [["Cambio analizado", ""], 
+    ["1. ¿Qué hizo el programa que ayudó a este cambio?", ""], ["2. ¿Qué hicieron otras personas, organizaciones o instituciones?", ""], ["3. ¿Qué factores del contexto influyeron (clima, precios, políticas, otros)?", ""],
+    ["4. ¿Habría ocurrido sin el programa? (Sí / En parte / No) ¿Por qué?", ""], ["5. ¿Qué aprendimos de este cambio?", ""]] }] });
   add("H11", { fig: ["arbol"] });
   add("H12", { tab: [{ cap: "Panel de aprendizajes", nota: "Ejemplo: «Cuando las familias intercambian semillas entre ellas, la diversificación se mantiene sin apoyo externo».", cols: ["Aprendimos de lo que funcionó", "Aprendimos de lo que no funcionó"], rows: filas(3, 2, () => "") }] });
   add("H13", { tab: [{ cap: "Guion de la celebración", cols: ["Momento", "Contenido", "Tiempo"], rows: [

@@ -234,3 +234,21 @@ footer.cred a{color:var(--terra-d)}
 html.toolopen:not(.proj) .modal.full:not(:fullscreen){left:var(--rail)}
 html.toolopen #rail,html.toolopen #tabbar{z-index:90}
 @media (max-width:760px){html.toolopen:not(.proj) .modal.full:not(:fullscreen){left:0;bottom:calc(66px + env(safe-area-inset-bottom))}}
+
+/* escribir en tablas y figuras */
+.tfmt table.edit td{cursor:text;outline:none;min-width:4em}
+.tfmt table.edit td:focus{background:#fff8e6;box-shadow:inset 0 0 0 3px var(--terra)}
+.etools{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.etools .btn.on{background:var(--terra-d);color:#fff;border-color:var(--terra-d)}
+.etools .sw{width:34px;height:34px;border-radius:99px;border:3px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0}
+.etools .sw.on{box-shadow:0 0 0 3px var(--terra-dd)}
+.fwrap{position:relative;max-width:1200px;margin:0 auto}
+.tfig .fwrap svg.fink{position:absolute;inset:0;width:100%;height:100%;max-width:none;margin:0;pointer-events:none;fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;background:none;border:0;padding:0;border-radius:0}
+.fwrap .fink polyline{vector-effect:non-scaling-stroke}
+.tfig .fwrap.act svg.fink{pointer-events:auto;cursor:crosshair;touch-action:none}
+.tfig .fwrap.act.txt svg.fink{pointer-events:none}
+.fwrap.txt{cursor:text}
+.fwrap.act{outline:3px dashed var(--terra);outline-offset:4px;border-radius:12px}
+.fnotes{position:absolute;inset:0;pointer-events:none}
+.fnote{position:absolute;pointer-events:auto;min-width:2em;max-width:45%;padding:2px 6px;font-weight:800;font-size:clamp(1.1rem,1.8vw,1.6rem);line-height:1.25;background:rgba(255,255,255,.85);border-radius:6px;outline:none;transform:translateY(-50%)}
+.fnote:focus{box-shadow:0 0 0 2px var(--terra)}
