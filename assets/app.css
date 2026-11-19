@@ -200,3 +200,28 @@ footer.cred a{color:var(--terra-d)}
 .previo .tt{font-weight:800;font-size:1.1rem}
 @media (max-width:859px){.modal.full{overflow:auto}.modal.full .box{height:auto}}
 @media (max-width:860px){.fcols:has(section + section){grid-template-columns:minmax(0,1fr)}.fbar .fcount{display:none}.previo{flex-direction:column;align-items:flex-start}}
+
+/* Ficha expandida: letra grande y legible para personas mayores; se desplaza en lugar de achicarse */
+.modal.full{overflow:auto}
+.modal.full .box{height:auto;min-height:100%}
+.fhero{min-height:30vh}
+.fhero h2{font-size:clamp(2.4rem,5vw,4.2rem)}
+.fhero p{font-size:clamp(1.35rem,2.2vw,1.9rem);max-width:70ch}
+.fhero .eyebrow{font-size:clamp(1rem,1.4vw,1.25rem)}
+.fbody{font-size:clamp(1.25rem,1.8vw,1.6rem)}
+.fbody h3{font-size:clamp(1.6rem,2.4vw,2.2rem);margin:26px 0 12px}
+.fbody .kv div{font-size:clamp(1.2rem,1.7vw,1.5rem);padding:14px}
+.fbody .kv b{font-size:clamp(.95rem,1.2vw,1.1rem)}
+.fcols,.fcols:has(section + section){grid-template-columns:minmax(0,1fr)}
+.fins{font-size:clamp(1.35rem,2.1vw,1.9rem);line-height:1.5}
+.fq{font-size:clamp(1.5rem,2.6vw,2.3rem)}
+.fbody .chip{font-size:clamp(1.05rem,1.4vw,1.3rem);padding:8px 14px}
+.fbody .btn{font-size:clamp(1.1rem,1.5vw,1.35rem);padding:14px 22px}
+.tfmt figcaption{font-size:clamp(1.25rem,1.8vw,1.6rem);margin-bottom:10px}
+.tfmt figcaption .muted{font-weight:600}
+.tfmt table{font-size:clamp(1.2rem,1.75vw,1.55rem);line-height:1.4}
+.tfmt th{padding:14px 12px}
+.tfmt td{padding:14px 12px;height:2.6em}
+.tfig svg{max-width:1200px;margin:0 auto}
+.tfig p.small{font-size:clamp(1.15rem,1.6vw,1.4rem) !important}
+.fbar .btn{font-size:1rem}

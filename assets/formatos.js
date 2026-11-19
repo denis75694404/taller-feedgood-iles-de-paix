@@ -22,17 +22,14 @@
         <rect x="90" y="440" width="230" height="56" rx="8" fill="#f3e6d3" stroke="#3d2520"/>${T(205, 474, "Mesa de materiales")}
         <rect x="520" y="440" width="260" height="56" rx="8" fill="#f3e6d3" stroke="#3d2520"/>${T(650, 474, "Mesa de documentación")}
       </svg>` },
-    tarjeta: { cap: "Modelo de tarjeta individual (media hoja A5)", nota: "Marcar si el cambio alegra o preocupa permite recoger también los cambios negativos o no esperados.",
+    tarjeta: { cap: "Modelo de tarjeta individual (media hoja A5)",
       svg: `<svg viewBox="0 0 800 420" role="img" aria-label="Tarjeta ¿Qué ha cambiado con el programa Feed Good?">
         <rect x="6" y="6" width="788" height="408" rx="18" fill="#fff" stroke="#B5532F" stroke-width="4"/>
         <rect x="6" y="6" width="788" height="70" rx="18" fill="#B5532F"/><rect x="6" y="50" width="788" height="26" fill="#B5532F"/>
         ${T(400, 50, "¿Qué ha cambiado con el programa Feed Good?", { c: "#fff", fs: 26 })}
         ${T(400, 108, "En ti, tu familia, tu organización, tu comunidad, tu chacra, lo que comes o lo que vendes.", { fw: 400, fs: 17 })}
         ${T(400, 132, "Puedes escribirlo o dibujarlo.", { fw: 400, fs: 17 })}
-        <rect x="40" y="152" width="720" height="180" rx="10" fill="#fffaf2" stroke="#c9b8a3" stroke-dasharray="6 5"/>
-        <rect x="70" y="356" width="26" height="26" rx="4" fill="#fff" stroke="#3d2520" stroke-width="2"/><text x="108" y="376" font-size="19" font-weight="700" fill="#4E8A3E">Me alegra</text>
-        <rect x="280" y="356" width="26" height="26" rx="4" fill="#fff" stroke="#3d2520" stroke-width="2"/><text x="318" y="376" font-size="19" font-weight="700" fill="#B5532F">Me preocupa</text>
-        <rect x="510" y="356" width="26" height="26" rx="4" fill="#fff" stroke="#3d2520" stroke-width="2"/><text x="548" y="376" font-size="19" font-weight="700" fill="#3d2520">Otro: ……………</text>
+        <rect x="40" y="152" width="720" height="240" rx="10" fill="#fffaf2" stroke="#c9b8a3" stroke-dasharray="6 5"/>
       </svg>` },
     circulos: { cap: "Dinámica de círculos concéntricos", nota: "Al parar la música, cada pareja comparte el cambio de su tarjeta (tres minutos). Se repite dos o tres veces.",
       svg: (() => { let p = ""; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6, c = Math.cos(a), s = Math.sin(a);

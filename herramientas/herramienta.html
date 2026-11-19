@@ -8,7 +8,7 @@
 <link rel="icon" href="../trabajemos-juntos/img/administrador-icono.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap">
-<link rel="stylesheet" href="../assets/app.css?v=20261112f">
+<link rel="stylesheet" href="../assets/app.css?v=20261119d">
 <style>
 #main{margin-left:0}
 #main .wrap{max-width:none;padding:0 clamp(16px,3vw,48px)}
@@ -70,6 +70,21 @@ textarea{min-height:70px;resize:vertical}
 .tbl.big{font-size:clamp(.95rem,1.25vw,1.12rem)}.tbl.big td{padding:10px}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--terra-dd);color:#fff;padding:.6rem 1rem;border-radius:12px;font-weight:700;display:none;z-index:99}
 @media (max-width:760px){.tree{grid-template-columns:1fr}.tree .arrow{transform:rotate(90deg)}.scale{grid-template-columns:1fr repeat(5,1fr)}}
+/* Letra grande y legible para personas mayores */
+#main{font-size:clamp(1.15rem,1.6vw,1.45rem)}
+html:fullscreen #main{font-size:clamp(1.25rem,1.8vw,1.6rem)}
+label.f{font-size:clamp(1rem,1.3vw,1.2rem)}
+input,select,textarea{font-size:clamp(1.05rem,1.4vw,1.3rem) !important}
+.col h4{font-size:clamp(1.1rem,1.5vw,1.35rem)}
+.note{font-size:clamp(1.1rem,1.5vw,1.35rem);padding:12px 14px}
+.note .meta{font-size:clamp(.9rem,1.1vw,1.05rem)}
+.tree .box{font-size:clamp(1.1rem,1.5vw,1.35rem)}
+.mx,.tbl,.tbl.big{font-size:clamp(1.1rem,1.55vw,1.4rem)}
+.tbl td,.tbl th,.mx td,.mx th{padding:12px}
+.legend{font-size:clamp(1.05rem,1.4vw,1.25rem)}
+.scale button{font-size:clamp(1rem,1.3vw,1.2rem)}
+.dot{width:36px;height:36px;font-size:.95rem}
+#pp{font-size:clamp(1.3rem,2.1vw,1.8rem) !important}
 </style>
 </head>
 <body>
@@ -93,7 +108,7 @@ textarea{min-height:70px;resize:vertical}
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<script src="../assets/data.js?v=20261119c"></script>
+<script src="../assets/data.js?v=20261119d"></script>
 <script>
 (function () {
   const D = window.FG, $ = s => document.querySelector(s);
@@ -150,10 +165,9 @@ textarea{min-height:70px;resize:vertical}
         <label class="f wide">Cambio observado (máximo siete palabras en la tarjeta de mesa)<input id="tx" maxlength="160" placeholder="Ej.: Más familias venden hortalizas en la feria"></label>
         <label class="f">Mesa<select id="me">${opt(MESAS)}</select></label>
         <label class="f">Resultado<select id="rr">${opt(RS.map(r => [r[0], r[0] + " · " + r[1]]))}</select></label>
-        <label class="f">El cambio…<select id="ti">${opt([["a", "Me alegra"], ["c", "Me preocupa"]])}</select></label>
         <button class="btn pri" id="add">Agregar al muro</button></div></div>
         <h3 style="margin-top:20px">Muro de cambios · ${S.notes.length} tarjetas</h3>
-        <div class="board">${RS.map(([r, n]) => { const ns = S.notes.filter(x => x.r === r); return `<div class="col"><h4>${r === "Otro" ? "Otros" : r}<small>${esc(n)} · ${ns.length}</small></h4><div class="cards">${ns.map(x => `<div class="note ${x.ti === "c" ? "n-a" : "n-b"}">${esc(x.tx)}<span class="meta">Mesa ${esc(x.me)} · ${x.ti === "c" ? "me preocupa" : "me alegra"}</span><button class="del" data-del="${x.id}" title="Quitar">×</button></div>`).join("")}</div></div>`; }).join("")}</div>`;
+        <div class="board">${RS.map(([r, n]) => { const ns = S.notes.filter(x => x.r === r); return `<div class="col"><h4>${r === "Otro" ? "Otros" : r}<small>${esc(n)} · ${ns.length}</small></h4><div class="cards">${ns.map(x => `<div class="note n-b">${esc(x.tx)}<span class="meta">Mesa ${esc(x.me)}</span><button class="del" data-del="${x.id}" title="Quitar">×</button></div>`).join("")}</div></div>`; }).join("")}</div>`;
     },
     votos() {
       const cfg = VOTOS[H.c]; S.items = S.items || [];
@@ -294,7 +308,7 @@ textarea{min-height:70px;resize:vertical}
   const hora = () => new Date(Date.now() - 5 * 3600e3).toISOString().slice(11, 16);
   function add() {
     const m = H.mode, tx = val("tx");
-    if (m === "muro") { if (!tx) return toast("Escriba el cambio"); S.notes.push({ id: uid(), tx, me: val("me"), r: val("rr"), ti: val("ti") }); }
+    if (m === "muro") { if (!tx) return toast("Escriba el cambio"); S.notes.push({ id: uid(), tx, me: val("me"), r: val("rr") }); }
     if (m === "votos" || m === "lecciones") { if (!tx) return toast("Escriba el elemento"); const o = { id: uid(), tx, v: 0 }; VOTOS[H.c].extra.forEach(([k]) => o[k] = val("x_" + k)); S.items.push(o); }
     if (m === "columnas") { if (!tx) return toast("Escriba la frase"); S.notes.push({ id: uid(), tx, co: val("co"), me: val("me") }); }
     if (m === "conclusiones") { if (!tx) return toast("Escriba la conclusión"); S.lastGr = val("gr"); S.rows.push({ id: uid(), gr: val("gr"), it: val("it"), tx }); }
@@ -343,7 +357,7 @@ textarea{min-height:70px;resize:vertical}
   /* exportar e importar */
   function rowsCsv() {
     const m = H.mode;
-    if (m === "muro") return [["Cambio", "Mesa", "Resultado", "Valoración"], ...S.notes.map(x => [x.tx, x.me, x.r, x.ti === "c" ? "Me preocupa" : "Me alegra"])];
+    if (m === "muro") return [["Cambio", "Mesa", "Resultado"], ...S.notes.map(x => [x.tx, x.me, x.r])];
     if (m === "votos") { const ex = VOTOS[H.c].extra; return [[VOTOS[H.c].item, "Votos", ...ex.map(x => x[1])], ...[...S.items].sort((a, b) => b.v - a.v).map(x => [x.tx, x.v || 0, ...ex.map(([k]) => x[k] || "")])]; }
     if (m === "ficha") { const c = FICHAS[H.c]; return [[c.item, ...c.q], ...S.fichas.map(f => [f.item, ...c.q.map((q, i) => f["q" + i] || "")])]; }
     if (m === "arbol") return [["Mesa", "Resultado no alcanzado", "Causa 1", "Causa 2", "Causa 3", "Consecuencia 1", "Consecuencia 2"], ...S.trees.map(t => [t.mesa, t.res, t.c0, t.c1, t.c2, t.k0, t.k1])];

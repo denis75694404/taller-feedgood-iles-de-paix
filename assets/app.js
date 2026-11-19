@@ -154,8 +154,8 @@
     for (let k = 0; k < 9; k++) { const z = (lo + hi) / 2; stage.style.zoom = z; if (h() <= avail) lo = z; else hi = z; }
     stage.style.zoom = lo;
   }
-  const fitTool = () => { const m = $("#modal"); if (!m.classList.contains("full")) return; const bar = m.querySelector(".fbar");
-    fitStage(m.querySelector(".fstage"), window.innerHeight - (bar ? bar.offsetHeight : 0)); };
+  /* la ficha se muestra a tamaño completo (letra grande para personas mayores) y se recorre con desplazamiento */
+  const fitTool = () => { const st = $("#modal .fstage"); if (st) st.style.zoom = 1; };
   window.addEventListener("resize", () => fitTool());
   const tabHtml = t => `<figure class="tfmt"><figcaption>${esc(t.cap)}${t.nota ? ` <span class="muted">· ${esc(t.nota)}</span>` : ""}</figcaption><div class="tscroll"><table>
     <thead><tr>${t.cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
