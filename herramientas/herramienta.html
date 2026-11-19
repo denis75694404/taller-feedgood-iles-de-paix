@@ -225,7 +225,7 @@ input,select,textarea{font-size:clamp(1.05rem,1.4vw,1.3rem) !important}
     },
     columnas() {
       const cs = COLS[H.c]; S.notes = S.notes || [];
-      return `<div class="card pad"><div class="form"><label class="f wide">Frase completa<input id="tx" maxlength="240" placeholder="Ej.: Cuando las familias intercambian semillas, la diversificación se mantiene sin apoyo externo"></label>
+      return `<div class="card pad"><div class="form"><label class="f wide">Frase completa<input id="tx" maxlength="240" placeholder="Ej.: El plátano pelado, en un táper de vidrio con tapa hermética y en la refrigeradora, se conserva hasta 10 días"></label>
         <label class="f">Columna<select id="co">${opt(cs.map((c, i) => [String(i), c[0]]))}</select></label>
         <label class="f">Mesa<select id="me">${opt(MESAS)}</select></label>
         <button class="btn pri" id="add">Agregar</button></div></div>
