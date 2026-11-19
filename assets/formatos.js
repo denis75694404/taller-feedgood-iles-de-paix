@@ -29,7 +29,10 @@
         ${T(400, 50, "¿Qué ha cambiado con el programa Feed Good?", { c: "#fff", fs: 26 })}
         ${T(400, 108, "En ti, tu familia, tu organización, tu comunidad, tu chacra, lo que comes o lo que vendes.", { fw: 400, fs: 17 })}
         ${T(400, 132, "Puedes escribirlo o dibujarlo.", { fw: 400, fs: 17 })}
-        <rect x="40" y="152" width="720" height="240" rx="10" fill="#fffaf2" stroke="#c9b8a3" stroke-dasharray="6 5"/>
+        <rect x="40" y="152" width="720" height="240" rx="10" fill="#fffaf2" stroke="#B5532F" stroke-width="2"/>
+        <path d="M50 152h700a10 10 0 0 1 10 10v34H40v-34a10 10 0 0 1 10-10z" fill="#F3E6D3" stroke="#B5532F" stroke-width="2"/>
+        <line x1="400" y1="152" x2="400" y2="392" stroke="#B5532F" stroke-width="2"/>
+        ${T(220, 182, "Antes", { fs: 22, c: "#B5532F" })}${T(580, 182, "Ahora", { fs: 22, c: "#B5532F" })}
       </svg>` },
     circulos: { cap: "Dinámica de círculos concéntricos", nota: "Al parar la música, cada pareja comparte el cambio de su tarjeta (tres minutos). Se repite dos o tres veces.",
       svg: (() => { let p = ""; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6, c = Math.cos(a), s = Math.sin(a);
