@@ -179,6 +179,7 @@
       <div class="fbody">
         <div class="kv"><div><b>Sesión</b>${esc(h.s)}</div><div><b>Responsable</b>${esc(h.who)}</div><div><b>Formato</b>${esc(h.f)}</div><div><b>Tipo</b>${h.url ? "Animación" : h.mode ? "Interactiva" : "Ficha y formato"}</div></div>
         ${h.q ? `<blockquote class="fq">${esc(h.q)}</blockquote>` : ""}
+        ${h.figPre ? h.figPre.map(figHtml).join("") : ""}
         <div class="fcols"><section><h3>Instrucciones</h3><ol class="fins">${h.i.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
           ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}–${b.t1}</span>`).join("")}</div>` : ""}</section>
           ${h.tab || h.fig || h.prog ? `<section>${h.fig ? h.fig.map(figHtml).join("") : ""}${h.tab ? `<h3>Formato</h3>${h.tab.map(tabHtml).join("")}` : ""}${h.prog ? progHtml() : ""}</section>` : ""}</div>

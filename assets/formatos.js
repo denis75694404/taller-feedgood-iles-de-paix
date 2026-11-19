@@ -24,15 +24,16 @@
       </svg>` },
     tarjeta: { cap: "Modelo de tarjeta individual (media hoja A5)",
       svg: `<svg viewBox="0 0 800 420" role="img" aria-label="Tarjeta ¿Qué ha cambiado con el programa Feed Good?">
+        <!--base-->
         <rect x="6" y="6" width="788" height="408" rx="18" fill="#fff" stroke="#B5532F" stroke-width="4"/>
         <rect x="6" y="6" width="788" height="70" rx="18" fill="#B5532F"/><rect x="6" y="50" width="788" height="26" fill="#B5532F"/>
         ${T(400, 50, "¿Qué ha cambiado con el programa Feed Good?", { c: "#fff", fs: 26 })}
         ${T(400, 108, "En ti, tu familia, tu organización, tu comunidad, tu chacra, lo que comes o lo que vendes.", { fw: 400, fs: 17 })}
         ${T(400, 132, "Puedes escribirlo o dibujarlo.", { fw: 400, fs: 17 })}
         <rect x="40" y="152" width="720" height="240" rx="10" fill="#fffaf2" stroke="#B5532F" stroke-width="2"/>
-        <path d="M50 152h700a10 10 0 0 1 10 10v34H40v-34a10 10 0 0 1 10-10z" fill="#F3E6D3" stroke="#B5532F" stroke-width="2"/>
+        <!--division--><path d="M50 152h700a10 10 0 0 1 10 10v34H40v-34a10 10 0 0 1 10-10z" fill="#F3E6D3" stroke="#B5532F" stroke-width="2"/>
         <line x1="400" y1="152" x2="400" y2="392" stroke="#B5532F" stroke-width="2"/>
-        ${T(220, 182, "Antes", { fs: 22, c: "#B5532F" })}${T(580, 182, "Ahora", { fs: 22, c: "#B5532F" })}
+        ${T(220, 182, "Antes", { fs: 22, c: "#B5532F" })}${T(580, 182, "Ahora", { fs: 22, c: "#B5532F" })}<!--/division-->
       </svg>` },
     circulos: { cap: "Dinámica de círculos concéntricos", nota: "Al parar la música, cada pareja comparte el cambio de su tarjeta (tres minutos). Se repite dos o tres veces.",
       svg: (() => { let p = ""; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6, c = Math.cos(a), s = Math.sin(a);
@@ -73,8 +74,11 @@
         ${[200, 390, 580].map(x => T(x + 15, 82, "–", { fs: 40 })).join("")}${T(400, 185, "Carpeta por día · se fotografía todo al cierre de cada sesión", { fs: 16, fw: 400 })}</svg>` }
   };
 
+  /* tarjeta sin la división Antes / Ahora (para H5) */
+  FIG.tarjetaSimple = { cap: "¿Qué ha cambiado con el programa Feed Good?", svg: FIG.tarjeta.svg.replace(/<!--division-->[\s\S]*<!--\/division-->/, "") };
+
   /* ---------- cuadros (formatos) ---------- */
-  const add = (c, o) => { const h = H(c); if (!h) return; if (o.tab) h.tab = o.tab.concat(h.tab || []); if (o.fig) h.fig = o.fig.map(k => FIG[k]); if (o.prog) h.prog = true; };
+  const add = (c, o) => { const h = H(c); if (!h) return; if (o.tab) h.tab = o.tab.concat(h.tab || []); if (o.fig) h.fig = o.fig.map(k => FIG[k]); if (o.figPre) h.figPre = o.figPre.map(k => FIG[k]); if (o.prog) h.prog = true; };
 
   add("H1", { tab: [{ cap: "Padrón de asistencia", cols: ["N.°", "Nombres y apellidos", "Organización o comunidad", "Categoría de actor", "Sexo (M/H)", "Edad", "Mesa", "Firma"], rows: filas(8, 8), nota: CAT }] });
   add("H2", { fig: ["sala"] });
@@ -88,7 +92,7 @@
     ["Lo dicho se registra sin nombres", "La relatoría anota la categoría de actor, no el nombre; las citas con nombre requieren autorización."],
     ["Lo que no funcionó también cuenta", "Se valoran los errores y las dificultades como fuente de aprendizaje."],
     ["Celulares en silencio", "Se usan solo para la evaluación con QR o para registrar las producciones."]] }] });
-  add("H5", { tab: [{ cap: "Contenido de los seis papelógrafos de resultados", nota: "El logro previsto y su avance se completan con el marco lógico y los informes del programa.", cols: ["R", "Enunciado breve", "Líneas de acción", "Logro previsto y avance"], rows: [
+  add("H5", { figPre: ["tarjetaSimple"], tab: [{ cap: "Contenido de los seis papelógrafos de resultados", nota: "El logro previsto y su avance se completan con el marco lógico y los informes del programa.", cols: ["R", "Enunciado breve", "Líneas de acción", "Logro previsto y avance"], rows: [
     ["R1", "Producción agroecológica resiliente", "Diversificación, agroforestería, suelos y agua, semillas campesinas", ""],
     ["R2", "Cadenas de valor territoriales justas", "Circuitos cortos, transformación local, MPE de mujeres y jóvenes, poscosecha", ""],
     ["R3", "Gobernanza territorial", "Espacios de concertación multiactor", ""],
