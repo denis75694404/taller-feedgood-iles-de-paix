@@ -175,7 +175,7 @@
     const rows = t.rows.concat(Array.from({ length: ex }, () => t.cols.map(() => "")));
     const cell = (c, r, j) => { const id = k + "-" + r + "-" + j, v = ed && escCur.t && id in escCur.t ? escCur.t[id] : null;
       return ed ? `<td contenteditable="true" spellcheck="false" data-cell="${id}">${v != null ? esc(v) : esc(c)}</td>` : `<td>${esc(c) || "&nbsp;"}</td>`; };
-    return `<figure class="tfmt"><figcaption>${esc(t.cap)}${t.nota ? ` <span class="muted">· ${esc(t.nota)}</span>` : ""}${t.ir && toolByCode(t.ir) ? ` <button class="btn pri sm irbtn noprint" data-tool="${t.ir}">Ir a ${t.ir}: ${esc(toolByCode(t.ir).n)} ›</button>` : ""}</figcaption><div class="tscroll"><table${ed ? ' class="edit"' : ""}>
+    return `<figure class="tfmt"><figcaption>${esc(t.cap)}${t.nota ? ` <span class="muted">· ${esc(t.nota)}</span>` : ""}${t.ir && toolByCode(t.ir) ? ` <button class="btn pri sm irbtn noprint" data-tool="${t.ir}">Ir a ${t.ir}: ${esc(toolByCode(t.ir).n)} ›</button>` : ""}</figcaption><div class="tscroll"><table${ed ? ` class="edit" style="min-width:${t.cols.length * 9}em"` : ""}>
     <thead><tr>${t.cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
     <tbody>${rows.map((r, i) => `<tr>${r.map((c, j) => cell(c, i, j)).join("")}</tr>`).join("")}</tbody></table></div>
     ${ed ? `<div class="etools noprint"><button class="btn sec sm" data-tadd="${k}">＋ Agregar fila</button><button class="btn ghost sm" data-tclr="${k}">Borrar lo escrito</button><span class="muted small">Toque una celda para escribir.</span></div>` : ""}</figure>`;
