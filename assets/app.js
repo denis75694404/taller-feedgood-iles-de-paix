@@ -29,7 +29,10 @@
 
   /* navegación */
   const NAV = [["inicio", "Inicio", "home"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"]];
-  const navHtml = list => list.map(([k, t, i]) => `<a class="nav-btn" data-k="${k}" href="#/${k}">${ic(i)}<span>${t}</span></a>`).join("");
+  // enlaces externos debajo de Herramientas (se abren en otra pestaña)
+  const EXT = [["https://taller-huanuco.2013101864.workers.dev/", "Taller Huánuco", "external"]];
+  const navHtml = list => list.map(([k, t, i]) => `<a class="nav-btn" data-k="${k}" href="#/${k}">${ic(i)}<span>${t}</span></a>`).join("") +
+    EXT.map(([u, t, i]) => `<a class="nav-ext" href="${u}" target="_blank" rel="noopener">${ic(i)}<span>${t}</span></a>`).join("");
   $("#rail").insertAdjacentHTML("beforeend", navHtml(NAV));
   $("#tabbar").innerHTML = navHtml(NAV);
 
