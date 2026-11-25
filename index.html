@@ -10,7 +10,7 @@
 <link rel="icon" href="trabajemos-juntos/img/administrador-icono.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap">
-<link rel="stylesheet" href="assets/app.css?v=20261125a">
+<link rel="stylesheet" href="assets/app.css?v=20261125b">
 <link rel="stylesheet" href="assets/recorrido3d.css?v=20261124a">
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
 <link rel="preload" as="image" href="img/idp-paisaje.jpg">
@@ -141,6 +141,14 @@
 <div id="timer" role="dialog" aria-label="Cronómetro">
   <div class="eyebrow" style="color:var(--sol)" id="tmLabel">Cronómetro</div>
   <div class="big" id="tmBig">00:00</div>
+  <div class="ctl" id="tmPresets" aria-label="Duración">
+    <button class="btn ghost" data-min="1">1 min</button>
+    <button class="btn ghost" data-min="3">3 min</button>
+    <button class="btn ghost" data-min="5">5 min</button>
+    <button class="btn ghost" data-min="10">10 min</button>
+    <button class="btn ghost" data-min="15">15 min</button>
+    <button class="btn ghost" data-min="30">30 min</button>
+  </div>
   <div class="ctl">
     <button class="btn ghost" id="tmPlay">Pausar</button>
     <button class="btn ghost" id="tmMinus">−1 min</button>
@@ -171,7 +179,7 @@
 <script src="assets/data.js?v=20261124c"></script>
 <script src="assets/formatos.js?v=20261119v"></script>
 <script src="assets/creditos.js?v=20261119a"></script>
-<script src="assets/app.js?v=20261125a"></script>
+<script src="assets/app.js?v=20261125b"></script>
 <script>
 /* Recorrido 3D: se descarga solo cuando la sección se acerca a la vista (ahorra datos con wifi débil) */
 (function () {

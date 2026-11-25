@@ -149,7 +149,7 @@ footer.cred a{color:var(--terra-d)}
 @media (max-width:760px){
   #rail{display:none}
   #main{margin-left:0;padding-bottom:96px}
-  #tabbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  #tabbar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
   #tabbar .nav-btn,#tabbar .nav-ext{padding:8px 2px;font-size:10.5px}
   .g2,.g3,.g4{grid-template-columns:1fr}
   .wrap{padding:0 16px}
@@ -263,3 +263,4 @@ html.toolopen #rail,html.toolopen #tabbar{z-index:90}
 .portada-bar .sp{flex:1}
 .portada-frame{display:block;width:100%;height:calc(100vh - 140px);height:calc(100dvh - 140px);min-height:460px;border:0;background:#5E3A32}
 @media (max-width:900px){.portada-frame{height:calc(100dvh - 210px)}}
+#tmPresets .btn{padding:.5rem .9rem;font-size:.9rem}

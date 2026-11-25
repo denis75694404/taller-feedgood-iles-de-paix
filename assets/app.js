@@ -33,7 +33,8 @@
   // enlaces externos debajo de Herramientas (se abren en otra pestaña)
   const EXT = [["https://taller-huanuco.2013101864.workers.dev/", "Sistematizador", "external"]];
   const navHtml = list => list.map(([k, t, i]) => `<a class="nav-btn" data-k="${k}" href="#/${k}">${ic(i)}<span>${t}</span></a>`).join("") +
-    EXT.map(([u, t, i]) => `<a class="nav-ext" href="${u}" target="_blank" rel="noopener">${ic(i)}<span>${t}</span></a>`).join("");
+    EXT.map(([u, t, i]) => `<a class="nav-ext" href="${u}" target="_blank" rel="noopener">${ic(i)}<span>${t}</span></a>`).join("") +
+    `<button class="nav-ext" type="button" data-tmfree>${ic("timer")}<span>Temporizador</span></button>`;
   $("#rail").insertAdjacentHTML("beforeend", navHtml(NAV));
   $("#tabbar").innerHTML = navHtml(NAV);
 
@@ -309,12 +310,18 @@
   let tm = { left: 0, run: false, iv: null };
   const fmt = s => { s = Math.max(0, Math.round(s)); return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); };
   function paint() { $("#tmBig").textContent = fmt(tm.left); $("#tmBig").classList.toggle("alert", tm.left <= 60); $("#tmPlay").textContent = tm.run ? "Pausar" : "Continuar"; }
-  function openTimer(b) {
-    tm.total = (toMin(b.t1) - toMin(b.t0)) * 60; tm.left = tm.total; tm.run = true;
-    $("#tmLabel").textContent = (b.c ? b.c + " · " : "") + b.t + " (" + b.t0 + ")";
-    clearInterval(tm.iv); tm.iv = setInterval(() => { if (tm.run) { tm.left -= 1; if (tm.left <= 0) { tm.left = 0; tm.run = false; } paint(); } }, 1000);
+  // aviso sonoro corto al llegar a cero
+  function beep() { try { const A = new (window.AudioContext || window.webkitAudioContext)(); [0, .35, .7].forEach(t => { const o = A.createOscillator(), g = A.createGain(); o.frequency.value = 880; g.gain.setValueAtTime(.25, A.currentTime + t); g.gain.exponentialRampToValueAtTime(.001, A.currentTime + t + .3); o.connect(g).connect(A.destination); o.start(A.currentTime + t); o.stop(A.currentTime + t + .3); }); } catch (_) {} }
+  function startTimer(secs, label, run = true) {
+    tm.total = secs; tm.left = secs; tm.run = run;
+    $("#tmLabel").textContent = label;
+    clearInterval(tm.iv); tm.iv = setInterval(() => { if (tm.run) { tm.left -= 1; if (tm.left <= 0) { tm.left = 0; tm.run = false; beep(); } paint(); } }, 1000);
     paint(); $("#timer").classList.add("on");
   }
+  function openTimer(b) { startTimer((toMin(b.t1) - toMin(b.t0)) * 60, (b.c ? b.c + " · " : "") + b.t + " (" + b.t0 + ")"); }
+  // temporizador libre desde el menú: empieza en pausa con 5 minutos; los botones de minutos cambian la duración
+  document.addEventListener("click", e => { if (e.target.closest("[data-tmfree]")) startTimer(5 * 60, "Temporizador", false); });
+  $("#tmPresets").addEventListener("click", e => { const b = e.target.closest("[data-min]"); if (b) startTimer(+b.dataset.min * 60, "Temporizador", true); });
   function closeTimer() { $("#timer").classList.remove("on"); clearInterval(tm.iv); }
   $("#tmPlay").onclick = () => { tm.run = !tm.run; paint(); };
   $("#tmPlus").onclick = () => { tm.left += 60; paint(); };
