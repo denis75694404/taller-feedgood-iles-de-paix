@@ -10,7 +10,7 @@
 <link rel="icon" href="trabajemos-juntos/img/administrador-icono.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap">
-<link rel="stylesheet" href="assets/app.css?v=20261125b">
+<link rel="stylesheet" href="assets/app.css?v=20261125c">
 <link rel="stylesheet" href="assets/recorrido3d.css?v=20261124a">
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
 <link rel="preload" as="image" href="img/idp-paisaje.jpg">
@@ -104,6 +104,16 @@
     <iframe id="portadaFrame" class="portada-frame" src="portada.html" title="Portada del taller" loading="lazy" allowfullscreen></iframe>
   </section>
 
+  <!-- ===================== sistematizador ===================== -->
+  <section class="view" id="v-sistematizador">
+    <div class="portada-bar noprint"><div class="wrap">
+      <span class="muted small">Captura de papelógrafos y audios, y análisis de lo subido a Drive (pestaña «Análisis»)</span><span class="sp"></span>
+      <button class="btn sec" id="sisFull" type="button" data-i="maximize">Pantalla completa</button>
+      <a class="btn sec" href="https://taller-huanuco.denisgarciacortez.workers.dev/" target="_blank" rel="noopener" data-i="external">Abrir en otra pestaña</a>
+    </div></div>
+    <iframe id="sisFrame" class="portada-frame sis-frame" data-src="https://taller-huanuco.denisgarciacortez.workers.dev/" title="Sistematizador del taller" allow="camera; microphone; clipboard-write; fullscreen" allowfullscreen></iframe>
+  </section>
+
   <!-- ===================== agenda ===================== -->
   <section class="view" id="v-agenda">
     <div class="wrap">
@@ -179,7 +189,7 @@
 <script src="assets/data.js?v=20261124c"></script>
 <script src="assets/formatos.js?v=20261119v"></script>
 <script src="assets/creditos.js?v=20261119a"></script>
-<script src="assets/app.js?v=20261125c"></script>
+<script src="assets/app.js?v=20261125d"></script>
 <script>
 /* Recorrido 3D: se descarga solo cuando la sección se acerca a la vista (ahorra datos con wifi débil) */
 (function () {

@@ -29,9 +29,9 @@
   document.querySelectorAll("[data-i]").forEach(el => el.insertAdjacentHTML("afterbegin", ic(el.dataset.i)));
 
   /* navegación */
-  const NAV = [["inicio", "Inicio", "home"], ["portada", "Portada", "image"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"]];
+  const NAV = [["inicio", "Inicio", "home"], ["portada", "Portada", "image"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"], ["sistematizador", "Sistematizador", "pen"]];
   // enlaces externos debajo de Herramientas (se abren en otra pestaña)
-  const EXT = [["https://taller-huanuco.denisgarciacortez.workers.dev/", "Sistematizador", "external"]];
+  const EXT = [];
   const navHtml = list => list.map(([k, t, i]) => `<a class="nav-btn" data-k="${k}" href="#/${k}">${ic(i)}<span>${t}</span></a>`).join("") +
     EXT.map(([u, t, i]) => `<a class="nav-ext" href="${u}" target="_blank" rel="noopener">${ic(i)}<span>${t}</span></a>`).join("") +
     `<button class="nav-ext" type="button" data-tmfree>${ic("timer")}<span>Temporizador</span></button>`;
@@ -44,8 +44,11 @@
     document.querySelectorAll(".view").forEach(x => x.classList.toggle("on", x.id === "v-" + v));
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("on", b.dataset.k === v));
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+    // el Sistematizador se carga solo la primera vez que se abre (ahorra datos)
+    if (v === "sistematizador") { const f = $("#sisFrame"); if (f && !f.src) f.src = f.dataset.src; }
   }
   window.addEventListener("hashchange", route);
+  document.addEventListener("click", e => { if (!e.target.closest("#sisFull")) return; const f = $("#sisFrame"); (f.requestFullscreen || f.webkitRequestFullscreen || function () {}).call(f); });
   document.addEventListener("click", e => { if (!e.target.closest("#portadaFull")) return; const f = $("#portadaFrame"); (f.requestFullscreen || f.webkitRequestFullscreen || function () {}).call(f); });
   // un solo clic en el menú: si la dirección ya es la del botón (no hay hashchange), igual cierra la ficha y muestra la vista
   document.addEventListener("click", e => {

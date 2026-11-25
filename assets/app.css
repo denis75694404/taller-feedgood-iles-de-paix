@@ -264,3 +264,4 @@ html.toolopen #rail,html.toolopen #tabbar{z-index:90}
 .portada-frame{display:block;width:100%;height:calc(100vh - 140px);height:calc(100dvh - 140px);min-height:460px;border:0;background:#5E3A32}
 @media (max-width:900px){.portada-frame{height:calc(100dvh - 210px)}}
 #tmPresets .btn{padding:.5rem .9rem;font-size:.9rem}
+.sis-frame{background:#f4f3ee}
