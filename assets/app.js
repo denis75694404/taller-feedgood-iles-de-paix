@@ -73,7 +73,7 @@
     if (s.b) {
       const pct = Math.round(100 * (s.n.min - toMin(s.b.t0)) / (toMin(s.b.t1) - toMin(s.b.t0)));
       el.innerHTML = `<div class="ico">${ic("clock")}</div><div><div class="eyebrow">Ahora en el taller · ${esc(s.d.label)}</div>
-        <h3 style="margin:0">${esc(s.b.c ? s.b.c + " · " : "")}${esc(s.b.t)}</h3><div class="small muted">${esc(s.b.t0)}–${esc(s.b.t1)} · ${esc(s.b.who)}</div>
+        <h3 style="margin:0">${esc(s.b.c ? s.b.c + " · " : "")}${esc(s.b.t)}</h3><div class="small muted">${esc(s.b.t0)} · ${esc(s.b.who)}</div>
         <div class="prog"><i style="width:${pct}%"></i></div></div>
         <div class="acts chips"><a class="btn pri sm" href="#/agenda">Ver la agenda</a>${s.b.pausa ? "" : `<button class="btn sec sm" data-timer="${s.d.key}|${s.b.t0}">${ic("timer")}Cronómetro</button>`}</div>`;
     } else if (s.d) {
@@ -111,15 +111,15 @@
     const d = D.dias.find(x => x.key === day), n = nowPe();
     const opened = new Set([...document.querySelectorAll("#timeline .blk-row.open")].map(x => x.dataset.b));
     $("#dayInfo").textContent = d.tema + ". " + d.publico + ".";
-    const pv = D.previo; if (pv && $("#previo")) $("#previo").innerHTML = `<div class="previo"><div class="pv-d"><b>${esc(pv.label)}</b><span>${pv.t0}–${pv.t1}</span></div>
+    const pv = D.previo; if (pv && $("#previo")) $("#previo").innerHTML = `<div class="previo"><div class="pv-d"><b>${esc(pv.label)}</b><span>${pv.t0}</span></div>
       <div><div class="eyebrow">Antes del taller · ${esc(pv.lugar)}</div><div class="tt">${esc(pv.t)}</div><p class="small muted" style="margin:4px 0 0">${esc(pv.d)}</p></div></div>`;
     $("#timeline").innerHTML = d.bloques.map(b => {
       const live = d.fecha === n.ymd && n.min >= toMin(b.t0) && n.min < toMin(b.t1);
       const past = d.fecha < n.ymd || (d.fecha === n.ymd && n.min >= toMin(b.t1));
-      if (b.pausa) return `<div class="blk-row pausa ${live ? "now" : ""} ${past ? "past" : ""}"><div class="hr">${b.t0}–${b.t1}</div><div><div class="tt">${esc(b.t)}</div></div><div></div></div>`;
+      if (b.pausa) return `<div class="blk-row pausa ${live ? "now" : ""} ${past ? "past" : ""}"><div class="hr">${b.t0}</div><div><div class="tt">${esc(b.t)}</div></div><div></div></div>`;
       const tools = (b.h || []).map(c => c === "TJ" ? `<a class="tcode" href="trabajemos-juntos/grupos.html" target="_blank" rel="noopener">Trabajemos juntos</a>` : `<a class="tcode" href="#/herramientas/${c}">${c}</a>`).join("");
       return `<div class="blk-row ${live ? "now" : ""} ${live || opened.has(b.t0) ? "open" : ""} ${past ? "past" : ""}" data-b="${b.t0}">
-        <div class="hr">${b.t0}–${b.t1}<span class="code">${b.c}</span></div>
+        <div class="hr">${b.t0}<span class="code">${b.c}</span></div>
         <div><div class="tt">${esc(b.t)}</div><div class="who">${esc(b.who)}</div><div class="tl">${tools}</div>
           <div class="detail"><p><b>Objetivo:</b> ${esc(b.obj)}</p><ol>${(b.pasos || []).map(p => `<li>${esc(p)}</li>`).join("")}</ol>
           <p class="small"><b>Resultado de la sesión:</b> ${esc(b.prod)}</p></div></div>
@@ -190,7 +190,7 @@
       <button class="btn ghost sm" data-fundo>↶ Deshacer</button><button class="btn ghost sm" data-fclr>Borrar lo escrito</button></div>
     ${f.nota ? `<p class="small muted" style="margin:6px 0 0">${esc(f.nota)}</p>` : ""}${f.pasos ? `<div class="fpasos"><b>Instrucciones:</b><ol>${f.pasos.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div>` : ""}</figure>`;
   const progHtml = () => D.dias.map((d, i) => tabHtml({ cap: `Programa del día ${i + 1} · ${d.label}`, cols: ["Hora", "Sesión"],
-    rows: d.bloques.map(b => [b.t0 + "–" + b.t1, (b.c ? b.c + " · " : "") + b.t]) })).join("");
+    rows: d.bloques.map(b => [b.t0, (b.c ? b.c + " · " : "") + b.t]) })).join("");
   // las flechas ‹ › recorren solo las herramientas del filtro elegido (Día 1, Día 2, Documentación o Todas)
   const navList = h => { const f = D.herr.filter(x => tf === "todas" || x.d.includes(tf)); return f.includes(h) ? f : D.herr; };
   function openTool(code) {
@@ -211,7 +211,7 @@
         ${h.q ? `<blockquote class="fq">${esc(h.q)}</blockquote>` : ""}
         ${h.figPre ? h.figPre.map((f, j) => figHtml(f, "p" + j)).join("") : ""}
         <div class="fcols"><section><h3>Instrucciones</h3><ol class="fins">${h.i.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
-          ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}–${b.t1}</span>`).join("")}</div>` : ""}</section>
+          ${ses.length ? `<h3>En la agenda</h3><div class="chips">${ses.map(b => `<span class="chip">${b.c} · ${b.t0}</span>`).join("")}</div>` : ""}</section>
           ${h.tab || h.fig || h.prog ? `<section>${h.fig ? h.fig.map((f, j) => figHtml(f, "f" + j)).join("") : ""}${h.tab ? `<h3>Formato</h3>${h.tab.map((t, j) => tabHtml(t, "t" + j)).join("")}` : ""}${h.prog ? progHtml() : ""}</section>` : ""}</div>
         <div class="chips" style="margin-top:22px">${h.url ? `<a class="btn pri" href="${h.url}">▶ Ver la animación en pantalla completa</a>` : ""}${h.anim && toolByCode(h.anim) ? `<a class="btn pri" href="${toolByCode(h.anim).url}?desde=${h.c}">▶ Ver la animación de ${h.anim}: ${esc(toolByCode(h.anim).n)}</a>` : ""}${h.mode ? `<a class="btn pri" href="herramientas/herramienta.html?id=${h.c}">${ic("pen")}Abrir la herramienta interactiva</a>` : ""}</div></div></div>`;
     $("#modal").classList.add("on", "full"); document.body.style.overflow = "hidden"; document.documentElement.classList.add("toolopen");
@@ -309,7 +309,7 @@
   function paint() { $("#tmBig").textContent = fmt(tm.left); $("#tmBig").classList.toggle("alert", tm.left <= 60); $("#tmPlay").textContent = tm.run ? "Pausar" : "Continuar"; }
   function openTimer(b) {
     tm.total = (toMin(b.t1) - toMin(b.t0)) * 60; tm.left = tm.total; tm.run = true;
-    $("#tmLabel").textContent = (b.c ? b.c + " · " : "") + b.t + " (" + b.t0 + "–" + b.t1 + ")";
+    $("#tmLabel").textContent = (b.c ? b.c + " · " : "") + b.t + " (" + b.t0 + ")";
     clearInterval(tm.iv); tm.iv = setInterval(() => { if (tm.run) { tm.left -= 1; if (tm.left <= 0) { tm.left = 0; tm.run = false; } paint(); } }, 1000);
     paint(); $("#timer").classList.add("on");
   }
