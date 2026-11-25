@@ -8,6 +8,7 @@
 
   /* íconos (trazos al estilo Lucide, ISC) */
   const P = {
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',
     home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
     calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
     wrench: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/>',
@@ -28,7 +29,7 @@
   document.querySelectorAll("[data-i]").forEach(el => el.insertAdjacentHTML("afterbegin", ic(el.dataset.i)));
 
   /* navegación */
-  const NAV = [["inicio", "Inicio", "home"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"]];
+  const NAV = [["inicio", "Inicio", "home"], ["portada", "Portada", "image"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"]];
   // enlaces externos debajo de Herramientas (se abren en otra pestaña)
   const EXT = [["https://taller-huanuco.2013101864.workers.dev/", "Sistematizador", "external"]];
   const navHtml = list => list.map(([k, t, i]) => `<a class="nav-btn" data-k="${k}" href="#/${k}">${ic(i)}<span>${t}</span></a>`).join("") +
@@ -44,6 +45,7 @@
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
   }
   window.addEventListener("hashchange", route);
+  document.addEventListener("click", e => { if (!e.target.closest("#portadaFull")) return; const f = $("#portadaFrame"); (f.requestFullscreen || f.webkitRequestFullscreen || function () {}).call(f); });
   // un solo clic en el menú: si la dirección ya es la del botón (no hay hashchange), igual cierra la ficha y muestra la vista
   document.addEventListener("click", e => {
     const nb = e.target.closest(".nav-btn"); if (!nb) return;

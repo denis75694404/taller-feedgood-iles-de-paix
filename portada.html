@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Portada · Taller Feed Good · Iles de Paix</title>
+<meta name="theme-color" content="#5E3A32">
+<link rel="icon" href="trabajemos-juntos/img/administrador-icono.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap">
+<link rel="preload" as="image" href="img/portada-andes.jpg">
+<style>
+:root{--terra-d:#8C5A4F;--terra-dd:#5E3A32;--sol:#E8B44F;--verde-l:#DCE8D4}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:"Figtree",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:var(--terra-dd);color:#fff;-webkit-font-smoothing:antialiased;overflow:hidden}
+.cover{position:relative;width:100vw;height:100vh;height:100dvh;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(20px,4vh,48px) clamp(20px,5vw,80px)}
+.cover .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 62%;animation:zoom 40s ease-out both}
+@keyframes zoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+.cover::before{content:"";position:absolute;inset:0;z-index:1;background:
+  linear-gradient(180deg,rgba(40,24,20,.55) 0%,rgba(40,24,20,.08) 26%,rgba(60,35,30,.15) 44%,rgba(70,42,36,.78) 70%,rgba(94,58,50,.96) 100%)}
+.cover>*{position:relative;z-index:2}
+header{display:flex;align-items:center;justify-content:space-between;gap:20px}
+header img{width:clamp(80px,9vw,140px)}
+.tag{font-weight:700;font-size:clamp(.85rem,1.2vw,1.1rem);letter-spacing:.14em;text-transform:uppercase;padding:.55em 1.1em;border:1.5px solid rgba(255,255,255,.55);border-radius:999px;backdrop-filter:blur(4px);background:rgba(0,0,0,.12)}
+main{max-width:min(1200px,92vw)}
+.eyebrow{color:var(--sol);font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:clamp(.9rem,1.5vw,1.35rem);text-shadow:0 1px 10px rgba(0,0,0,.45);margin:0 0 .6em}
+h1{font-size:clamp(2.2rem,5.6vw,5.2rem);line-height:1.02;font-weight:900;letter-spacing:-.02em;margin:0 0 .3em;text-shadow:0 3px 24px rgba(0,0,0,.35);text-wrap:balance}
+.lead{font-size:clamp(1.1rem,2.1vw,1.9rem);font-weight:500;max-width:46ch;margin:0;opacity:.96;text-shadow:0 1px 12px rgba(0,0,0,.4)}
+.line{width:clamp(80px,10vw,150px);height:5px;border-radius:3px;background:var(--sol);margin:clamp(16px,3vh,30px) 0}
+.meta{display:flex;flex-wrap:wrap;gap:clamp(18px,3vw,48px);font-size:clamp(1rem,1.6vw,1.45rem)}
+.meta div{display:flex;flex-direction:column}
+.meta b{font-size:.68em;letter-spacing:.14em;text-transform:uppercase;color:var(--verde-l);font-weight:700;margin-bottom:.15em}
+.meta span{font-weight:700}
+footer{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;font-size:clamp(.7rem,.9vw,.85rem);opacity:.8}
+footer a{color:#fff}
+.go{opacity:1;font-size:clamp(.85rem,1.1vw,1rem);font-weight:700;text-decoration:none;padding:.6em 1.2em;border-radius:999px;background:var(--sol);color:var(--terra-dd)}
+.go:hover{filter:brightness(1.06)}
+@media (prefers-reduced-motion:reduce){.cover .bg{animation:none}}
+@media print{
+  @page{size:A4 landscape;margin:0}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cover{width:297mm;height:210mm}.cover .bg{animation:none}.go{display:none}
+}
+</style>
+</head>
+<body>
+<div class="cover">
+  <img class="bg" src="img/portada-andes.jpg" alt="Laderas andinas de Huánuco con chacras y andenes bajo un cielo de nubes">
+  <header>
+    <img src="img/logo_idp_blanco.png" alt="Iles de Paix">
+    <span class="tag">Feed Good 2022–2026</span>
+  </header>
+  <main>
+    <p class="eyebrow">Taller participativo de autoevaluación final</p>
+    <h1>Cinco años de cambios en el sistema alimentario de Huánuco</h1>
+    <p class="lead">Celebrando los cambios que sembramos juntos.</p>
+    <div class="line"></div>
+    <div class="meta">
+      <div><b>Lugar</b><span>Huánuco, Perú</span></div>
+      <div><b>Fechas</b><span>25 y 26 de noviembre de 2026</span></div>
+      <div><b>Organiza</b><span>Iles de Paix · Programa Feed Good</span></div>
+    </div>
+  </main>
+  <footer>
+    <span>Foto: «Estribaciones de la cadena central de los andes norteños», Waterloo, <a href="https://commons.wikimedia.org/wiki/File:Estribaciones_de_la_cadena_central_de_los_andes_norte%C3%B1os.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>, CC BY-SA 4.0</span>
+    <a class="go" href="index.html#/agenda" target="_top">Ver la agenda →</a>
+  </footer>
+</div>
+</body>
+</html>

@@ -31,8 +31,8 @@ const VIEWS = [
     desc: DOCS.map(d => `${d.c} · ${esc(d.n)}`).join('; ') + '. Todo alimenta el informe final.', link: '#/herramientas', linkTxt: 'Ver las herramientas' },
   { id: 'equipo', nav: 'Equipo facilitador', title: 'Facilitación y documentación',
     desc: 'César Delgado facilita el taller y Denis García lo documenta, junto con el equipo del programa y las cofacilitadoras y cofacilitadores de mesa.' },
-  { id: 'simulacion', nav: 'Trabajemos juntos', title: 'Participación desde el celular',
-    desc: 'Cada mesa escribe sus aportes y vota desde el celular; los resultados aparecen en la pantalla al instante.', link: 'trabajemos-juntos/grupos.html', linkTxt: 'Abrir Trabajemos juntos' },
+  { id: 'simulacion', nav: 'Trabajemos juntos', title: 'Lo que construimos en mesa',
+    desc: 'Los aportes de cada mesa se proyectan en la pantalla para verlos y comentarlos entre todas y todos.', link: 'trabajemos-juntos/grupos.html', linkTxt: 'Abrir Trabajemos juntos' },
   { id: 'postulacion', nav: 'Iles de Paix', title: FG.taller.programa,
     desc: 'Iles de Paix acompaña a familias productoras, organizaciones y autoridades de Huánuco hacia sistemas alimentarios sostenibles. «' + esc(FG.taller.frase) + '»' },
 ].map((v, i) => ({ ...v, n: i + 1 }));
@@ -594,6 +594,9 @@ function build() {
   function openTour(viewId, autoplay, at) {
     mode = 'tour'; tourEl.classList.remove('hidden'); tourEl.setAttribute('aria-hidden', 'false');
     document.body.classList.add('tour-open');
+    // pantalla completa real: oculta pestañas, barra de direcciones y ventanas del navegador para proyectar
+    const rq = tourEl.requestFullscreen || tourEl.webkitRequestFullscreen;
+    if (rq && !(document.fullscreenElement || document.webkitFullscreenElement)) { try { const p = rq.call(tourEl, { navigationUI: 'hide' }); if (p && p.catch) p.catch(() => {}); } catch (_) {} }
     mount(tourHost);
     controls.autoRotate = false; controls.enableZoom = true;
     const start = at != null ? at : Math.max(0, STOPS.findIndex(s => s.kind === 'view' && s.id === viewId));
@@ -602,16 +605,24 @@ function build() {
     ensureLoop();
     setTimeout(() => $t('#tourClose').focus(), 50);
   }
+  let closing = false;
   function closeTour() {
-    if (mode !== 'tour') return;
+    if (mode !== 'tour' || closing) return;
+    closing = true;
     setPlaying(false);
+    const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+    if (fsEl === tourEl) { const ex = document.exitFullscreen || document.webkitExitFullscreen; try { const p = ex.call(document); if (p && p.catch) p.catch(() => {}); } catch (_) {} }
     const done = () => {
+      closing = false;
       tourEl.classList.add('hidden'); tourEl.setAttribute('aria-hidden', 'true'); document.body.classList.remove('tour-open');
       mode = 'hero'; mount(heroHost); setHeroControls(); labels.forEach(l => l.el.classList.remove('on')); beams.forEach(b => { b.visible = false; }); ringMat.opacity = 0;
       flyTo(STOPS[0].cam, 1.2); ensureLoop();
     };
     if (Mo && !RM3) Mo.animate(tourEl, { opacity: [1, 0], scale: [1, 1.03] }, { duration: 0.3 }).then(done); else done();
   }
+  // si el navegador sale de pantalla completa (tecla Esc o F11), también se cierra el recorrido
+  const onFs = () => { if (mode === 'tour' && !(document.fullscreenElement || document.webkitFullscreenElement)) closeTour(); };
+  document.addEventListener('fullscreenchange', onFs); document.addEventListener('webkitfullscreenchange', onFs);
   document.addEventListener('keydown', e => {
     if (mode !== 'tour') return;
     if (e.key === 'Escape') { e.preventDefault(); closeTour(); }

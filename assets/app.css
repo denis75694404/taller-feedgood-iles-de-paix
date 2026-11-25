@@ -257,3 +257,9 @@ html.toolopen #rail,html.toolopen #tabbar{z-index:90}
 .fnote:focus{box-shadow:0 0 0 2px var(--terra)}
 
 .tfmt figcaption .irbtn{margin-left:8px;vertical-align:middle;font-size:clamp(1rem,1.4vw,1.25rem)}
+
+/* Portada (vista después de Inicio) */
+.portada-bar .wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.portada-bar .sp{flex:1}
+.portada-frame{display:block;width:100%;height:calc(100vh - 140px);height:calc(100dvh - 140px);min-height:460px;border:0;background:#5E3A32}
+@media (max-width:900px){.portada-frame{height:calc(100dvh - 210px)}}
