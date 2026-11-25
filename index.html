@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap">
 <link rel="stylesheet" href="assets/app.css?v=20261122d">
+<link rel="stylesheet" href="assets/recorrido3d.css?v=20261124a">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
 <link rel="preload" as="image" href="img/idp-paisaje.jpg">
 </head>
 <body>
@@ -51,6 +53,22 @@
           <div class="card pad"><div class="n">1</div><h3>Mire la agenda</h3><p class="muted">La agenda indica en vivo qué toca ahora, quién conduce y con qué herramienta.</p></div>
           <div class="card pad"><div class="n">2</div><h3>Abra la herramienta</h3><p class="muted">Cada sesión tiene su herramienta: se abre aquí mismo y guarda lo escrito en este equipo.</p></div>
           <div class="card pad"><div class="n">3</div><h3>Participe con su mesa</h3><p class="muted">Escanee el código QR, elija el color de su mesa, responda y vote desde su celular.</p></div>
+        </div>
+      </section>
+
+      <section class="blk" style="padding-top:0" id="t3dBlock">
+        <h2>Recorrido 3D por el taller</h2>
+        <p class="muted">Una maqueta del valle de Huánuco con una estación por cada parte del taller. Gírela con el dedo o el ratón, toque una estación o inicie el recorrido guiado.</p>
+        <div id="hero3d" class="t3d-hero">
+          <div id="hero3dHost" class="t3d-host"></div>
+          <div class="t3d-fade"></div>
+          <span class="t3d-badge">Recorrido 3D · Valle de Huánuco</span>
+          <div class="t3d-load" id="t3dLoad">Cargando la maqueta 3D…</div>
+          <div class="t3d-bar">
+            <button type="button" class="t3d-start" data-tour="resumen" data-autoplay><span class="pl">▶</span>Iniciar recorrido guiado</button>
+            <button type="button" class="t3d-full" data-tour="resumen">⤢ Explorar en pantalla completa</button>
+            <span class="t3d-hint">Arrastre para girar · toque una estación</span>
+          </div>
         </div>
       </section>
 
@@ -123,10 +141,37 @@
 </div>
 <button class="btn pri" id="projX">Salir de la proyección</button>
 
+<!-- Recorrido 3D a pantalla completa (assets/recorrido3d.js) -->
+<div id="tour" class="hidden" role="dialog" aria-modal="true" aria-label="Recorrido 3D del taller" aria-hidden="true">
+  <div id="tourHost"></div>
+  <div class="t3d-tbar">
+    <div class="t3d-brand"><img src="img/logo_idp.png" alt=""><div><b>Taller Feed Good</b><small>Recorrido 3D · Valle de Huánuco</small></div></div>
+    <div class="t3d-tacts">
+      <button type="button" id="tourPlay" class="t3d-btn" aria-pressed="false">▶<span>Reproducir</span></button>
+      <button type="button" id="tourClose" class="t3d-btn" aria-label="Cerrar el recorrido (Esc)">✕<span>Cerrar</span></button>
+    </div>
+  </div>
+  <div class="t3d-cardwrap"><div id="tourCard"></div></div>
+  <div class="t3d-bottom">
+    <div class="t3d-steps-box"><div id="tourSteps"></div><div class="t3d-prog"><div id="tourProg"></div></div></div>
+    <div class="t3d-keys"><span><b>← →</b> estaciones</span><span><b>Espacio</b> reproducir</span><span><b>Esc</b> salir</span><span>Arrastre para girar · rueda para acercar</span></div>
+  </div>
+</div>
+
 <script src="assets/data.js?v=20261119v"></script>
 <script src="assets/formatos.js?v=20261119v"></script>
 <script src="assets/creditos.js?v=20261119a"></script>
 <script src="assets/app.js?v=20261124a"></script>
+<script>
+/* Recorrido 3D: se descarga solo cuando la sección se acerca a la vista (ahorra datos con wifi débil) */
+(function () {
+  var h = document.getElementById("hero3d"); if (!h) return;
+  var go = function () { import("./assets/recorrido3d.js?v=20261124a").catch(function () { document.documentElement.classList.add("no-3d"); }); };
+  if (!("IntersectionObserver" in window)) return go();
+  var io = new IntersectionObserver(function (en) { if (en.some(function (x) { return x.isIntersecting; })) { io.disconnect(); go(); } }, { rootMargin: "400px" });
+  io.observe(h);
+})();
+</script>
 <script>if ("serviceWorker" in navigator && location.protocol.startsWith("http")) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));</script>
 </body>
 </html>

@@ -1,0 +1,90 @@
+/* Recorrido 3D del taller (inicio). Colores del portal: --terra-d, --verde-d, --sol. */
+.t3d-hero{position:relative;isolation:isolate;height:clamp(380px,56vw,540px);border-radius:var(--r);overflow:hidden;
+  background:linear-gradient(#1e5dd8,#7fb0f0 45%,#d7e7fc 80%,#f4f7fc);box-shadow:var(--sh);border:1px solid var(--line)}
+.t3d-host{position:absolute;inset:0}
+.t3d-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;outline:none;touch-action:none}
+.t3d-fade{position:absolute;inset:auto 0 0 0;height:150px;pointer-events:none;background:linear-gradient(to top,rgba(43,34,32,.5),transparent)}
+.t3d-badge{position:absolute;left:16px;top:16px;display:inline-flex;align-items:center;gap:6px;padding:.4rem .8rem;border-radius:999px;
+  background:rgba(255,255,255,.92);color:var(--terra-dd);font-size:.78rem;font-weight:800;box-shadow:0 6px 16px -8px rgba(0,0,0,.4);pointer-events:none}
+.t3d-bar{position:absolute;left:16px;right:16px;bottom:16px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.t3d-start{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:16px;padding:.7rem 1.1rem .7rem .7rem;background:#fff;color:var(--terra-dd);
+  font-weight:800;font-size:.92rem;box-shadow:0 14px 30px -12px rgba(0,0,0,.55);transition:transform .2s}
+.t3d-start .pl{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(140deg,var(--terra-d),var(--verde-d));color:#fff;font-size:.8rem}
+.t3d-start:hover{transform:translateY(-2px)}
+.t3d-full{border:1px solid rgba(255,255,255,.55);border-radius:16px;padding:.7rem 1rem;background:rgba(255,255,255,.16);color:#fff;font-weight:700;font-size:.88rem;backdrop-filter:blur(6px)}
+.t3d-full:hover{background:rgba(255,255,255,.28)}
+.t3d-hint{margin-left:auto;color:rgba(255,255,255,.92);font-size:.75rem;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.t3d-load{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:700;font-size:.95rem;text-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none}
+.no-3d #t3dBlock{display:none}
+@media (max-width:640px){.t3d-hint{display:none}.t3d-full{display:none}}
+
+/* Etiquetas sobre la maqueta */
+.l2d{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.lbl-wrap{display:flex;flex-direction:column;align-items:center}
+.lbl3d{pointer-events:auto;display:inline-flex;align-items:center;gap:.45rem;padding:.28rem .7rem .28rem .28rem;border-radius:999px;background:rgba(255,255,255,.94);
+  color:var(--ink);font:700 11px/1 "Figtree",system-ui,sans-serif;white-space:nowrap;cursor:pointer;border:1px solid rgba(140,90,79,.18);
+  box-shadow:0 8px 22px -8px rgba(43,34,32,.45);transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s,background .2s}
+.lbl3d .ic{min-width:22px;height:22px;padding:0 5px;border-radius:999px;display:grid;place-items:center;color:#fff;background:var(--c,#8C5A4F);font-size:11px;font-weight:800}
+.lbl3d .tx{max-width:230px;overflow:hidden;transition:max-width .45s cubic-bezier(.16,1,.3,1),opacity .3s}
+.lbl3d:hover,.lbl3d.on{transform:translateY(-5px) scale(1.07);background:#fff;box-shadow:0 14px 28px -10px color-mix(in srgb,var(--c,#8C5A4F) 70%,transparent)}
+.lbl-stem{width:2px;height:16px;background:linear-gradient(var(--c,#8C5A4F),transparent)}
+#hero3d .lbl3d{padding-right:.28rem;gap:0}
+#hero3d .lbl3d .tx{max-width:0;opacity:0}
+#hero3d .lbl3d:hover{padding-right:.7rem;gap:.45rem}
+#hero3d .lbl3d:hover .tx{max-width:230px;opacity:1}
+
+/* Recorrido a pantalla completa */
+body.tour-open{overflow:hidden}
+#tour{position:fixed;inset:0;z-index:95;background:#1e5dd8}
+#tour.hidden{display:none}
+#tourHost{position:absolute;inset:0}
+.t3d-tbar{position:absolute;top:0;left:0;right:0;padding:14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;pointer-events:none}
+.t3d-brand{pointer-events:auto;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.92);border-radius:16px;padding:6px 14px 6px 6px;box-shadow:0 12px 28px -14px rgba(0,0,0,.5)}
+.t3d-brand img{width:38px;height:38px;border-radius:10px;object-fit:contain;background:#fff;padding:3px}
+.t3d-brand b{display:block;font-size:.9rem;color:var(--terra-dd);line-height:1.2}
+.t3d-brand small{display:block;font-size:.7rem;font-weight:600;color:var(--muted)}
+.t3d-tacts{pointer-events:auto;display:flex;gap:8px}
+.t3d-btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:14px;padding:.6rem .9rem;background:rgba(255,255,255,.92);color:var(--terra-dd);font-weight:800;font-size:.85rem;box-shadow:0 10px 24px -12px rgba(0,0,0,.5)}
+.t3d-btn:hover{background:#fff}
+.t3d-cardwrap{position:absolute;left:12px;right:12px;bottom:96px;perspective:1400px}
+#tourCard{background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-radius:22px;padding:18px 20px;box-shadow:0 24px 50px -20px rgba(0,0,0,.55);border:1px solid #fff;color:var(--ink)}
+#tourCard h3{font-size:1.2rem;margin:0;line-height:1.2;color:var(--ink)}
+#tourCard p{font-size:.9rem;color:var(--muted);margin:10px 0 0;line-height:1.55}
+.t3d-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.t3d-num{font-size:.7rem;font-weight:800;color:#a8968f;font-variant-numeric:tabular-nums}
+.t3d-tag{font-size:.65rem;font-weight:800;padding:.15rem .55rem;border-radius:999px;color:var(--c,var(--terra-dd));background:color-mix(in srgb,var(--c,#E8B44F) 16%,#fff);border:1px solid color-mix(in srgb,var(--c,#E8B44F) 30%,#fff)}
+.t3d-head{display:flex;align-items:center;gap:12px;margin-top:10px}
+.t3d-ico{width:46px;height:46px;flex-shrink:0;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:1rem;
+  background:linear-gradient(140deg,var(--terra-d),var(--verde-d));box-shadow:0 10px 20px -10px rgba(94,58,50,.8)}
+.t3d-kick{font-size:.75rem;font-weight:800;color:var(--terra-d)}
+.t3d-acts{display:flex;gap:8px;margin-top:14px}
+.t3d-cta{flex:1;border:0;border-radius:14px;padding:.7rem 1rem;background:linear-gradient(140deg,var(--terra-d),var(--verde-d));color:#fff;font-weight:800;font-size:.85rem}
+.t3d-cta:hover{filter:brightness(1.08)}
+.t3d-sp{flex:1}
+.t3d-nav{width:42px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--terra-dd);font-size:1.3rem;font-weight:800;line-height:1}
+.t3d-nav:hover{background:var(--crema)}
+.t3d-bottom{position:absolute;left:0;right:0;bottom:0;padding:12px}
+.t3d-steps-box{max-width:1080px;margin:0 auto;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-radius:16px;padding:6px;box-shadow:0 12px 28px -14px rgba(0,0,0,.5)}
+#tourSteps{display:flex;gap:4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.tour-step{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;border:0;background:none;padding:.5rem .7rem;border-radius:12px;font-size:.72rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.tour-step b{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.68rem;background:var(--crema);color:var(--terra-dd)}
+.tour-step span{display:none}
+.tour-step:hover{background:var(--crema);color:var(--terra-dd)}
+.tour-step.on{background:var(--terra-d);color:#fff}
+.tour-step.on b{background:rgba(255,255,255,.25);color:#fff}
+.tour-step.on span{display:inline}
+.tour-step.r{color:var(--c);font-weight:800;padding:.5rem .55rem}
+.tour-step.r.on{background:var(--c);color:#fff}
+.t3d-prog{height:4px;margin-top:4px;border-radius:99px;background:#eadfd9;overflow:hidden}
+#tourProg{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--terra-d),var(--sol))}
+.t3d-keys{display:none;justify-content:center;gap:16px;margin:6px auto 0;width:max-content;padding:.3rem .8rem;border-radius:999px;background:rgba(43,34,32,.55);font-size:.7rem;font-weight:600;color:#fff}
+@media (min-width:900px){
+  .t3d-cardwrap{left:32px;right:auto;bottom:118px;width:430px}
+  .t3d-keys{display:flex}
+  .t3d-tbar{padding:24px}
+  .t3d-bottom{padding:20px 24px}
+}
+.t3d-toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);z-index:100;background:var(--ink);color:#fff;padding:.6rem 1rem;border-radius:12px;font-weight:700;font-size:.85rem;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+.t3d-toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:640px){.t3d-brand small{display:none}.t3d-brand{padding-right:10px}.t3d-btn span{display:none}.t3d-btn{padding:.6rem .75rem}}
+@media print{#t3dBlock,#tour{display:none!important}}
