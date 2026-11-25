@@ -31,7 +31,7 @@
   /* navegación */
   const NAV = [["inicio", "Inicio", "home"], ["portada", "Portada", "image"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"]];
   // enlaces externos debajo de Herramientas (se abren en otra pestaña)
-  const EXT = [["https://taller-huanuco.2013101864.workers.dev/", "Sistematizador", "external"]];
+  const EXT = [["https://taller-huanuco.denisgarciacortez.workers.dev/", "Sistematizador", "external"]];
   const navHtml = list => list.map(([k, t, i]) => `<a class="nav-btn" data-k="${k}" href="#/${k}">${ic(i)}<span>${t}</span></a>`).join("") +
     EXT.map(([u, t, i]) => `<a class="nav-ext" href="${u}" target="_blank" rel="noopener">${ic(i)}<span>${t}</span></a>`).join("") +
     `<button class="nav-ext" type="button" data-tmfree>${ic("timer")}<span>Temporizador</span></button>`;
