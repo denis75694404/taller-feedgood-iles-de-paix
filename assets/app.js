@@ -29,7 +29,7 @@
   document.querySelectorAll("[data-i]").forEach(el => el.insertAdjacentHTML("afterbegin", ic(el.dataset.i)));
 
   /* navegación */
-  const NAV = [["inicio", "Inicio", "home"], ["portada", "Portada", "image"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"], ["sistematizador", "Sistematizador", "pen"], ["priorizacion", "Priorización", "file"]];
+  const NAV = [["inicio", "Inicio", "home"], ["portada", "Portada", "image"], ["agenda", "Agenda", "calendar"], ["herramientas", "Herramientas", "wrench"], ["sistematizador", "Sistematizador", "pen"]];
   // enlaces externos debajo de Herramientas (se abren en otra pestaña)
   const EXT = [];
   const navHtml = list => list.map(([k, t, i]) => `<a class="nav-btn" data-k="${k}" href="#/${k}">${ic(i)}<span>${t}</span></a>`).join("") +
@@ -46,11 +46,9 @@
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
     // el Sistematizador se carga solo la primera vez que se abre (ahorra datos)
     if (v === "sistematizador") { const f = $("#sisFrame"); if (f && !f.src) f.src = f.dataset.src; }
-    if (v === "priorizacion") { const f = $("#prioFrame"); if (f && !f.src) f.src = f.dataset.src; }
   }
   window.addEventListener("hashchange", route);
   document.addEventListener("click", e => { if (!e.target.closest("#sisFull")) return; const f = $("#sisFrame"); (f.requestFullscreen || f.webkitRequestFullscreen || function () {}).call(f); });
-  document.addEventListener("click", e => { if (!e.target.closest("#prioFull")) return; const f = $("#prioFrame"); (f.requestFullscreen || f.webkitRequestFullscreen || function () {}).call(f); });
   document.addEventListener("click", e => { if (!e.target.closest("#portadaFull")) return; const f = $("#portadaFrame"); (f.requestFullscreen || f.webkitRequestFullscreen || function () {}).call(f); });
   // un solo clic en el menú: si la dirección ya es la del botón (no hay hashchange), igual cierra la ficha y muestra la vista
   document.addEventListener("click", e => {
